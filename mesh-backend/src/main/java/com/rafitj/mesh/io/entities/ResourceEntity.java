@@ -12,6 +12,7 @@ public abstract class ResourceEntity {
     private String project_id;
     private String label;
     private ResourceType type;
+    private Boolean isAlive = true;
     @Relationship(type = "Connects", direction = Relationship.Direction.OUTGOING)
     private List<ResourceEntity> resources;
 
@@ -53,5 +54,13 @@ public abstract class ResourceEntity {
 
     public void setResources(List<ResourceEntity> resources) {
         this.resources = resources;
+    }
+
+    public Boolean getAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(Boolean alive) {
+        isAlive = alive;
     }
 }

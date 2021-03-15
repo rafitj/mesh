@@ -1,4 +1,4 @@
-package com.rafitj.mesh.config;
+package com.rafitj.mesh.io.seeders;
 
 import com.rafitj.mesh.io.documents.UserDocument;
 import com.rafitj.mesh.io.repos.UserRepo;
@@ -15,7 +15,8 @@ public class UserSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        UserDocument user = new UserDocument("Rafit", "rafit.jamil@gmail.com", "123", Arrays.asList("123", "332"));
+        UserDocument user = new UserDocument("Rafit", "rafit.jamil@gmail.com", "123", Arrays.asList());
+
         userRepo.deleteAll();
         userRepo.save(user);
     }

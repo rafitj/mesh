@@ -1,25 +1,20 @@
 import React from 'react';
-import axios from "axios";
+import { Container, Button, Heading, Text, Center } from "@chakra-ui/react"
+import { Space } from 'antd';
+import { Link } from 'react-router-dom';
 
-const getData = async () => {
-    const baseUrl = "http://localhost:8080"
-    try {
-        return await axios.request({
-            url: `${baseUrl}${"/resource/all"}`,
-            method: "GET",
-        })
-    } catch (e) {
-        const {
-            response: {data},
-        } = e
-        return data
-    }
-}
-export const Project = () =>{
-    React.useEffect(()=> {
-        getData().then(r => console.log(r));
-    })
+export const Home = () =>{
     return (
-        <div> hi </div>
+        <Container centerContent height={'100vh'}>
+            <Center h={'100vh'}>
+            <Space size={'middle'} direction="vertical" style={{textAlign: "center"}}>
+                <Text>Welcome to</Text>
+                <Heading>Mesh</Heading>
+                <Link to="/projects">
+                    <Button>Start</Button>
+                </Link>
+            </Space>
+            </Center>
+        </Container>
     );
 }

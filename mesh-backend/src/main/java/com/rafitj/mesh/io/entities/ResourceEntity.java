@@ -10,6 +10,7 @@ public abstract class ResourceEntity {
     @Id
     private String id = UUID.randomUUID().toString().replace("-", "");
     private String label;
+    private String description;
     private Boolean isAlive = true;
     private ResourceType type;
     @Relationship(type = "CONNECTS", direction = Relationship.Direction.OUTGOING)
@@ -29,6 +30,14 @@ public abstract class ResourceEntity {
 
     public void setType(ResourceType type) {
         this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getLabel() {

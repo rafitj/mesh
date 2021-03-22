@@ -16,6 +16,9 @@ public class DatabaseEntity extends ResourceEntity{
         this.setLabel(label);
     }
 
+    public DatabaseEntity() {
+    }
+
     public String getDbType() {
         return dbType;
     }

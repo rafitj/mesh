@@ -1,8 +1,4 @@
-package com.rafitj.mesh.controller;
-
-import com.rafitj.mesh.io.entities.ResourceType;
-
-import java.util.Collection;
+package com.rafitj.mesh.controller.projections;
 
 public class ClientEntityProjection extends ResourceEntityProjection {
     private int throughput;

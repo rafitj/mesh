@@ -12,6 +12,10 @@ public class ServerEntity extends ResourceEntity{
         this.setType(ResourceType.SERVER);
     }
 
+    public ServerEntity() {
+
+    }
+
     public String getInstanceType() {
         return instanceType;
     }

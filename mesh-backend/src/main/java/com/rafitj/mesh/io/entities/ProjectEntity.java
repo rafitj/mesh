@@ -4,6 +4,7 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +21,9 @@ public class ProjectEntity {
         this.name = name;
         this.budget = budget;
         this.resources = resources;
+    }
+
+    public ProjectEntity() {
     }
 
     public String getId() {
@@ -52,5 +56,12 @@ public class ProjectEntity {
 
     public void setResources(List<ResourceOfRelationshipEntity> resources) {
         this.resources = resources;
+    }
+
+    public void addResource(ResourceOfRelationshipEntity resource) {
+        if (this.resources == null) {
+            this.resources = new ArrayList<>();
+        }
+        this.resources.add(resource);
     }
 }

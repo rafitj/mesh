@@ -1,4 +1,4 @@
-package com.rafitj.mesh.controller;
+package com.rafitj.mesh.controller.projections;
 
 import java.util.List;
 

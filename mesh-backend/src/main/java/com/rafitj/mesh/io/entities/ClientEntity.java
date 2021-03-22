@@ -7,6 +7,9 @@ public class ClientEntity extends ResourceEntity {
     private int throughput;
     private int clickRate;
 
+    public ClientEntity() {
+    }
+
     public ClientEntity(String label, int throughput, int clickRate) {
         this.throughput = throughput;
         this.clickRate = clickRate;

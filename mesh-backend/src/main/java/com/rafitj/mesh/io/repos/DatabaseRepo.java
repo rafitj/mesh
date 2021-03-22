@@ -1,7 +1,6 @@
 package com.rafitj.mesh.io.repos;
 
-import com.rafitj.mesh.controller.ClientEntityProjection;
-import com.rafitj.mesh.controller.DatabaseEntityProjection;
+import com.rafitj.mesh.controller.projections.DatabaseEntityProjection;
 import com.rafitj.mesh.io.entities.DatabaseEntity;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;

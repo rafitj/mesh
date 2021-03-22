@@ -2,7 +2,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Home } from './components/Home';
-import { Project } from './components/Project';
+import { ProjectDashboard } from './components/ProjectDashboard';
 import theme from './theme';
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
               <Home />
             </Route>
             <Route exact={true} path="/projects">
-              <Project />
+              <ProjectDashboard />
             </Route>
           </Switch>
         </div>

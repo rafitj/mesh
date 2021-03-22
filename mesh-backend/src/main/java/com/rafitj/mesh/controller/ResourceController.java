@@ -1,19 +1,18 @@
 package com.rafitj.mesh.controller;
 
-import com.rafitj.mesh.io.entities.ClientEntity;
-import com.rafitj.mesh.io.entities.DatabaseEntity;
-import com.rafitj.mesh.io.entities.ResourceEntity;
-import com.rafitj.mesh.io.entities.ServerEntity;
+import com.rafitj.mesh.io.entities.*;
 import com.rafitj.mesh.io.repos.ClientRepo;
 import com.rafitj.mesh.io.repos.DatabaseRepo;
+import com.rafitj.mesh.io.repos.ProjectRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/resource")
+@CrossOrigin("http://localhost:3000")
 public class ResourceController {
     @Autowired
     ServerRepo serverRepo;
@@ -21,6 +20,8 @@ public class ResourceController {
     DatabaseRepo dbRepo;
     @Autowired
     ClientRepo clientRepo;
+    @Autowired
+    ProjectRepo projectRepo;
 
     @PostMapping("/kill/{type}/{id}")
     private String killResource(@PathVariable String type, @PathVariable String id) {

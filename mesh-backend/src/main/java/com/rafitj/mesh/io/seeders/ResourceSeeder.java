@@ -1,10 +1,9 @@
 package com.rafitj.mesh.io.seeders;
 
-import com.rafitj.mesh.io.entities.ClientEntity;
-import com.rafitj.mesh.io.entities.DatabaseEntity;
-import com.rafitj.mesh.io.entities.ServerEntity;
+import com.rafitj.mesh.io.entities.*;
 import com.rafitj.mesh.io.repos.ClientRepo;
 import com.rafitj.mesh.io.repos.DatabaseRepo;
+import com.rafitj.mesh.io.repos.ProjectRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -20,23 +19,36 @@ public class ResourceSeeder implements CommandLineRunner {
     private ClientRepo clientRepo ;
     @Autowired
     private DatabaseRepo dbRepo;
+    @Autowired
+    private ProjectRepo projectRepo;
 
     @Override
     public void run(String... args) throws Exception {
-        ServerEntity server = new ServerEntity("gxLarge");
-        ServerEntity server2 = new ServerEntity("gxMed");
-        ServerEntity server3 = new ServerEntity("mxSmall");
-        ClientEntity client1 = new ClientEntity(1000, 50);
-        DatabaseEntity db1 = new DatabaseEntity("Postgres", List.of("Users", "Notes"));
-        server.setResources(List.of(server2,server3,db1));
-        server2.setResources(List.of(server,server3,db1));
-        server3.setResources(List.of(client1));
+        ServerEntity server = new ServerEntity("main server","gxLarge");
+        ServerEntity server2 = new ServerEntity("analytics server","gxMed");
+        ServerEntity server3 = new ServerEntity("client server","mxSmall");
+        ClientEntity client1 = new ClientEntity("web portal",1000, 50);
+        DatabaseEntity db1 = new DatabaseEntity( "user db","Postgres", List.of("Users", "Notes"));
+        ConnectsRelationshipEntity connection = new ConnectsRelationshipEntity(1, server2);
+        ConnectsRelationshipEntity connection1 = new ConnectsRelationshipEntity(2, server3);
+        ConnectsRelationshipEntity connection2 = new ConnectsRelationshipEntity(10, db1);
+        server.setResources(List.of(connection,connection2,connection1));
+        ConnectsRelationshipEntity connection3 = new ConnectsRelationshipEntity(1, client1);
+        server3.setResources(List.of(connection3));
+//        server2.setResources(List.of(server,server3,db1));
+//        server3.setResources(List.of(client1));
+        ResourceOfRelationshipEntity r1 = new ResourceOfRelationshipEntity(server);
+        ResourceOfRelationshipEntity r2 = new ResourceOfRelationshipEntity(server2);
+        ResourceOfRelationshipEntity r3 = new ResourceOfRelationshipEntity(server3);
+        ResourceOfRelationshipEntity r4 = new ResourceOfRelationshipEntity(client1);
+        ResourceOfRelationshipEntity r5 = new ResourceOfRelationshipEntity(db1);
+        ProjectEntity proj1 = new ProjectEntity("my project", 10000, List.of(r1,r2,r3,r4,r5));
         serverRepo.deleteAll();
         clientRepo.deleteAll();
         dbRepo.deleteAll();
-        serverRepo.saveAll(List.of(server,server2,server3));
-        dbRepo.save(db1);
-        clientRepo.save(client1);
+        projectRepo.deleteAll();
+        projectRepo.save(proj1);
+        System.out.println("SEEDED RESOURCES");
     }
 
 }

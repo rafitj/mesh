@@ -15,8 +15,7 @@ public class UserSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        UserDocument user = new UserDocument("Rafit", "rafit.jamil@gmail.com", "123", Arrays.asList());
-
+        UserDocument user = new UserDocument("Rafit", "rafit.jamil@gmail.com", "123", Arrays.asList("123", "234"));
         userRepo.deleteAll();
         userRepo.save(user);
     }

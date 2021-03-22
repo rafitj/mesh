@@ -2,23 +2,24 @@ package com.rafitj.mesh.io.entities;
 
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
-@Node
+import java.util.List;
+import java.util.UUID;
+
+@Node("Project")
 public class ProjectEntity {
     @Id
-    private String id;
-
-    private String title;
+    private String id = UUID.randomUUID().toString().replace("-", "");;
+    private String name;
     private int budget;
-    private int created_at;
-    private int updated_at;
+    @Relationship(type = "RESOURCE_OF", direction = Relationship.Direction.INCOMING)
+    private List<ResourceOfRelationshipEntity> resources;
 
-    public ProjectEntity(String id, String title, int budget, int created_at, int updated_at) {
-        this.id = id;
-        this.title = title;
+    public ProjectEntity(String name, int budget, List<ResourceOfRelationshipEntity> resources) {
+        this.name = name;
         this.budget = budget;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
+        this.resources = resources;
     }
 
     public String getId() {
@@ -29,12 +30,12 @@ public class ProjectEntity {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getBudget() {
@@ -45,19 +46,11 @@ public class ProjectEntity {
         this.budget = budget;
     }
 
-    public int getCreated_at() {
-        return created_at;
+    public List<ResourceOfRelationshipEntity> getResources() {
+        return resources;
     }
 
-    public void setCreated_at(int created_at) {
-        this.created_at = created_at;
-    }
-
-    public int getUpdated_at() {
-        return updated_at;
-    }
-
-    public void setUpdated_at(int updated_at) {
-        this.updated_at = updated_at;
+    public void setResources(List<ResourceOfRelationshipEntity> resources) {
+        this.resources = resources;
     }
 }

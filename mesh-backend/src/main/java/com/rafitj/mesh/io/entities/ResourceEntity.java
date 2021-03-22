@@ -1,20 +1,19 @@
 package com.rafitj.mesh.io.entities;
 
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.*;
 
 import java.util.List;
+import java.util.UUID;
+
 
 public abstract class ResourceEntity {
     @Id
-    private String id = String.valueOf(Math.random());
-    private String project_id;
+    private String id = UUID.randomUUID().toString().replace("-", "");
     private String label;
-    private ResourceType type;
     private Boolean isAlive = true;
-    @Relationship(type = "Connects", direction = Relationship.Direction.OUTGOING)
-    private List<ResourceEntity> resources;
+    private ResourceType type;
+    @Relationship(type = "CONNECTS", direction = Relationship.Direction.OUTGOING)
+    private List<ConnectsRelationshipEntity> resources;
 
     public String getId() {
         return id;
@@ -22,22 +21,6 @@ public abstract class ResourceEntity {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getProject_id() {
-        return project_id;
-    }
-
-    public void setProject_id(String project_id) {
-        this.project_id = project_id;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
     }
 
     public ResourceType getType() {
@@ -48,11 +31,19 @@ public abstract class ResourceEntity {
         this.type = type;
     }
 
-    public List<ResourceEntity> getResources() {
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public List<ConnectsRelationshipEntity>  getResources() {
         return resources;
     }
 
-    public void setResources(List<ResourceEntity> resources) {
+    public void setResources(List<ConnectsRelationshipEntity>  resources) {
         this.resources = resources;
     }
 

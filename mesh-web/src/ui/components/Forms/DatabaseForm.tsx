@@ -20,6 +20,8 @@ import {
   SiPostgresql,
   SiRedis,
 } from 'react-icons/si';
+import { CreateDatabaseRequest } from '../../../network/protos';
+import { ProjectContext } from '../../../stores/MeshContext';
 
 const DBTypeList = [
   'Postgres',
@@ -33,8 +35,33 @@ const DBTypeList = [
   'CouchDB',
 ];
 
-export const DatabaseForm = () => {
+interface DatabaseFormProps {
+  description: string;
+  label: string;
+  onFormChange: (s: CreateDatabaseRequest) => void;
+}
+
+export const DatabaseForm = ({
+  onFormChange,
+  label,
+  description,
+}: DatabaseFormProps) => {
+  const ProjectStore = React.useContext(ProjectContext);
   const [DBType, setDBType] = React.useState<string>(DBTypeList[0]);
+
+  const setForm = () => {
+    if (ProjectStore.selectedProject) {
+      onFormChange({
+        description,
+        label,
+        dbType: DBType,
+        projectId: ProjectStore.selectedProject!.id,
+      });
+    }
+  };
+  React.useEffect(() => {
+    setForm();
+  });
 
   const getDBIcon = (db: string) => {
     if (db === 'Postgres') {
@@ -56,6 +83,11 @@ export const DatabaseForm = () => {
     }
   };
 
+  const onSelectDBType = (db: string) => {
+    setDBType(db);
+    setForm();
+  };
+
   return (
     <Box width="100%">
       <FormLabel>
@@ -73,7 +105,7 @@ export const DatabaseForm = () => {
               key={db}
               icon={getDBIcon(db)}
               onClick={() => {
-                setDBType(db);
+                onSelectDBType(db);
               }}
             >
               {db}

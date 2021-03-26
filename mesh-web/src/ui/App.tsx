@@ -2,9 +2,14 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { ProjectContext, ProjectStore, NetworkContext, NetworkStore } from '../stores/MeshContext';
+import {
+  NetworkContext,
+  NetworkStore,
+  ProjectContext,
+  ProjectStore,
+} from '../stores/MeshContext';
 import { Home } from './components/Home';
-import { ProjectDashboard } from './components/ProjectDashboard';
+import { ProjectDashboard } from './components/Project/ProjectDashboard';
 import theme from './styles/theme';
 
 export const App = observer(() => {
@@ -28,4 +33,4 @@ export const App = observer(() => {
       </Router>
     </ChakraProvider>
   );
-})
+});

@@ -8,6 +8,13 @@ export interface GetProjectResponse {
 
 export interface GetProjectInfoResponse extends Project {}
 
+export interface CreateProjectResponse extends GetProjectInfoResponse {}
+
+export interface CreateProjectRequest {
+  name: string;
+  budget: number;
+}
+
 export type GetProjectResourcesResponse = Resource[];
 
 export interface CreateResourceRequest {

@@ -26,7 +26,6 @@ import { NetworkContext } from '../../../stores/MeshContext';
 import { Resource } from '../../../types/Resources';
 
 export const ConnectionForm = observer(() => {
-  
   const NetworkStore = React.useContext(NetworkContext);
   const [resourceToConnect, setResourceToConnect] = React.useState<Resource>();
 

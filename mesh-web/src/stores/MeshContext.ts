@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { NetworkState } from './NetworkStore';
 import { ProjectState } from './ProjectStore';
 

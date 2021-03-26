@@ -30,27 +30,13 @@ import {
   HiDuplicate,
   HiOutlineLightningBolt,
 } from 'react-icons/hi';
-import { NetworkContext } from '../../stores/MeshContext';
-import { ResourceType } from '../../types/Resources';
-import ClientIcon from '../assets/ClientIcon.svg';
-import DatabaseIcon from '../assets/DatabaseIcon.svg';
-import ServerIcon from '../assets/ServerIcon.svg';
-import '../styles/graph.css';
-
-const getResourceImage = (resourceType: ResourceType) => {
-  if (resourceType === 'DATABASE') {
-    return DatabaseIcon;
-  } else if (resourceType === 'CLIENT') {
-    return ClientIcon;
-  } else {
-    return ServerIcon;
-  }
-};
+import { NetworkContext } from '../../../stores/MeshContext';
+import { getResourceImg } from '../../../utils/helper';
+import '../../styles/graph.css';
 
 export const ResourceInfo = observer(() => {
-
   const NetworkStore = React.useContext(NetworkContext);
-  
+
   return (
     <>
       {NetworkStore.selectedItem ? (
@@ -65,7 +51,7 @@ export const ResourceInfo = observer(() => {
               <Image
                 width="100%"
                 boxSize="125px"
-                src={getResourceImage(NetworkStore.selectedItem.type)}
+                src={getResourceImg(NetworkStore.selectedItem.type)}
                 alt={NetworkStore.selectedItem.type}
               />
               <Stack p="3" direction="column">
@@ -107,21 +93,25 @@ export const ResourceInfo = observer(() => {
             <Box borderRadius="md" borderWidth="1px" overflow="hidden">
               <Table variant="simple">
                 <Thead>
-                  <Th>PROPERTY</Th>
-                  <Th>VALUE</Th>
+                  <Tr>
+                    <Th>PROPERTY</Th>
+                    <Th>VALUE</Th>
+                  </Tr>
                 </Thead>
                 <Tbody>
                   {NetworkStore.selectedItem &&
-                    Object.entries(NetworkStore.selectedItem).map(([key, value]) => {
-                      return (
-                        <Tr key={key}>
-                          <Th>{key}</Th>
-                          <Td>
-                            <Text isTruncated={true}>{value}</Text>
-                          </Td>
-                        </Tr>
-                      );
-                    })}
+                    Object.entries(NetworkStore.selectedItem).map(
+                      ([key, value]) => {
+                        return (
+                          <Tr key={key}>
+                            <Th>{key}</Th>
+                            <Td>
+                              <Text isTruncated={true}>{value}</Text>
+                            </Td>
+                          </Tr>
+                        );
+                      }
+                    )}
                 </Tbody>
                 <Tfoot />
               </Table>

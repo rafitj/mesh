@@ -8,7 +8,6 @@ import { NetworkTools } from './NetworkTools';
 
 export const Network = observer(() => {
   const NetworkStore = React.useContext(NetworkContext);
-
   const graphConfig = {
     nodeHighlightBehavior: true,
     node: {
@@ -27,7 +26,7 @@ export const Network = observer(() => {
       highlightColor: 'lightblue',
     },
   };
-  
+
   return (
     <>
       <NetworkTools />

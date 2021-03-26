@@ -13,14 +13,21 @@ import {
 import { observer } from 'mobx-react';
 import React from 'react';
 import { HiArrowLeft, HiViewGridAdd } from 'react-icons/hi';
-import { ProjectContext } from '../../stores/MeshContext';
+import { ProjectContext } from '../../../stores/MeshContext';
+import { ProjectDialog } from './ProjectDialog';
 
 export const ProjectSelectBar = observer(() => {
-  
   const ProjectStore = React.useContext(ProjectContext);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   return (
     <Box>
+      <ProjectDialog
+        isOpen={isDialogOpen}
+        onClose={() => {
+          setIsDialogOpen(false);
+        }}
+      />
       <Stack p={4} direction="column">
         <Heading color="gray.400" size="sm">
           Selected Project
@@ -43,7 +50,13 @@ export const ProjectSelectBar = observer(() => {
               </MenuItem>
             ))}
             <MenuDivider />
-            <MenuItem icon={<HiViewGridAdd />} command="⌘N">
+            <MenuItem
+              icon={<HiViewGridAdd />}
+              command="⌘N"
+              onClick={() => {
+                setIsDialogOpen(true);
+              }}
+            >
               New Project
             </MenuItem>
             <MenuItem icon={<HiArrowLeft />} command="⌘V">

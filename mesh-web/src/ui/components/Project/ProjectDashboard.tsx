@@ -1,14 +1,14 @@
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { ProjectContext } from '../../stores/MeshContext';
-import { Network } from './Network/Network';
+import { ProjectContext } from '../../../stores/MeshContext';
+import { Network } from '../Network/Network';
 import { ProjectSelectBar } from './ProjectSelectBar';
 import { ResourceInfo } from './ResourceInfo';
 
 export const ProjectDashboard = observer(() => {
   const ProjectStore = React.useContext(ProjectContext);
-  
+
   React.useEffect(() => {
     ProjectStore.fetchProjects();
   });

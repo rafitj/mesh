@@ -4,6 +4,8 @@ import {
   CreateClientResponse,
   CreateDatabaseRequest,
   CreateDatabasetResponse,
+  CreateProjectRequest,
+  CreateProjectResponse,
   CreateServerRequest,
   CreateServerResponse,
   GetProjectInfoResponse,
@@ -62,6 +64,14 @@ export class Api {
     return data;
   };
 
+  static createProject = async (payload: CreateProjectRequest) => {
+    const data = await Api.createRequest<
+      CreateProjectRequest,
+      CreateProjectResponse
+    >(`project`, 'POST', payload);
+    return data;
+  };
+
   static createServer = async (payload: CreateServerRequest) => {
     const data = await Api.createRequest<
       CreateServerRequest,
@@ -74,7 +84,7 @@ export class Api {
     const data = await Api.createRequest<
       CreateClientRequest,
       CreateClientResponse
-    >('server', 'POST', payload);
+    >('client', 'POST', payload);
     return data;
   };
 
@@ -82,7 +92,7 @@ export class Api {
     const data = await Api.createRequest<
       CreateDatabaseRequest,
       CreateDatabasetResponse
-    >('server', 'POST', payload);
+    >('database', 'POST', payload);
     return data;
   };
 }

@@ -1,36 +1,55 @@
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { Api } from '../network/api';
-import { GetProjectResponse } from '../network/protos';
+import { CreateProjectRequest, GetProjectResponse } from '../network/protos';
 import { Project } from '../types/Projects';
 import { NetworkState } from './NetworkStore';
 
 export class ProjectState {
-  @observable
   projects: GetProjectResponse[] = [];
 
-  @observable
   selectedProject?: GetProjectResponse;
 
-  @observable
   selectedProjectInfo?: Project;
 
-  @observable
   isLoading: boolean = false;
 
-  @observable
   hasError: boolean = false;
 
-  @observable
   statusMessage: string = '';
 
-  @observable
   networkState: NetworkState;
 
   constructor(networkState: NetworkState) {
+    makeObservable(this, {
+      projects: observable,
+      selectedProjectInfo: observable,
+      isLoading: observable,
+      hasError: observable,
+      statusMessage: observable,
+      networkState: observable,
+      selectedProject: observable,
+      fetchProjectInfo: action,
+      selectProject: action,
+      fetchProjects: action,
+      createProject: action,
+    });
     this.networkState = networkState;
   }
 
-  @action
+  createProject = async (project: CreateProjectRequest) => {
+    this.isLoading = true;
+    try {
+      const newProject = await Api.createProject(project);
+      this.projects = [...this.projects, newProject];
+      this.selectProject(newProject);
+      this.statusMessage = 'New project created';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to create project';
+    }
+    this.isLoading = false;
+  };
+
   selectProject = async (project: GetProjectResponse) => {
     this.isLoading = true;
     try {
@@ -45,13 +64,12 @@ export class ProjectState {
     this.isLoading = false;
   };
 
-  @action
   fetchProjects = async () => {
     this.isLoading = true;
     try {
       this.projects = await Api.getProjects();
       if (this.projects.length > 0) {
-        await this.networkState.fetchProjectResources(this.projects[0].id);
+        await this.selectProject(this.projects[0]);
       }
       this.statusMessage = 'Projects loaded';
     } catch (e) {
@@ -61,7 +79,6 @@ export class ProjectState {
     this.isLoading = false;
   };
 
-  @action
   fetchProjectInfo = async (projectId: string) => {
     this.isLoading = true;
     try {

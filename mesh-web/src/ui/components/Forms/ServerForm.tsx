@@ -52,6 +52,7 @@ export const ServerForm = () => {
         <MenuList>
           {InstanceList.map((i) => (
             <MenuItem
+              key={i.instanceType}
               icon={getProviderIcon(i.provider)}
               onClick={() => {
                 setServerInstance(i);

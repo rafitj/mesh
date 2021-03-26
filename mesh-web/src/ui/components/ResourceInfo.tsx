@@ -29,11 +29,11 @@ import {
   HiDuplicate,
   HiOutlineLightningBolt,
 } from 'react-icons/hi';
+import { Resource, ResourceType } from '../../types/Resources';
 import ClientIcon from '../assets/ClientIcon.svg';
 import DatabaseIcon from '../assets/DatabaseIcon.svg';
 import ServerIcon from '../assets/ServerIcon.svg';
 import '../stylesheets/graph.css';
-import { Resource, ResourceType } from '../types/Resources';
 
 interface NodeInfoProps {
   resource?: Resource;

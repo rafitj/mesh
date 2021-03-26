@@ -18,6 +18,8 @@
         "axios": "^0.21.1",
         "d3": "^5.16.0",
         "framer-motion": "^3.10.5",
+        "mobx": "^6.1.8",
+        "mobx-react": "^7.1.0",
         "react": "^17.0.1",
         "react-d3-graph": "^2.6.0",
         "react-dom": "^17.0.1",

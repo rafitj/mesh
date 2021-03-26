@@ -18,7 +18,7 @@ import {
 import React from 'react';
 import { HiDatabase, HiDesktopComputer, HiServer } from 'react-icons/hi';
 import { IoIosRocket } from 'react-icons/io';
-import { ResourceType } from '../../types/Resources';
+import { ResourceType } from '../../../types/Resources';
 import { ClientForm } from './ClientForm';
 import { DatabaseForm } from './DatabaseForm';
 import { ServerForm } from './ServerForm';
@@ -57,7 +57,7 @@ export const ResourceForm = () => {
               {resourceType.charAt(0).toUpperCase() +
                 resourceType.slice(1).toLowerCase()}
             </MenuButton>
-            <MenuList>
+            <MenuList width="100%">
               <MenuItem
                 icon={<HiServer />}
                 command="⌘S"
@@ -83,7 +83,7 @@ export const ResourceForm = () => {
           </Menu>
         </Box>
         <Box>
-          <FormLabel color="gray.500">Resource Desc.</FormLabel>
+          <FormLabel color="gray.500">Resource Description</FormLabel>
           <Textarea placeholder="Description of resource purpose/usage" />
         </Box>
         <Spacer />

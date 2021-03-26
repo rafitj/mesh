@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 import { HiArrowLeft, HiViewGridAdd } from 'react-icons/hi';
-import { Project } from '../types/Projects';
+import { Project } from '../../types/Projects';
 interface ProjectSelectBarProps {
   projects: Project[];
   selectedProject?: Project;

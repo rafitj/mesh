@@ -1,25 +1,19 @@
 import React from 'react';
 import { Graph } from 'react-d3-graph';
+import { NetworkData, NetworkNode } from '../../../types/Network';
+import { Resource } from '../../../types/Resources';
 import ClientIcon from '../assets/ClientIcon.svg';
 import DatabaseIcon from '../assets/DatabaseIcon.svg';
 import ServerIcon from '../assets/ServerIcon.svg';
 import '../stylesheets/graph.css';
-import { Resource } from '../types/Resources';
 import { NetworkTools } from './NetworkTools';
-
-type Node = { id: string; label: string; svg: string };
-type Link = { source: string; target: string };
-type GraphData = {
-  nodes: Node[];
-  links: Link[];
-};
 
 interface NetworkProps {
   resources: Resource[];
   onClickNode: (nodeId: string) => void;
 }
 const createGraph = (resources: Resource[]) => {
-  const newData: GraphData = { nodes: [], links: [] };
+  const newData: NetworkData = { nodes: [], links: [] };
   resources.forEach((r) => {
     let icon: string = ServerIcon;
     if (r.type === 'DATABASE') {
@@ -47,7 +41,7 @@ export const Network = ({ resources, onClickNode }: NetworkProps) => {
       highlightColor: 'white',
       highlightFontWeight: '700',
       highlightFontSize: 14,
-      labelProperty: (node: Node) => node.label,
+      labelProperty: (node: NetworkNode) => node.label,
     },
     link: {
       highlightColor: 'lightblue',
@@ -55,7 +49,7 @@ export const Network = ({ resources, onClickNode }: NetworkProps) => {
   };
   return (
     <>
-      <NetworkTools />
+      <NetworkTools resources={resources} />
       <Graph
         id="graph-id"
         data={createGraph(resources)}

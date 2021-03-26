@@ -10,6 +10,7 @@ import {
   MenuList,
 } from '@chakra-ui/react';
 import React from 'react';
+import { HiOutlineDatabase } from 'react-icons/hi';
 import {
   SiCassandra,
   SiMariadb,
@@ -19,7 +20,6 @@ import {
   SiPostgresql,
   SiRedis,
 } from 'react-icons/si';
-import { HiOutlineDatabase } from 'react-icons/hi';
 
 const DBTypeList = [
   'Postgres',
@@ -70,6 +70,7 @@ export const DatabaseForm = () => {
         <MenuList>
           {DBTypeList.map((db) => (
             <MenuItem
+              key={db}
               icon={getDBIcon(db)}
               onClick={() => {
                 setDBType(db);

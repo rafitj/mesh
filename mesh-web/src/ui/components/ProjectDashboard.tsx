@@ -1,9 +1,9 @@
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 import axios from 'axios';
 import React from 'react';
-import { Project } from '../types/Projects';
-import { Resource } from '../types/Resources';
-import { Network } from './Network';
+import { Project } from '../../types/Projects';
+import { Resource } from '../../types/Resources';
+import { Network } from './Network/Network';
 import { ProjectSelectBar } from './ProjectSelectBar';
 import { ResourceInfo } from './ResourceInfo';
 

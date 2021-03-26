@@ -11,10 +11,15 @@ import {
 import React from 'react';
 import { AiOutlineNodeIndex } from 'react-icons/ai';
 import { HiServer } from 'react-icons/hi';
+import { Resource } from '../../../types/Resources';
+import { ConnectionForm } from '../Forms/ConnectionForm';
+import { ResourceForm } from '../Forms/ResourceForm';
 import '../stylesheets/override.css';
-import { ResourceForm } from './Forms/ResourceForm';
 
-export const NetworkTools = () => {
+interface NetworkToolProps {
+  resources: Resource[];
+}
+export const NetworkTools = ({ resources }: NetworkToolProps) => {
   return (
     <Box position="absolute" right="0">
       <ButtonGroup>
@@ -28,7 +33,19 @@ export const NetworkTools = () => {
             <PopoverCloseButton />
           </PopoverContent>
         </Popover>
-        <IconButton aria-label="Add Connection" icon={<AiOutlineNodeIndex />} />
+        <Popover placement="left-end" size="md" id="chakra-popover">
+          <PopoverTrigger>
+            <IconButton
+              aria-label="Add Connection"
+              icon={<AiOutlineNodeIndex />}
+            />
+          </PopoverTrigger>
+          <PopoverContent p={3}>
+            <PopoverArrow />
+            <ConnectionForm resources={resources} />
+            <PopoverCloseButton />
+          </PopoverContent>
+        </Popover>
       </ButtonGroup>
     </Box>
   );

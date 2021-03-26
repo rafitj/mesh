@@ -14,6 +14,7 @@ import {
   Spacer,
   Stack,
 } from '@chakra-ui/react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import {
   HiDatabase,
@@ -21,13 +22,14 @@ import {
   HiFire,
   HiServer,
 } from 'react-icons/hi';
+import { NetworkContext } from '../../../stores/MeshContext';
 import { Resource } from '../../../types/Resources';
 
-interface ConnectionFormProps {
-  resources: Resource[];
-}
-export const ConnectionForm = ({ resources }: ConnectionFormProps) => {
+export const ConnectionForm = observer(() => {
+  
+  const NetworkStore = React.useContext(NetworkContext);
   const [resourceToConnect, setResourceToConnect] = React.useState<Resource>();
+
   return (
     <FormControl id="resource-form" width="250px">
       <Stack>
@@ -47,7 +49,7 @@ export const ConnectionForm = ({ resources }: ConnectionFormProps) => {
                 : 'Select a Resource'}
             </MenuButton>
             <MenuList width="100%">
-              {resources.map((r) => (
+              {NetworkStore.resources.map((r) => (
                 <MenuItem
                   key={r.id}
                   icon={
@@ -77,7 +79,7 @@ export const ConnectionForm = ({ resources }: ConnectionFormProps) => {
             <Box>
               <FormLabel color="gray.500">Resources to Connect</FormLabel>
               <Stack>
-                {resources.map((r) => {
+                {NetworkStore.resources.map((r) => {
                   if (r === resourceToConnect) {
                     return <Checkbox isChecked={true}>{r.label}</Checkbox>;
                   } else {
@@ -105,4 +107,4 @@ export const ConnectionForm = ({ resources }: ConnectionFormProps) => {
       </Stack>
     </FormControl>
   );
-};
+});

@@ -23,21 +23,20 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import {
   HiCursorClick,
   HiDuplicate,
   HiOutlineLightningBolt,
 } from 'react-icons/hi';
-import { Resource, ResourceType } from '../../types/Resources';
+import { NetworkContext } from '../../stores/MeshContext';
+import { ResourceType } from '../../types/Resources';
 import ClientIcon from '../assets/ClientIcon.svg';
 import DatabaseIcon from '../assets/DatabaseIcon.svg';
 import ServerIcon from '../assets/ServerIcon.svg';
-import '../stylesheets/graph.css';
+import '../styles/graph.css';
 
-interface NodeInfoProps {
-  resource?: Resource;
-}
 const getResourceImage = (resourceType: ResourceType) => {
   if (resourceType === 'DATABASE') {
     return DatabaseIcon;
@@ -47,10 +46,14 @@ const getResourceImage = (resourceType: ResourceType) => {
     return ServerIcon;
   }
 };
-export const ResourceInfo = ({ resource }: NodeInfoProps) => {
+
+export const ResourceInfo = observer(() => {
+
+  const NetworkStore = React.useContext(NetworkContext);
+  
   return (
     <>
-      {resource ? (
+      {NetworkStore.selectedItem ? (
         <Grid
           height="100%"
           templateColumns="repeat(10, 1fr)"
@@ -62,8 +65,8 @@ export const ResourceInfo = ({ resource }: NodeInfoProps) => {
               <Image
                 width="100%"
                 boxSize="125px"
-                src={getResourceImage(resource.type)}
-                alt={resource.type}
+                src={getResourceImage(NetworkStore.selectedItem.type)}
+                alt={NetworkStore.selectedItem.type}
               />
               <Stack p="3" direction="column">
                 <Box d="flex" alignItems="baseline">
@@ -75,7 +78,7 @@ export const ResourceInfo = ({ resource }: NodeInfoProps) => {
                     textTransform="uppercase"
                     mr="2"
                   >
-                    {resource.type}
+                    {NetworkStore.selectedItem.type}
                   </Box>
                   <Badge borderRadius="full" px="2" colorScheme="teal">
                     ACTIVE
@@ -88,7 +91,7 @@ export const ResourceInfo = ({ resource }: NodeInfoProps) => {
                   lineHeight="tight"
                   isTruncated={true}
                 >
-                  {resource.label.toUpperCase()}
+                  {NetworkStore.selectedItem.label.toUpperCase()}
                 </Box>
                 <Box>
                   <Text color="gray.300" isTruncated={true}>
@@ -108,8 +111,8 @@ export const ResourceInfo = ({ resource }: NodeInfoProps) => {
                   <Th>VALUE</Th>
                 </Thead>
                 <Tbody>
-                  {resource &&
-                    Object.entries(resource).map(([key, value]) => {
+                  {NetworkStore.selectedItem &&
+                    Object.entries(NetworkStore.selectedItem).map(([key, value]) => {
                       return (
                         <Tr key={key}>
                           <Th>{key}</Th>
@@ -199,4 +202,4 @@ export const ResourceInfo = ({ resource }: NodeInfoProps) => {
       )}
     </>
   );
-};
+});

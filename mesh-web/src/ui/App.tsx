@@ -1,11 +1,13 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { ProjectContext, ProjectStore, NetworkContext, NetworkStore } from '../stores/MeshContext';
 import { Home } from './components/Home';
 import { ProjectDashboard } from './components/ProjectDashboard';
-import theme from './theme';
+import theme from './styles/theme';
 
-function App() {
+export const App = observer(() => {
   return (
     <ChakraProvider theme={theme}>
       <Router>
@@ -15,13 +17,15 @@ function App() {
               <Home />
             </Route>
             <Route exact={true} path="/projects">
-              <ProjectDashboard />
+              <NetworkContext.Provider value={NetworkStore}>
+                <ProjectContext.Provider value={ProjectStore}>
+                  <ProjectDashboard />
+                </ProjectContext.Provider>
+              </NetworkContext.Provider>
             </Route>
           </Switch>
         </div>
       </Router>
     </ChakraProvider>
   );
-}
-
-export default App;
+})

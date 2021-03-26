@@ -19,7 +19,7 @@ const InstanceList: ServerInstance[] = [
   { provider: 'AWS', instanceType: 'mdSmall' },
   { provider: 'AWS', instanceType: 'gxSmall' },
   { provider: 'GCP', instanceType: 'gxLarge' },
-  { provider: 'GCP', instanceType: 'gxLarge' },
+  { provider: 'GCP', instanceType: 'gxM' },
   { provider: 'AZURE', instanceType: 'med' },
 ];
 
@@ -52,7 +52,7 @@ export const ServerForm = () => {
         <MenuList>
           {InstanceList.map((i) => (
             <MenuItem
-              key={i.instanceType}
+              key={i.instanceType + i.provider}
               icon={getProviderIcon(i.provider)}
               onClick={() => {
                 setServerInstance(i);

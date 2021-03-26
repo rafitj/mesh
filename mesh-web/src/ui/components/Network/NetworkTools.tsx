@@ -8,18 +8,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@chakra-ui/react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import { AiOutlineNodeIndex } from 'react-icons/ai';
 import { HiServer } from 'react-icons/hi';
-import { Resource } from '../../../types/Resources';
+import '../../styles/override.css';
 import { ConnectionForm } from '../Forms/ConnectionForm';
 import { ResourceForm } from '../Forms/ResourceForm';
-import '../stylesheets/override.css';
 
-interface NetworkToolProps {
-  resources: Resource[];
-}
-export const NetworkTools = ({ resources }: NetworkToolProps) => {
+export const NetworkTools = observer(() => {
   return (
     <Box position="absolute" right="0">
       <ButtonGroup>
@@ -42,11 +39,11 @@ export const NetworkTools = ({ resources }: NetworkToolProps) => {
           </PopoverTrigger>
           <PopoverContent p={3}>
             <PopoverArrow />
-            <ConnectionForm resources={resources} />
+            <ConnectionForm />
             <PopoverCloseButton />
           </PopoverContent>
         </Popover>
       </ButtonGroup>
     </Box>
   );
-};
+});

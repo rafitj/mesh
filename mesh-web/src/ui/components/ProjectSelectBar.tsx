@@ -10,19 +10,15 @@ import {
   MenuList,
   Stack,
 } from '@chakra-ui/react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import { HiArrowLeft, HiViewGridAdd } from 'react-icons/hi';
-import { Project } from '../../types/Projects';
-interface ProjectSelectBarProps {
-  projects: Project[];
-  selectedProject?: Project;
-  onProjectSelect: (id: string) => void;
-}
-export const ProjectSelectBar = ({
-  projects,
-  selectedProject,
-  onProjectSelect,
-}: ProjectSelectBarProps) => {
+import { ProjectContext } from '../../stores/MeshContext';
+
+export const ProjectSelectBar = observer(() => {
+  
+  const ProjectStore = React.useContext(ProjectContext);
+
   return (
     <Box>
       <Stack p={4} direction="column">
@@ -31,14 +27,16 @@ export const ProjectSelectBar = ({
         </Heading>
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-            {selectedProject ? selectedProject.name : 'None'}
+            {ProjectStore.selectedProject
+              ? ProjectStore.selectedProject.name
+              : 'None'}
           </MenuButton>
           <MenuList>
-            {projects.map((p) => (
+            {ProjectStore.projects.map((p) => (
               <MenuItem
                 key={p.id}
                 onClick={() => {
-                  onProjectSelect(p.id);
+                  ProjectStore.selectProject(p);
                 }}
               >
                 {p.name}
@@ -56,4 +54,4 @@ export const ProjectSelectBar = ({
       </Stack>
     </Box>
   );
-};
+});

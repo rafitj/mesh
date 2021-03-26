@@ -40,7 +40,7 @@ export class Api {
 
   static getProjects = async () => {
     const data = await Api.createRequest<null, GetProjectResponse[]>(
-      'projects/all',
+      'project/all',
       'GET'
     );
     return data;
@@ -56,7 +56,7 @@ export class Api {
 
   static getProjectResourcesById = async (id: string) => {
     const data = await Api.createRequest<null, GetProjectResourcesResponse>(
-      `project/${id}`,
+      `project/${id}/resources`,
       'GET'
     );
     return data;

@@ -1,16 +1,15 @@
-import { action, observable } from 'mobx';
-import ClientIcon from '../assets/ClientIcon.svg';
-import DatabaseIcon from '../assets/DatabaseIcon.svg';
-import ServerIcon from '../assets/ServerIcon.svg';
+import { action, computed, observable } from 'mobx';
 import { Api } from '../network/api';
 import {
   CreateClientRequest,
   CreateDatabaseRequest,
-  CreateResourceRequest,
   CreateServerRequest,
 } from '../network/protos';
 import { NetworkLink, NetworkNode } from '../types/Network';
 import { Resource } from '../types/Resources';
+import ClientIcon from '../ui/assets/ClientIcon.svg';
+import DatabaseIcon from '../ui/assets/DatabaseIcon.svg';
+import ServerIcon from '../ui/assets/ServerIcon.svg';
 
 export class NetworkState {
   @observable
@@ -23,7 +22,7 @@ export class NetworkState {
   nodes: NetworkNode[] = [];
 
   @observable
-  selectedItem?: NetworkLink | Resource;
+  selectedItem?: Resource;
 
   @observable
   isLoading: boolean = false;
@@ -34,14 +33,19 @@ export class NetworkState {
   @observable
   statusMessage: string = '';
 
+  @computed
+  get graph() {
+    return { nodes: this.nodes, links: this.links };
+  }
+
   @action
   deselectItem = () => {
     this.selectedItem = undefined;
   };
 
   @action
-  selectItem = (item: NetworkLink | Resource) => {
-    this.selectedItem = item;
+  selectResource = (itemId: string) => {
+    this.selectedItem = this.resources.find((r) => r.id === itemId);
   };
 
   @action
@@ -51,6 +55,7 @@ export class NetworkState {
       this.resources = await Api.getProjectResourcesById(projectId);
       this.createNetwork();
       this.statusMessage = 'Project loaded';
+      console.log(this.statusMessage)
     } catch (e) {
       this.hasError = true;
       this.statusMessage = 'Failed to load project';
@@ -62,6 +67,8 @@ export class NetworkState {
   createNetwork = () => {
     this.isLoading = true;
     try {
+      const nodes: NetworkNode[] = [];
+      const links: NetworkLink[] = [];
       this.resources.forEach((r) => {
         const icon =
           r.type === 'CLIENT'
@@ -69,11 +76,13 @@ export class NetworkState {
             : r.type === 'SERVER'
             ? ServerIcon
             : DatabaseIcon;
-        this.nodes.push({ id: r.id, label: r.label, svg: icon });
+        nodes.push({ id: r.id, label: r.label, svg: icon });
         r.connections.forEach((connectionId) => {
-          this.links.push({ source: r.id, target: connectionId });
+          links.push({ source: r.id, target: connectionId });
         });
       });
+      this.nodes = nodes;
+      this.links = links;
       this.statusMessage = 'Network created';
     } catch (e) {
       this.hasError = true;

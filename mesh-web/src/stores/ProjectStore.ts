@@ -31,11 +31,12 @@ export class ProjectState {
   }
 
   @action
-  selectProject = async (project: Project) => {
+  selectProject = async (project: GetProjectResponse) => {
     this.isLoading = true;
     try {
       this.selectedProject = project;
       await this.fetchProjectInfo(project.id);
+      await this.networkState.fetchProjectResources(project.id);
       this.statusMessage = 'New project selected';
     } catch (e) {
       this.hasError = true;
@@ -49,6 +50,9 @@ export class ProjectState {
     this.isLoading = true;
     try {
       this.projects = await Api.getProjects();
+      if (this.projects.length > 0) {
+        await this.networkState.fetchProjectResources(this.projects[0].id);
+      }
       this.statusMessage = 'Projects loaded';
     } catch (e) {
       this.hasError = true;

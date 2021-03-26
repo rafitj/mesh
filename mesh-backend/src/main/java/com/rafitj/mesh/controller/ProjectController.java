@@ -1,17 +1,22 @@
 package com.rafitj.mesh.controller;
 
 import com.rafitj.mesh.controller.projections.ResourceEntityProjection;
+import com.rafitj.mesh.io.dto.CreateProjectDTO;
+import com.rafitj.mesh.io.dto.GetAllProjectsDTO;
 import com.rafitj.mesh.io.entities.*;
 import com.rafitj.mesh.io.repos.ClientRepo;
 import com.rafitj.mesh.io.repos.DatabaseRepo;
 import com.rafitj.mesh.io.repos.ProjectRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/project")
@@ -27,11 +32,16 @@ public class ProjectController {
     ClientRepo clientRepo;
 
     @GetMapping("/all")
-    private Collection<ProjectEntity> getProjects() {
-        return projectRepo.findAll();
+    private Collection<GetAllProjectsDTO> getProjects() {
+        List<ProjectEntity> projectEntities = projectRepo.findAll();
+        ModelMapper modelMapper = new ModelMapper();
+        return projectEntities
+                .stream()
+                .map(source -> modelMapper.map(source, GetAllProjectsDTO.class))
+                .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}/info")
+    @GetMapping("/{id}")
     private Optional<ProjectEntity> getProjectById(@PathVariable String id) {
         return projectRepo.findById(id);
     }
@@ -44,4 +54,19 @@ public class ProjectController {
         projectResources.addAll(dbRepo.getDatabasesByProjectId(id));
         return projectResources;
     }
+
+    @PostMapping
+    private String createProject(CreateProjectDTO createProjectDTO){
+        try {
+            ProjectEntity projectEntity = new ProjectEntity();
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.map(createProjectDTO,projectEntity);
+            projectRepo.save(projectEntity);
+            return String.format("Success! Project %s has been created.", projectEntity.getName());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "Something went wrong... Try again!";
+        }
+    }
+
 }

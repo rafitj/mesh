@@ -13,7 +13,7 @@ public class ServerEntity extends ResourceEntity{
     }
 
     public ServerEntity() {
-
+        this.setType(ResourceType.SERVER);
     }
 
     public String getInstanceType() {

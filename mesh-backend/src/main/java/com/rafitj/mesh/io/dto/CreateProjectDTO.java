@@ -1,49 +1,22 @@
 package com.rafitj.mesh.io.dto;
 
-public class CreateClientDTO {
-    private String label;
-    private String description;
-    private int throughput;
-    private int clickRate;
-    private String projectId;
+public class CreateProjectDTO {
+    private String name;
+    private String budget;
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public String getBudget() {
+        return budget;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public int getThroughput() {
-        return throughput;
-    }
-
-    public void setThroughput(int throughput) {
-        this.throughput = throughput;
-    }
-
-    public int getClickRate() {
-        return clickRate;
-    }
-
-    public void setClickRate(int clickRate) {
-        this.clickRate = clickRate;
+    public void setBudget(String budget) {
+        this.budget = budget;
     }
 }

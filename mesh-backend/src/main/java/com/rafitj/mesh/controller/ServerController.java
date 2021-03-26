@@ -1,22 +1,15 @@
 package com.rafitj.mesh.controller;
 
-import com.rafitj.mesh.controller.projections.ResourceEntityProjection;
 import com.rafitj.mesh.io.dto.CreateServerDTO;
 import com.rafitj.mesh.io.dto.PatchServerDTO;
 import com.rafitj.mesh.io.entities.ProjectEntity;
 import com.rafitj.mesh.io.entities.ResourceOfRelationshipEntity;
 import com.rafitj.mesh.io.entities.ServerEntity;
-import com.rafitj.mesh.io.repos.ClientRepo;
-import com.rafitj.mesh.io.repos.DatabaseRepo;
 import com.rafitj.mesh.io.repos.ProjectRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/server")
@@ -32,25 +25,20 @@ public class ServerController {
         return serverRepo.findById(id).orElse(null);
     }
 
-    @PostMapping("/")
-    private String createServer(@RequestBody CreateServerDTO createServerDTO) {
-        try {
-            String projectId = createServerDTO.getProjectId();
-            ProjectEntity projectEntity = projectRepo.findById(projectId).orElse(null);
-            if (projectEntity != null) {
-                ModelMapper modelMapper = new ModelMapper();
-                ServerEntity serverEntity = new ServerEntity();
-                modelMapper.map(createServerDTO,serverEntity);
-                ResourceOfRelationshipEntity resourceOfRelationshipEntity = new ResourceOfRelationshipEntity(serverEntity);
-                projectEntity.addResource(resourceOfRelationshipEntity);
-                projectRepo.save(projectEntity);
-                return String.format("Success! Server %s has been added.", serverEntity.getLabel());
-            }
-            return "Project not found... Try again!";
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "Something went wrong... Try again!";
+    @PostMapping
+    private ServerEntity createServer(@RequestBody CreateServerDTO createServerDTO) throws Exception {
+        String projectId = createServerDTO.getProjectId();
+        ProjectEntity projectEntity = projectRepo.findById(projectId).orElse(null);
+        if (projectEntity != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            ServerEntity serverEntity = new ServerEntity();
+            modelMapper.map(createServerDTO,serverEntity);
+            ResourceOfRelationshipEntity resourceOfRelationshipEntity = new ResourceOfRelationshipEntity(serverEntity);
+            projectEntity.addResource(resourceOfRelationshipEntity);
+            projectRepo.save(projectEntity);
+            return serverEntity;
         }
+        throw new Exception();
     }
 
     @DeleteMapping("/{id}")

@@ -17,6 +17,7 @@ public class DatabaseEntity extends ResourceEntity{
     }
 
     public DatabaseEntity() {
+        this.setType(ResourceType.DATABASE);
     }
 
     public String getDbType() {

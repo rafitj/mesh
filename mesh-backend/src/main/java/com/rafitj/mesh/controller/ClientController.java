@@ -25,25 +25,20 @@ public class ClientController {
         return clientRepo.findById(id).orElse(null);
     }
 
-    @PostMapping("/")
-    private String createClient(@RequestBody CreateClientDTO createClientDTO) {
-        try {
-            String projectId = createClientDTO.getProjectId();
-            ProjectEntity projectEntity = projectRepo.findById(projectId).orElse(null);
-            if (projectEntity != null) {
-                ModelMapper modelMapper = new ModelMapper();
-                ClientEntity clientEntity = new ClientEntity();
-                modelMapper.map(createClientDTO, clientEntity);
-                ResourceOfRelationshipEntity resourceOfRelationshipEntity = new ResourceOfRelationshipEntity(clientEntity);
-                projectEntity.addResource(resourceOfRelationshipEntity);
-                projectRepo.save(projectEntity);
-                return String.format("Success! Client %s has been added.", clientEntity.getLabel());
-            }
-            return "Project not found... Try again!";
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "Something went wrong... Try again!";
+    @PostMapping
+    private ClientEntity createClient(@RequestBody CreateClientDTO createClientDTO) throws Exception {
+        String projectId = createClientDTO.getProjectId();
+        ProjectEntity projectEntity = projectRepo.findById(projectId).orElse(null);
+        if (projectEntity != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            ClientEntity clientEntity = new ClientEntity();
+            modelMapper.map(createClientDTO, clientEntity);
+            ResourceOfRelationshipEntity resourceOfRelationshipEntity = new ResourceOfRelationshipEntity(clientEntity);
+            projectEntity.addResource(resourceOfRelationshipEntity);
+            projectRepo.save(projectEntity);
+            return clientEntity;
         }
+        throw new Exception();
     }
 
     @DeleteMapping("/{id}")

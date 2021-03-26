@@ -25,25 +25,20 @@ public class DatabaseController {
         return databaseRepo.findById(id).orElse(null);
     }
 
-    @PostMapping("/")
-    private String createDatabase(@RequestBody CreateDatabaseDTO createDatabaseDTO) {
-        try {
-            String projectId = createDatabaseDTO.getProjectId();
-            ProjectEntity projectEntity = projectRepo.findById(projectId).orElse(null);
-            if (projectEntity != null) {
-                ModelMapper modelMapper = new ModelMapper();
-                DatabaseEntity databaseEntity = new DatabaseEntity();
-                modelMapper.map(createDatabaseDTO, databaseEntity);
-                ResourceOfRelationshipEntity resourceOfRelationshipEntity = new ResourceOfRelationshipEntity(databaseEntity);
-                projectEntity.addResource(resourceOfRelationshipEntity);
-                projectRepo.save(projectEntity);
-                return String.format("Success! Database %s has been added.", databaseEntity.getLabel());
-            }
-            return "Project not found... Try again!";
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "Something went wrong... Try again!";
+    @PostMapping
+    private DatabaseEntity createDatabase(@RequestBody CreateDatabaseDTO createDatabaseDTO) throws Exception {
+        String projectId = createDatabaseDTO.getProjectId();
+        ProjectEntity projectEntity = projectRepo.findById(projectId).orElse(null);
+        if (projectEntity != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            DatabaseEntity databaseEntity = new DatabaseEntity();
+            modelMapper.map(createDatabaseDTO, databaseEntity);
+            ResourceOfRelationshipEntity resourceOfRelationshipEntity = new ResourceOfRelationshipEntity(databaseEntity);
+            projectEntity.addResource(resourceOfRelationshipEntity);
+            projectRepo.save(projectEntity);
+            return databaseEntity;
         }
+        throw new Exception();
     }
 
     @DeleteMapping("/{id}")

@@ -8,6 +8,8 @@ export interface GetProjectResponse {
 
 export interface GetProjectInfoResponse extends Project {}
 
+export interface PatchProjectRequest extends Project {}
+
 export interface CreateProjectResponse extends GetProjectInfoResponse {}
 
 export interface CreateProjectRequest {

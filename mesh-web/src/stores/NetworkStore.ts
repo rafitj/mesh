@@ -37,10 +37,12 @@ export class NetworkState {
       selectResource: action,
       fetchProjectResources: action,
       createNetwork: action,
-      updateNetwork: action,
+      addToNetwork: action,
+      removeFromNetwork: action,
       createClient: action,
       createDatabase: action,
       createServer: action,
+      deleteResource: action,
     });
   }
 
@@ -90,7 +92,7 @@ export class NetworkState {
     this.isLoading = false;
   };
 
-  updateNetwork = (r: Resource) => {
+  addToNetwork = (r: Resource) => {
     this.nodes = [
       ...this.nodes,
       { id: r.id, label: r.label, svg: getResourceImg(r.type) },
@@ -102,12 +104,19 @@ export class NetworkState {
     this.links = [...links];
   };
 
+  removeFromNetwork = (r: Resource) => {
+    this.nodes = this.nodes.filter((node) => node.id !== r.id);
+    this.links = this.links.filter(
+      (link) => link.source !== r.id && link.target !== r.id
+    );
+  };
+
   createClient = async (payload: CreateClientRequest) => {
     this.isLoading = true;
     try {
       const newResource = await Api.createClient(payload);
       this.resources = [...this.resources, newResource];
-      this.updateNetwork(newResource);
+      this.addToNetwork(newResource);
       this.statusMessage = 'Client succesfully created';
     } catch (e) {
       this.hasError = true;
@@ -121,7 +130,7 @@ export class NetworkState {
     try {
       const newResource = await Api.createServer(payload);
       this.resources = [...this.resources, newResource];
-      this.updateNetwork(newResource);
+      this.addToNetwork(newResource);
       this.statusMessage = 'Server succesfully created';
     } catch (e) {
       this.hasError = true;
@@ -135,11 +144,31 @@ export class NetworkState {
     try {
       const newResource = await Api.createDatabase(payload);
       this.resources = [...this.resources, newResource];
-      this.updateNetwork(newResource);
+      this.addToNetwork(newResource);
       this.statusMessage = 'Database succesfully created';
     } catch (e) {
       this.hasError = true;
       this.statusMessage = 'Failed to create Database';
+    }
+    this.isLoading = false;
+  };
+
+  deleteResource = async (resource: Resource) => {
+    this.isLoading = true;
+    try {
+      if (resource.type === 'CLIENT') {
+        await Api.deleteClient(resource.id);
+      } else if (resource.type === 'SERVER') {
+        await Api.deleteServer(resource.id);
+      } else {
+        await Api.deleteDatabase(resource.id);
+      }
+      this.resources = this.resources.filter((r) => r.id === resource.id);
+      this.removeFromNetwork(resource);
+      this.statusMessage = 'Resource succesfully deleted';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to delete Resource';
     }
     this.isLoading = false;
   };

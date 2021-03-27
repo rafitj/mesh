@@ -28,6 +28,28 @@ import { Resource } from '../../../types/Resources';
 export const ConnectionForm = observer(() => {
   const NetworkStore = React.useContext(NetworkContext);
   const [resourceToConnect, setResourceToConnect] = React.useState<Resource>();
+  const [connectedResources, setConnectedResources] = React.useState<
+    { id: string; connected: boolean }[]
+  >([]);
+
+  const toggleConnection = (resourceId: string) => {
+    const newConnectedResources = [...connectedResources];
+    const indx = newConnectedResources.findIndex((r) => r.id === resourceId);
+    newConnectedResources[indx].connected =
+      resourceId === resourceToConnect?.id ||
+      !newConnectedResources[indx].connected;
+    setConnectedResources(newConnectedResources);
+  };
+
+  const updateResourceToConnect = (resource: Resource) => {
+    setResourceToConnect(resource);
+    setConnectedResources(
+      NetworkStore.resources.map((r) => ({
+        id: r.id,
+        connected: resource.connections.includes(r.id) || r.id === resource.id,
+      }))
+    );
+  };
 
   return (
     <FormControl id="resource-form" width="250px">
@@ -48,7 +70,7 @@ export const ConnectionForm = observer(() => {
                 : 'Select a Resource'}
             </MenuButton>
             <MenuList width="100%">
-              {NetworkStore.resources.map((r) => (
+              {NetworkStore.resources.map((r, i) => (
                 <MenuItem
                   key={r.id}
                   icon={
@@ -61,7 +83,7 @@ export const ConnectionForm = observer(() => {
                     )
                   }
                   onClick={() => {
-                    setResourceToConnect(r);
+                    updateResourceToConnect(r);
                   }}
                 >
                   {r.label}
@@ -78,21 +100,18 @@ export const ConnectionForm = observer(() => {
             <Box>
               <FormLabel color="gray.500">Resources to Connect</FormLabel>
               <Stack>
-                {NetworkStore.resources.map((r) => {
-                  if (r === resourceToConnect) {
-                    return <Checkbox isChecked={true}>{r.label}</Checkbox>;
-                  } else {
-                    return (
-                      <Checkbox
-                        defaultChecked={resourceToConnect?.connections.includes(
-                          r.id
-                        )}
-                      >
-                        {r.label}
-                      </Checkbox>
-                    );
-                  }
-                })}
+                {NetworkStore.resources.map((r, i) => (
+                  <Checkbox
+                    isDisabled={r === resourceToConnect}
+                    key={r.id}
+                    isChecked={
+                      connectedResources.find((_r) => _r.id === r.id)?.connected
+                    }
+                    onChange={() => toggleConnection(r.id)}
+                  >
+                    {r.label}
+                  </Checkbox>
+                ))}
               </Stack>
             </Box>
             <Spacer />

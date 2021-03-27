@@ -11,6 +11,7 @@ import {
   GetProjectInfoResponse,
   GetProjectResourcesResponse,
   GetProjectResponse,
+  PatchProjectRequest,
 } from './protos';
 
 export const baseUrl = 'http://localhost:8080/';
@@ -64,6 +65,14 @@ export class Api {
     return data;
   };
 
+  static updateProject = async (payload: PatchProjectRequest) => {
+    const data = await Api.createRequest<
+      PatchProjectRequest,
+      GetProjectInfoResponse
+    >(`project`, 'PATCH', payload);
+    return data;
+  };
+
   static createProject = async (payload: CreateProjectRequest) => {
     const data = await Api.createRequest<
       CreateProjectRequest,
@@ -93,6 +102,24 @@ export class Api {
       CreateDatabaseRequest,
       CreateDatabasetResponse
     >('database', 'POST', payload);
+    return data;
+  };
+
+  static deleteServer = async (id: string) => {
+    const data = await Api.createRequest<null, null>(`server/${id}`, 'DELETE');
+    return data;
+  };
+
+  static deleteClient = async (id: string) => {
+    const data = await Api.createRequest<null, null>(`client/${id}`, 'DELETE');
+    return data;
+  };
+
+  static deleteDatabase = async (id: string) => {
+    const data = await Api.createRequest<null, null>(
+      `database/${id}`,
+      'DELETE'
+    );
     return data;
   };
 }

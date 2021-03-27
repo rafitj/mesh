@@ -1,6 +1,10 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { Api } from '../network/api';
-import { CreateProjectRequest, GetProjectResponse } from '../network/protos';
+import {
+  CreateProjectRequest,
+  GetProjectResponse,
+  PatchProjectRequest,
+} from '../network/protos';
 import { Project } from '../types/Projects';
 import { NetworkState } from './NetworkStore';
 
@@ -28,12 +32,43 @@ export class ProjectState {
       statusMessage: observable,
       networkState: observable,
       selectedProject: observable,
+      numClients: computed,
+      numDatabases: computed,
+      numServers: computed,
+      numResources: computed,
+      resourceCost: computed,
       fetchProjectInfo: action,
       selectProject: action,
       fetchProjects: action,
       createProject: action,
+      updateProject: action,
     });
     this.networkState = networkState;
+  }
+
+  get resourceCost() {
+    return this.networkState.resources
+      .map((r) => r.cost)
+      .reduce((a, b) => a + b, 0);
+  }
+
+  get numResources() {
+    return this.networkState.resources.length;
+  }
+
+  get numServers() {
+    return this.networkState.resources.filter((r) => r.type === 'SERVER')
+      .length;
+  }
+
+  get numClients() {
+    return this.networkState.resources.filter((r) => r.type === 'CLIENT')
+      .length;
+  }
+
+  get numDatabases() {
+    return this.networkState.resources.filter((r) => r.type === 'DATABASE')
+      .length;
   }
 
   createProject = async (project: CreateProjectRequest) => {
@@ -87,6 +122,18 @@ export class ProjectState {
     } catch (e) {
       this.hasError = true;
       this.statusMessage = 'Failed to load project info';
+    }
+    this.isLoading = false;
+  };
+
+  updateProject = async (updatedProject: PatchProjectRequest) => {
+    this.isLoading = true;
+    try {
+      this.selectedProjectInfo = await Api.updateProject(updatedProject);
+      this.statusMessage = 'Project updated';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to update project info';
     }
     this.isLoading = false;
   };

@@ -99,19 +99,18 @@ export const ResourceInfo = observer(() => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {NetworkStore.selectedItem &&
-                    Object.entries(NetworkStore.selectedItem).map(
-                      ([key, value]) => {
-                        return (
-                          <Tr key={key}>
-                            <Th>{key}</Th>
-                            <Td>
-                              <Text isTruncated={true}>{value}</Text>
-                            </Td>
-                          </Tr>
-                        );
-                      }
-                    )}
+                  {Object.entries(NetworkStore.selectedItem).map(
+                    ([key, value]) => {
+                      return (
+                        <Tr key={key}>
+                          <Th>{key}</Th>
+                          <Td>
+                            <Text isTruncated={true}>{value}</Text>
+                          </Td>
+                        </Tr>
+                      );
+                    }
+                  )}
                 </Tbody>
                 <Tfoot />
               </Table>
@@ -173,6 +172,11 @@ export const ResourceInfo = observer(() => {
                   leftIcon={<DeleteIcon />}
                   colorScheme="red"
                   variant="outline"
+                  onClick={() => {
+                    if (NetworkStore.selectedItem) {
+                      NetworkStore.deleteResource(NetworkStore.selectedItem);
+                    }
+                  }}
                 >
                   Delete
                 </Button>

@@ -8,6 +8,7 @@ interface BaseResource {
   connections: string[];
   alive: boolean;
   type: ResourceType;
+  cost: number;
 }
 
 export interface Server extends BaseResource {

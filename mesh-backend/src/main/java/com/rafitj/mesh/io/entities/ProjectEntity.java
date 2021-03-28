@@ -14,6 +14,7 @@ public class ProjectEntity {
     private String id = UUID.randomUUID().toString().replace("-", "");;
     private String name;
     private int budget;
+    private boolean isPublic = false;
     @Relationship(type = "RESOURCE_OF", direction = Relationship.Direction.INCOMING)
     private List<ResourceOfRelationshipEntity> resources;
 
@@ -24,6 +25,14 @@ public class ProjectEntity {
     }
 
     public ProjectEntity() {
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     public String getId() {

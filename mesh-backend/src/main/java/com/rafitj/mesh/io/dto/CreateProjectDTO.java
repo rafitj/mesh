@@ -3,6 +3,15 @@ package com.rafitj.mesh.io.dto;
 public class CreateProjectDTO {
     private String name;
     private String budget;
+    private boolean isPublic;
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
 
     public String getName() {
         return name;

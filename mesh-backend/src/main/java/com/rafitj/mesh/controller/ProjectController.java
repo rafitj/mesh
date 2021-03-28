@@ -3,6 +3,7 @@ package com.rafitj.mesh.controller;
 import com.rafitj.mesh.controller.projections.ResourceEntityProjection;
 import com.rafitj.mesh.io.dto.CreateProjectDTO;
 import com.rafitj.mesh.io.dto.GetAllProjectsDTO;
+import com.rafitj.mesh.io.dto.PatchProjectDTO;
 import com.rafitj.mesh.io.entities.*;
 import com.rafitj.mesh.io.repos.ClientRepo;
 import com.rafitj.mesh.io.repos.DatabaseRepo;
@@ -56,17 +57,25 @@ public class ProjectController {
     }
 
     @PostMapping
-    private String createProject(CreateProjectDTO createProjectDTO){
-        try {
-            ProjectEntity projectEntity = new ProjectEntity();
+    private ProjectEntity createProject(@RequestBody CreateProjectDTO createProjectDTO){
+        ProjectEntity projectEntity = new ProjectEntity();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.map(createProjectDTO,projectEntity);
+        projectRepo.save(projectEntity);
+        return projectEntity;
+    }
+
+    @PatchMapping
+    private ProjectEntity updateProject(@RequestBody PatchProjectDTO patchProjectDTO) throws Exception {
+        Optional<ProjectEntity> projectEntity = projectRepo.findById(patchProjectDTO.getId());
+        if (projectEntity.isPresent()) {
+            ProjectEntity updatedProjectEntity = new ProjectEntity();
             ModelMapper modelMapper = new ModelMapper();
-            modelMapper.map(createProjectDTO,projectEntity);
-            projectRepo.save(projectEntity);
-            return String.format("Success! Project %s has been created.", projectEntity.getName());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "Something went wrong... Try again!";
+            modelMapper.map(patchProjectDTO,updatedProjectEntity);
+            projectRepo.save(updatedProjectEntity);
+            return updatedProjectEntity;
         }
+        throw new Exception();
     }
 
 }

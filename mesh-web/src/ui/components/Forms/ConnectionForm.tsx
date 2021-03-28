@@ -13,42 +13,84 @@ import {
   MenuList,
   Spacer,
   Stack,
+  useToast,
 } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React from 'react';
-import {
-  HiDatabase,
-  HiDesktopComputer,
-  HiFire,
-  HiServer,
-} from 'react-icons/hi';
+import { HiDatabase, HiDesktopComputer, HiServer } from 'react-icons/hi';
 import { NetworkContext } from '../../../stores/MeshContext';
 import { Resource } from '../../../types/Resources';
+import { toastSettings } from '../../styles/components';
 
 export const ConnectionForm = observer(() => {
   const NetworkStore = React.useContext(NetworkContext);
+  const toast = useToast();
   const [resourceToConnect, setResourceToConnect] = React.useState<Resource>();
   const [connectedResources, setConnectedResources] = React.useState<
     { id: string; connected: boolean }[]
   >([]);
 
-  const toggleConnection = (resourceId: string) => {
-    const newConnectedResources = [...connectedResources];
-    const indx = newConnectedResources.findIndex((r) => r.id === resourceId);
-    newConnectedResources[indx].connected =
-      resourceId === resourceToConnect?.id ||
-      !newConnectedResources[indx].connected;
-    setConnectedResources(newConnectedResources);
+  const toggleConnection = (resource: Resource) => {
+    if (resourceToConnect) {
+      const isConnected =
+        resource.connections.includes(resourceToConnect.id) ||
+        resourceToConnect.connections.includes(resource.id);
+      const serverId =
+        resourceToConnect.type === 'SERVER'
+          ? resourceToConnect.id
+          : resource.id;
+      const resourceId =
+        resourceToConnect.type === 'SERVER'
+          ? resource.id
+          : resourceToConnect.id;
+      const connectType =
+        resourceToConnect.type === 'SERVER'
+          ? resource.type
+          : resourceToConnect.type;
+      if (isConnected) {
+        NetworkStore.disconnectResource({
+          serverId,
+          resourceId,
+        }).then(() => {
+          toast({
+            ...toastSettings,
+            title: NetworkStore.statusMessage,
+            status: NetworkStore.hasError ? 'error' : 'success',
+          });
+        });
+      } else {
+        NetworkStore.connectResource(connectType, {
+          latency: 100,
+          serverId,
+          resourceId,
+        }).then(() => {
+          toast({
+            ...toastSettings,
+            title: NetworkStore.statusMessage,
+            status: NetworkStore.hasError ? 'error' : 'success',
+          });
+        });
+      }
+    }
   };
+
+  React.useEffect(() => {
+    if (resourceToConnect) {
+      const resource = NetworkStore.resources.find(
+        (r) => r.id === resourceToConnect.id
+      );
+      setConnectedResources(
+        NetworkStore.resources.map((r) => ({
+          id: r.id,
+          connected:
+            resource?.connections.includes(r.id) || r.id === resource?.id,
+        }))
+      );
+    }
+  }, [resourceToConnect, NetworkStore.links, NetworkStore.resources]);
 
   const updateResourceToConnect = (resource: Resource) => {
     setResourceToConnect(resource);
-    setConnectedResources(
-      NetworkStore.resources.map((r) => ({
-        id: r.id,
-        connected: resource.connections.includes(r.id) || r.id === resource.id,
-      }))
-    );
   };
 
   return (
@@ -70,9 +112,9 @@ export const ConnectionForm = observer(() => {
                 : 'Select a Resource'}
             </MenuButton>
             <MenuList width="100%">
-              {NetworkStore.resources.map((r, i) => (
+              {NetworkStore.resources.map((r) => (
                 <MenuItem
-                  key={r.id}
+                  key={r.id + Math.random()}
                   icon={
                     r.type === 'CLIENT' ? (
                       <HiDesktopComputer />
@@ -100,26 +142,27 @@ export const ConnectionForm = observer(() => {
             <Box>
               <FormLabel color="gray.500">Resources to Connect</FormLabel>
               <Stack>
-                {NetworkStore.resources.map((r, i) => (
-                  <Checkbox
-                    isDisabled={r === resourceToConnect}
-                    key={r.id}
-                    isChecked={
-                      connectedResources.find((_r) => _r.id === r.id)?.connected
-                    }
-                    onChange={() => toggleConnection(r.id)}
-                  >
-                    {r.label}
-                  </Checkbox>
-                ))}
+                {NetworkStore.resources
+                  .filter(
+                    (res) =>
+                      res.type === 'SERVER' ||
+                      resourceToConnect.type === 'SERVER'
+                  )
+                  .map((r) => (
+                    <Checkbox
+                      isDisabled={r === resourceToConnect}
+                      key={r.id}
+                      isChecked={
+                        connectedResources.find((_r) => _r.id === r.id)
+                          ?.connected
+                      }
+                      onChange={() => toggleConnection(r)}
+                    >
+                      {r.label}
+                    </Checkbox>
+                  ))}
               </Stack>
             </Box>
-            <Spacer />
-            <Divider />
-            <Spacer />
-            <Button leftIcon={<HiFire />} colorScheme="teal">
-              Save
-            </Button>
           </>
         )}
       </Stack>

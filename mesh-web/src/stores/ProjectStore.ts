@@ -77,6 +77,7 @@ export class ProjectState {
       const newProject = await Api.createProject(project);
       this.projects = [...this.projects, newProject];
       this.selectProject(newProject);
+      this.hasError = false;
       this.statusMessage = 'New project created';
     } catch (e) {
       this.hasError = true;
@@ -91,6 +92,7 @@ export class ProjectState {
       this.selectedProject = project;
       await this.fetchProjectInfo(project.id);
       await this.networkState.fetchProjectResources(project.id);
+      this.hasError = false;
       this.statusMessage = 'New project selected';
     } catch (e) {
       this.hasError = true;
@@ -106,6 +108,7 @@ export class ProjectState {
       if (this.projects.length > 0) {
         await this.selectProject(this.projects[0]);
       }
+      this.hasError = false;
       this.statusMessage = 'Projects loaded';
     } catch (e) {
       this.hasError = true;
@@ -118,6 +121,7 @@ export class ProjectState {
     this.isLoading = true;
     try {
       this.selectedProjectInfo = await Api.getProjectInfoById(projectId);
+      this.hasError = false;
       this.statusMessage = 'Project info loaded';
     } catch (e) {
       this.hasError = true;
@@ -130,6 +134,7 @@ export class ProjectState {
     this.isLoading = true;
     try {
       this.selectedProjectInfo = await Api.updateProject(updatedProject);
+      this.hasError = false;
       this.statusMessage = 'Project updated';
     } catch (e) {
       this.hasError = true;

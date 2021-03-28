@@ -22,7 +22,7 @@ export const ProjectDialog = observer(
         <ModalContent p={4}>
           <ModalCloseButton />
           <ModalBody>
-            <CreateProjectForm />
+            <CreateProjectForm closeDialog={onClose} />
           </ModalBody>
         </ModalContent>
       </Modal>

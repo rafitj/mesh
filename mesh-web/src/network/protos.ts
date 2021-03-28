@@ -40,4 +40,19 @@ export interface CreateDatabaseRequest extends CreateResourceRequest {
 
 export interface CreateClientResponse extends Client {}
 export interface CreateServerResponse extends Server {}
-export interface CreateDatabasetResponse extends Database {}
+export interface CreateDatabaseResponse extends Database {}
+
+export interface ConnectResourceRequest {
+  latency: number;
+  serverId: string;
+  resourceId: string;
+}
+
+export interface DisconnectResourceRequest {
+  serverId: string;
+  resourceId: string;
+}
+export interface ConnectResourceResponse {
+  target: string;
+  source: string;
+}

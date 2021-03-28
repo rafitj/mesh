@@ -69,17 +69,34 @@ export const ResourceForm = observer(() => {
   };
   const createResource = () => {
     if (resourceType === 'SERVER' && serverRequest) {
-      NetworkStore.createServer(serverRequest);
+      NetworkStore.createServer(serverRequest).then(() => {
+        toast({
+          ...toastSettings,
+          title: NetworkStore.statusMessage,
+          status: NetworkStore.hasError ? 'error' : 'success',
+        });
+      });
     } else if (resourceType === 'DATABASE' && databaseRequest) {
-      NetworkStore.createDatabase(databaseRequest);
+      NetworkStore.createDatabase(databaseRequest).then(() => {
+        toast({
+          ...toastSettings,
+          title: NetworkStore.statusMessage,
+          status: NetworkStore.hasError ? 'error' : 'success',
+        });
+      });
     } else if (resourceType === 'CLIENT' && clientRequest) {
-      NetworkStore.createClient(clientRequest);
+      NetworkStore.createClient(clientRequest).then(() => {
+        toast({
+          ...toastSettings,
+          title: NetworkStore.statusMessage,
+          status: NetworkStore.hasError ? 'error' : 'success',
+        });
+      });
     } else {
       toast({
         ...toastSettings,
-        title: 'Failed to create resource',
-        description: 'Please check if all fields are filled',
-        status: 'warning',
+        title: 'Failed to create resource - invalid resource type',
+        status: 'error',
       });
     }
   };

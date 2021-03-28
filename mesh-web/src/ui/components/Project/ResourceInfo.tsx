@@ -22,6 +22,7 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React from 'react';
@@ -32,11 +33,12 @@ import {
 } from 'react-icons/hi';
 import { NetworkContext } from '../../../stores/MeshContext';
 import { getResourceImg } from '../../../utils/helper';
+import { toastSettings } from '../../styles/components';
 import '../../styles/graph.css';
 
 export const ResourceInfo = observer(() => {
   const NetworkStore = React.useContext(NetworkContext);
-
+  const toast = useToast();
   return (
     <>
       {NetworkStore.selectedItem ? (
@@ -174,7 +176,15 @@ export const ResourceInfo = observer(() => {
                   variant="outline"
                   onClick={() => {
                     if (NetworkStore.selectedItem) {
-                      NetworkStore.deleteResource(NetworkStore.selectedItem);
+                      NetworkStore.deleteResource(
+                        NetworkStore.selectedItem
+                      ).then(() => {
+                        toast({
+                          ...toastSettings,
+                          title: NetworkStore.statusMessage,
+                          status: NetworkStore.hasError ? 'error' : 'success',
+                        });
+                      });
                     }
                   }}
                 >

@@ -1,12 +1,14 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { Api } from '../network/api';
 import {
+  ConnectResourceRequest,
   CreateClientRequest,
   CreateDatabaseRequest,
   CreateServerRequest,
+  DisconnectResourceRequest,
 } from '../network/protos';
 import { NetworkLink, NetworkNode } from '../types/Network';
-import { Resource } from '../types/Resources';
+import { Resource, ResourceType } from '../types/Resources';
 import { getResourceImg } from '../utils/helper';
 export class NetworkState {
   resources: Resource[] = [];
@@ -43,6 +45,8 @@ export class NetworkState {
       createDatabase: action,
       createServer: action,
       deleteResource: action,
+      connectResource: action,
+      disconnectResource: action,
     });
   }
 
@@ -63,6 +67,7 @@ export class NetworkState {
     try {
       this.resources = await Api.getProjectResourcesById(projectId);
       this.createNetwork();
+      this.hasError = false;
       this.statusMessage = 'Project loaded';
     } catch (e) {
       this.hasError = true;
@@ -84,6 +89,7 @@ export class NetworkState {
       });
       this.nodes = [...nodes];
       this.links = [...links];
+      this.hasError = false;
       this.statusMessage = 'Network created';
     } catch (e) {
       this.hasError = true;
@@ -117,6 +123,7 @@ export class NetworkState {
       const newResource = await Api.createClient(payload);
       this.resources = [...this.resources, newResource];
       this.addToNetwork(newResource);
+      this.hasError = false;
       this.statusMessage = 'Client succesfully created';
     } catch (e) {
       this.hasError = true;
@@ -131,6 +138,7 @@ export class NetworkState {
       const newResource = await Api.createServer(payload);
       this.resources = [...this.resources, newResource];
       this.addToNetwork(newResource);
+      this.hasError = false;
       this.statusMessage = 'Server succesfully created';
     } catch (e) {
       this.hasError = true;
@@ -145,6 +153,7 @@ export class NetworkState {
       const newResource = await Api.createDatabase(payload);
       this.resources = [...this.resources, newResource];
       this.addToNetwork(newResource);
+      this.hasError = false;
       this.statusMessage = 'Database succesfully created';
     } catch (e) {
       this.hasError = true;
@@ -156,19 +165,94 @@ export class NetworkState {
   deleteResource = async (resource: Resource) => {
     this.isLoading = true;
     try {
-      if (resource.type === 'CLIENT') {
-        await Api.deleteClient(resource.id);
-      } else if (resource.type === 'SERVER') {
-        await Api.deleteServer(resource.id);
-      } else {
-        await Api.deleteDatabase(resource.id);
+      await Api.deleteResource(resource.type, resource.id);
+      if (this.selectedItem?.id === resource.id) {
+        this.deselectItem();
       }
-      this.resources = this.resources.filter((r) => r.id === resource.id);
+      this.resources = this.resources.filter((r) => r.id !== resource.id);
       this.removeFromNetwork(resource);
+      this.hasError = false;
       this.statusMessage = 'Resource succesfully deleted';
     } catch (e) {
       this.hasError = true;
       this.statusMessage = 'Failed to delete Resource';
+    }
+    this.isLoading = false;
+  };
+
+  connectResource = async (
+    resourceType: ResourceType,
+    payload: ConnectResourceRequest
+  ) => {
+    this.isLoading = true;
+    try {
+      const newLink = await Api.connectResource(resourceType, payload);
+      const resourceIndx = this.resources.findIndex(
+        (r) => r.id === payload.resourceId
+      );
+      const serverIndx = this.resources.findIndex(
+        (r) => r.id === payload.serverId
+      );
+      this.resources[resourceIndx] = {
+        ...this.resources[resourceIndx],
+        connections: [
+          ...this.resources[resourceIndx].connections,
+          payload.serverId,
+        ],
+      };
+      this.resources[serverIndx] = {
+        ...this.resources[serverIndx],
+        connections: [
+          ...this.resources[serverIndx].connections,
+          payload.resourceId,
+        ],
+      };
+      this.links = [...this.links, newLink];
+      this.hasError = false;
+      this.statusMessage = 'Resource succesfully connected';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to connect Resource';
+    }
+    this.isLoading = false;
+  };
+
+  disconnectResource = async (payload: DisconnectResourceRequest) => {
+    this.isLoading = true;
+    try {
+      await Api.disconnectResource(payload);
+      const resourceIndx = this.resources.findIndex(
+        (r) => r.id === payload.resourceId
+      );
+      const serverIndx = this.resources.findIndex(
+        (r) => r.id === payload.serverId
+      );
+      this.resources[resourceIndx] = {
+        ...this.resources[resourceIndx],
+        connections: this.resources[resourceIndx].connections.filter(
+          (id) => id === payload.serverId
+        ),
+      };
+      this.resources[serverIndx] = {
+        ...this.resources[serverIndx],
+        connections: this.resources[resourceIndx].connections.filter(
+          (id) => id === payload.resourceId
+        ),
+      };
+      this.links = this.links.filter(
+        (link) =>
+          !(
+            (link.source === payload.resourceId &&
+              link.target === payload.serverId) ||
+            (link.source === payload.serverId &&
+              link.target === payload.resourceId)
+          )
+      );
+      this.hasError = false;
+      this.statusMessage = 'Resource succesfully disconnected';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to disconnected Resource';
     }
     this.isLoading = false;
   };

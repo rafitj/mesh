@@ -1,13 +1,17 @@
 import axios, { Method } from 'axios';
+import { ResourceType } from '../types/Resources';
 import {
+  ConnectResourceRequest,
+  ConnectResourceResponse,
   CreateClientRequest,
   CreateClientResponse,
   CreateDatabaseRequest,
-  CreateDatabasetResponse,
+  CreateDatabaseResponse,
   CreateProjectRequest,
   CreateProjectResponse,
   CreateServerRequest,
   CreateServerResponse,
+  DisconnectResourceRequest,
   GetProjectInfoResponse,
   GetProjectResourcesResponse,
   GetProjectResponse,
@@ -100,25 +104,35 @@ export class Api {
   static createDatabase = async (payload: CreateDatabaseRequest) => {
     const data = await Api.createRequest<
       CreateDatabaseRequest,
-      CreateDatabasetResponse
+      CreateDatabaseResponse
     >('database', 'POST', payload);
     return data;
   };
 
-  static deleteServer = async (id: string) => {
-    const data = await Api.createRequest<null, null>(`server/${id}`, 'DELETE');
-    return data;
-  };
-
-  static deleteClient = async (id: string) => {
-    const data = await Api.createRequest<null, null>(`client/${id}`, 'DELETE');
-    return data;
-  };
-
-  static deleteDatabase = async (id: string) => {
+  static deleteResource = async (resourceType: ResourceType, id: string) => {
     const data = await Api.createRequest<null, null>(
-      `database/${id}`,
+      `${resourceType.toLowerCase()}/${id}`,
       'DELETE'
+    );
+    return data;
+  };
+
+  static connectResource = async (
+    resourceType: ResourceType,
+    payload: ConnectResourceRequest
+  ) => {
+    const data = await Api.createRequest<
+      ConnectResourceRequest,
+      ConnectResourceResponse
+    >(`${resourceType.toLowerCase()}/connect`, 'POST', payload);
+    return data;
+  };
+
+  static disconnectResource = async (payload: DisconnectResourceRequest) => {
+    const data = await Api.createRequest<DisconnectResourceRequest, null>(
+      `resource/disconnect`,
+      'DELETE',
+      payload
     );
     return data;
   };

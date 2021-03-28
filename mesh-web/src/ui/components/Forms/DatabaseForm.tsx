@@ -9,6 +9,7 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import { HiOutlineDatabase } from 'react-icons/hi';
 import {
@@ -41,78 +42,76 @@ interface DatabaseFormProps {
   onFormChange: (s: CreateDatabaseRequest) => void;
 }
 
-export const DatabaseForm = ({
-  onFormChange,
-  label,
-  description,
-}: DatabaseFormProps) => {
-  const ProjectStore = React.useContext(ProjectContext);
-  const [DBType, setDBType] = React.useState<string>(DBTypeList[0]);
+export const DatabaseForm = observer(
+  ({ onFormChange, label, description }: DatabaseFormProps) => {
+    const ProjectStore = React.useContext(ProjectContext);
+    const [DBType, setDBType] = React.useState<string>(DBTypeList[0]);
 
-  const setForm = () => {
-    if (ProjectStore.selectedProject) {
-      onFormChange({
-        description,
-        label,
-        dbType: DBType,
-        projectId: ProjectStore.selectedProject!.id,
-      });
-    }
-  };
-  React.useEffect(() => {
-    setForm();
-  });
+    const setForm = () => {
+      if (ProjectStore.selectedProject) {
+        onFormChange({
+          description,
+          label,
+          dbType: DBType,
+          projectId: ProjectStore.selectedProject!.id,
+        });
+      }
+    };
+    React.useEffect(() => {
+      setForm();
+    }, []);
 
-  const getDBIcon = (db: string) => {
-    if (db === 'Postgres') {
-      return <SiPostgresql />;
-    } else if (db === 'MySQL') {
-      return <SiMysql />;
-    } else if (db === 'MongoDB') {
-      return <SiMongodb />;
-    } else if (db === 'MariaDB') {
-      return <SiMariadb />;
-    } else if (db === 'Redis') {
-      return <SiRedis />;
-    } else if (db === 'Neo4j') {
-      return <SiNeo4J />;
-    } else if (db === 'Cassandra') {
-      return <SiCassandra />;
-    } else {
-      return <HiOutlineDatabase />;
-    }
-  };
+    const getDBIcon = (db: string) => {
+      if (db === 'Postgres') {
+        return <SiPostgresql />;
+      } else if (db === 'MySQL') {
+        return <SiMysql />;
+      } else if (db === 'MongoDB') {
+        return <SiMongodb />;
+      } else if (db === 'MariaDB') {
+        return <SiMariadb />;
+      } else if (db === 'Redis') {
+        return <SiRedis />;
+      } else if (db === 'Neo4j') {
+        return <SiNeo4J />;
+      } else if (db === 'Cassandra') {
+        return <SiCassandra />;
+      } else {
+        return <HiOutlineDatabase />;
+      }
+    };
 
-  const onSelectDBType = (db: string) => {
-    setDBType(db);
-    setForm();
-  };
+    const onSelectDBType = (db: string) => {
+      setDBType(db);
+      setForm();
+    };
 
-  return (
-    <Box width="100%">
-      <FormLabel>
-        <Heading color="gray.500" size="sm">
-          DB Type
-        </Heading>
-      </FormLabel>
-      <Menu>
-        <MenuButton as={Button} rightIcon={<ChevronDownIcon />} width="100%">
-          {DBType}
-        </MenuButton>
-        <MenuList>
-          {DBTypeList.map((db) => (
-            <MenuItem
-              key={db}
-              icon={getDBIcon(db)}
-              onClick={() => {
-                onSelectDBType(db);
-              }}
-            >
-              {db}
-            </MenuItem>
-          ))}
-        </MenuList>
-      </Menu>
-    </Box>
-  );
-};
+    return (
+      <Box width="100%">
+        <FormLabel>
+          <Heading color="gray.500" size="sm">
+            DB Type
+          </Heading>
+        </FormLabel>
+        <Menu>
+          <MenuButton as={Button} rightIcon={<ChevronDownIcon />} width="100%">
+            {DBType}
+          </MenuButton>
+          <MenuList>
+            {DBTypeList.map((db) => (
+              <MenuItem
+                key={db}
+                icon={getDBIcon(db)}
+                onClick={() => {
+                  onSelectDBType(db);
+                }}
+              >
+                {db}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      </Box>
+    );
+  }
+);

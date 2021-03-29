@@ -8,7 +8,12 @@ export interface GetProjectResponse {
 
 export interface GetProjectInfoResponse extends Project {}
 
-export interface PatchProjectRequest extends Project {}
+export interface PatchProjectRequest {
+  id: string;
+  name?: string;
+  budget?: number;
+  public?: boolean;
+}
 
 export interface CreateProjectResponse extends GetProjectInfoResponse {}
 

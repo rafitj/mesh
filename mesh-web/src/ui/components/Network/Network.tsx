@@ -34,7 +34,8 @@ export const Network = observer(() => {
         id="graph-id"
         data={NetworkStore.graph}
         config={graphConfig}
-        onClickNode={NetworkStore.selectResource}
+        onClickNode={NetworkStore.selectNode}
+        onClickLink={NetworkStore.selectLink}
       />
     </>
   );

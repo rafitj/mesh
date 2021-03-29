@@ -150,7 +150,7 @@ export const ConnectionForm = observer(() => {
                   )
                   .map((r) => (
                     <Checkbox
-                      isDisabled={r === resourceToConnect}
+                      isDisabled={r.id === resourceToConnect.id}
                       key={r.id}
                       isChecked={
                         connectedResources.find((_r) => _r.id === r.id)

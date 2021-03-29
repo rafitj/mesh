@@ -42,6 +42,7 @@ export class ProjectState {
       fetchProjects: action,
       createProject: action,
       updateProject: action,
+      deleteProject: action,
     });
     this.networkState = networkState;
   }
@@ -139,6 +140,20 @@ export class ProjectState {
     } catch (e) {
       this.hasError = true;
       this.statusMessage = 'Failed to update project info';
+    }
+    this.isLoading = false;
+  };
+
+  deleteProject = async (id: string) => {
+    this.isLoading = true;
+    try {
+      await Api.deleteProject(id);
+      this.projects.filter((p) => p.id !== id);
+      this.hasError = false;
+      this.statusMessage = 'Project deleted';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to delete project';
     }
     this.isLoading = false;
   };

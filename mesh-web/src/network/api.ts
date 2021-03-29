@@ -77,6 +77,11 @@ export class Api {
     return data;
   };
 
+  static deleteProject = async (id: string) => {
+    const data = await Api.createRequest<null, null>(`project/${id}`, 'DELETE');
+    return data;
+  };
+
   static createProject = async (payload: CreateProjectRequest) => {
     const data = await Api.createRequest<
       CreateProjectRequest,

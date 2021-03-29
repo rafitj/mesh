@@ -11,12 +11,14 @@ import {
   MenuList,
   Spacer,
   Stack,
+  useToast,
 } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { HiArrowLeft, HiViewGridAdd } from 'react-icons/hi';
+import { HiViewBoards, HiViewGridAdd } from 'react-icons/hi';
 import { ProjectContext } from '../../../stores/MeshContext';
-import { ProjectDialog } from './ProjectDialog';
+import { toastSettings } from '../../styles/components';
+import { ProjectDialog, ProjectDialogState } from './ProjectDialog';
 import { ProjectInfo } from './ProjectInfo';
 import { ProjectSettings } from './ProjectSettings';
 import { ProjectSimController } from './ProjectSimController';
@@ -25,12 +27,32 @@ import { ProjectStats } from './ProjectStats';
 export const ProjectSelectBar = observer(() => {
   const ProjectStore = React.useContext(ProjectContext);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-
+  const [dialogState, setDialogState] = React.useState<ProjectDialogState>(
+    'CREATE'
+  );
+  const toast = useToast();
   return (
     <>
       <ProjectDialog
-        isOpen={isDialogOpen}
+        changeToCreateMode={() => {
+          setDialogState('CREATE');
+        }}
+        changeToEditMode={() => {
+          setDialogState('EDIT');
+        }}
+        changeToViewMode={() => {
+          setDialogState('VIEW');
+        }}
+        isOpen={isDialogOpen || ProjectStore.projects.length < 1}
+        state={ProjectStore.projects.length < 1 ? 'CREATE' : dialogState}
         onClose={() => {
+          if (ProjectStore.projects.length < 1) {
+            toast({
+              ...toastSettings,
+              title: 'Create a project to get started',
+              status: 'error',
+            });
+          }
           setIsDialogOpen(false);
         }}
       />
@@ -61,12 +83,20 @@ export const ProjectSelectBar = observer(() => {
                 icon={<HiViewGridAdd />}
                 command="⌘N"
                 onClick={() => {
+                  setDialogState('CREATE');
                   setIsDialogOpen(true);
                 }}
               >
                 New Project
               </MenuItem>
-              <MenuItem icon={<HiArrowLeft />} command="⌘V">
+              <MenuItem
+                icon={<HiViewBoards />}
+                command="⌘V"
+                onClick={() => {
+                  setDialogState('VIEW');
+                  setIsDialogOpen(true);
+                }}
+              >
                 View All Projects
               </MenuItem>
             </MenuList>

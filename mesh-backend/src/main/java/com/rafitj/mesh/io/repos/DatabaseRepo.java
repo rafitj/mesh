@@ -10,7 +10,7 @@ import java.util.Collection;
 
 @Repository
 public interface DatabaseRepo extends Neo4jRepository<DatabaseEntity, String> {
-    @Query("MATCH (n:Database) OPTIONAL MATCH (n)-[r:CONNECTS]->(m) " +
-            "WHERE exists((n)-[:RESOURCE_OF]->(:Project {id: $id})) RETURN n, collect(m.id) as connections")
+    @Query("MATCH (n:Database) WHERE exists((n)-[:RESOURCE_OF]->(:Project {id: $id})) " +
+            "OPTIONAL MATCH (n)-[r:CONNECTS]->(m) RETURN n, collect(m.id) as connections")
     Collection<DatabaseEntityProjection> getDatabasesByProjectId(String id);
 }

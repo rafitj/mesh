@@ -83,7 +83,7 @@ public class DatabaseController {
     private ConnectResourcesResponseDTO connectServer(@RequestBody ConnectResourcesDTO connectResourcesDTO) throws Exception {
         DatabaseEntity databaseEntity = databaseRepo.findById(connectResourcesDTO.getResourceId()).orElse(null);
         ServerEntity serverEntity = serverRepo.findById(connectResourcesDTO.getServerId()).orElse(null);
-        if ( databaseEntity != null && serverEntity != null) {
+        if (databaseEntity != null && serverEntity != null) {
             databaseEntity.addResourceConnection(new ConnectsRelationshipEntity(connectResourcesDTO.getLatency(),serverEntity));
             serverEntity.addResourceConnection(new ConnectsRelationshipEntity(connectResourcesDTO.getLatency(),databaseEntity));
             serverRepo.save(serverEntity);

@@ -98,7 +98,7 @@ public class ServerController {
     private ConnectResourcesResponseDTO connectServer(@RequestBody ConnectResourcesDTO connectResourcesDTO) throws Exception {
         ServerEntity serverEntityA = serverRepo.findById(connectResourcesDTO.getResourceId()).orElse(null);
         ServerEntity serverEntityB = serverRepo.findById(connectResourcesDTO.getServerId()).orElse(null);
-        if ( serverEntityA != null && serverEntityB != null) {
+        if (serverEntityA != null && serverEntityB != null) {
             ConnectsRelationshipEntity relationshipEntityA = new ConnectsRelationshipEntity(connectResourcesDTO.getLatency(),serverEntityA);
             ConnectsRelationshipEntity relationshipEntityB = new ConnectsRelationshipEntity(connectResourcesDTO.getLatency(),serverEntityB);
             serverEntityA.addResourceConnection(relationshipEntityB);

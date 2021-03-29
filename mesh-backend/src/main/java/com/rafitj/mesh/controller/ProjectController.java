@@ -57,10 +57,10 @@ public class ProjectController {
     }
 
     @PostMapping
-    private ProjectEntity createProject(@RequestBody CreateProjectDTO createProjectDTO){
+    private ProjectEntity createProject(@RequestBody CreateProjectDTO createProjectDTO) {
         ProjectEntity projectEntity = new ProjectEntity();
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.map(createProjectDTO,projectEntity);
+        modelMapper.map(createProjectDTO, projectEntity);
         projectRepo.save(projectEntity);
         return projectEntity;
     }
@@ -71,11 +71,21 @@ public class ProjectController {
         if (projectEntity.isPresent()) {
             ProjectEntity updatedProjectEntity = new ProjectEntity();
             ModelMapper modelMapper = new ModelMapper();
-            modelMapper.map(patchProjectDTO,updatedProjectEntity);
+            modelMapper.map(patchProjectDTO, updatedProjectEntity);
             projectRepo.save(updatedProjectEntity);
             return updatedProjectEntity;
         }
         throw new Exception();
     }
 
+    @DeleteMapping("/{id}")
+    private String deleteProject(@PathVariable String id) {
+        try {
+            projectRepo.deleteById(id);
+            return "Success! Project has been deleted.";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "Something went wrong... Try again!";
+        }
+    }
 }

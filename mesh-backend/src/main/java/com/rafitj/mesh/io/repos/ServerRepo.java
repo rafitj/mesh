@@ -10,7 +10,6 @@ import java.util.Collection;
 
 @Repository
 public interface ServerRepo extends Neo4jRepository<ServerEntity, String> {
-    @Query("MATCH (n:Server) OPTIONAL MATCH (n)-[r:CONNECTS]->(m) " +
-            "WHERE exists((n)-[:RESOURCE_OF]->(:Project {id: $id})) RETURN n, collect(m.id) as connections")
+    @Query("MATCH (n:Server) WHERE exists((n)-[:RESOURCE_OF]->(:Project {id: $id})) OPTIONAL MATCH (n)-[r:CONNECTS]->(m) RETURN n, collect(m.id) as connections")
     Collection<ServerEntityProjection> getServersByProjectId(String id);
 }

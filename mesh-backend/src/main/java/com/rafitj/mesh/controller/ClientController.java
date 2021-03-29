@@ -1,10 +1,7 @@
 package com.rafitj.mesh.controller;
 
 import com.rafitj.mesh.controller.projections.ClientEntityProjection;
-import com.rafitj.mesh.io.dto.ConnectResourcesDTO;
-import com.rafitj.mesh.io.dto.ConnectResourcesResponseDTO;
-import com.rafitj.mesh.io.dto.CreateClientDTO;
-import com.rafitj.mesh.io.dto.PatchClientDTO;
+import com.rafitj.mesh.io.dto.*;
 import com.rafitj.mesh.io.entities.*;
 import com.rafitj.mesh.io.repos.ClientRepo;
 import com.rafitj.mesh.io.repos.ProjectRepo;
@@ -81,7 +78,7 @@ public class ClientController {
     private ConnectResourcesResponseDTO connectServer(@RequestBody ConnectResourcesDTO connectResourcesDTO) throws Exception {
         ClientEntity clientEntity = clientRepo.findById(connectResourcesDTO.getResourceId()).orElse(null);
         ServerEntity serverEntity = serverRepo.findById(connectResourcesDTO.getServerId()).orElse(null);
-        if ( clientEntity != null && serverEntity != null) {
+        if (clientEntity != null && serverEntity != null) {
             clientEntity.addResourceConnection(new ConnectsRelationshipEntity(connectResourcesDTO.getLatency(),serverEntity));
             serverEntity.addResourceConnection(new ConnectsRelationshipEntity(connectResourcesDTO.getLatency(),clientEntity));
             serverRepo.save(serverEntity);

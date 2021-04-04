@@ -43,7 +43,7 @@ export class NetworkState {
   }
 
   get graph() {
-    return { nodes: this.nodes, links: this.links };
+    return { nodes: this.nodes, links: this.links, focusedNodeId: this.selectedItem?.id};
   }
 
   get links() {

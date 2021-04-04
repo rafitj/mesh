@@ -11,10 +11,15 @@ import {
 import React from 'react';
 import { Link } from 'react-router-dom';
 import MeshLogo from '../assets/MeshLogoTransparent.svg';
+import { CreateStompClient } from './StompJS';
 
 export const Home = () => {
+  React.useEffect(() => {
+    CreateStompClient();
+  })
   return (
     <Container centerContent={true} height={'100vh'}>
+
       <Center h={'100vh'}>
         <Stack
           width="60%"

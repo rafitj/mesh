@@ -18,7 +18,7 @@ import {
   PatchProjectRequest,
 } from './protos';
 
-export const baseUrl = 'http://localhost:8080/';
+export const baseUrl = 'http://localhost:8090/';
 
 export class Api {
   static createRequest = <T, S>(

@@ -23,8 +23,13 @@ export const Network = observer(() => {
       labelProperty: (node: NetworkNode) => node.label,
     },
     link: {
-      highlightColor: 'lightblue',
+      highlightColor: '#81E6D9',
     },
+    focusZoom: 1.25,
+    highlightOpacity: 0.5,
+    d3: {
+      gravity: -500,
+    }
   };
 
   return (

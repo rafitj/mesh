@@ -125,10 +125,7 @@ export const ProjectsView = observer(
             >
               Create Project
             </Button>
-            <Button
-              leftIcon={<ArrowBackIcon />}
-              onClick={closeDialog}
-            >
+            <Button leftIcon={<ArrowBackIcon />} onClick={closeDialog}>
               Back
             </Button>
           </ButtonGroup>

@@ -30,7 +30,7 @@ export const ProjectDialog = observer(
     changeToViewMode,
     changeToEditMode,
   }: ProjectDialogProps) => {
-    const [editProjectId, setEditProjectId] = React.useState("")
+    const [editProjectId, setEditProjectId] = React.useState('');
     return (
       <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size="xl">
         <ModalOverlay />
@@ -42,8 +42,8 @@ export const ProjectDialog = observer(
               <ProjectsView
                 createProject={changeToCreateMode}
                 editProject={(id: string) => {
-                  setEditProjectId(id)
-                  changeToEditMode()
+                  setEditProjectId(id);
+                  changeToEditMode();
                 }}
                 closeDialog={onClose}
               />

@@ -42,16 +42,14 @@ export const EditProjectForm = observer(
       setName(e.target.value);
     };
     const updateProject = () => {
-      ProjectStore.updateProject({ budget, name, id: projectId }).then(
-        () => {
-          closeDialog();
-          toast({
-            ...toastSettings,
-            title: ProjectStore.statusMessage,
-            status: ProjectStore.hasError ? 'error' : 'success',
-          });
-        }
-      );
+      ProjectStore.updateProject({ budget, name, id: projectId }).then(() => {
+        closeDialog();
+        toast({
+          ...toastSettings,
+          title: ProjectStore.statusMessage,
+          status: ProjectStore.hasError ? 'error' : 'success',
+        });
+      });
     };
     return (
       <FormControl id="resource-form">
@@ -92,10 +90,7 @@ export const EditProjectForm = observer(
             >
               Save Updates
             </Button>
-            <Button
-              leftIcon={<ArrowBackIcon />}
-              onClick={viewProjects}
-            >
+            <Button leftIcon={<ArrowBackIcon />} onClick={viewProjects}>
               Back
             </Button>
           </ButtonGroup>

@@ -29,7 +29,7 @@ export const Network = observer(() => {
     highlightOpacity: 0.5,
     d3: {
       gravity: -500,
-    }
+    },
   };
 
   return (

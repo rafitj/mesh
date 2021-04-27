@@ -16,10 +16,9 @@ import { CreateStompClient } from './StompJS';
 export const Home = () => {
   React.useEffect(() => {
     CreateStompClient();
-  })
+  });
   return (
     <Container centerContent={true} height={'100vh'}>
-
       <Center h={'100vh'}>
         <Stack
           width="60%"

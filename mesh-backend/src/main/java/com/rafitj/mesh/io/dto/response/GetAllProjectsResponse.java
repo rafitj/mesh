@@ -1,6 +1,6 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.response;
 
-public class GetAllProjectsDTO {
+public class GetAllProjectsResponse {
     private String id;
     private String name;
 

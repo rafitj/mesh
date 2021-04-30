@@ -1,21 +1,22 @@
 package com.rafitj.mesh.controller;
 
 import com.rafitj.mesh.controller.projections.ServerEntityProjection;
-import com.rafitj.mesh.io.dto.ConnectResourcesDTO;
-import com.rafitj.mesh.io.dto.ConnectResourcesResponseDTO;
-import com.rafitj.mesh.io.dto.CreateServerDTO;
-import com.rafitj.mesh.io.dto.PatchServerDTO;
+import com.rafitj.mesh.io.dto.request.ConnectResourcesRequest;
+import com.rafitj.mesh.io.dto.response.ConnectResourcesResponse;
+import com.rafitj.mesh.io.dto.request.CreateServerRequest;
+import com.rafitj.mesh.io.dto.request.PatchServerRequest;
+import com.rafitj.mesh.io.dto.response.CreateServerResponse;
+import com.rafitj.mesh.io.dto.response.GetAllProjectsResponse;
 import com.rafitj.mesh.io.entities.*;
 import com.rafitj.mesh.io.repos.ProjectRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/server")
@@ -32,17 +33,17 @@ public class ServerController {
     }
 
     @PostMapping
-    private ServerEntityProjection createServer(@RequestBody CreateServerDTO createServerDTO) throws Exception {
-        String projectId = createServerDTO.getProjectId();
+    private CreateServerResponse createServer(@RequestBody CreateServerRequest createServerRequest) throws Exception {
+        String projectId = createServerRequest.getProjectId();
         ProjectEntity projectEntity = projectRepo.findById(projectId).orElse(null);
         if (projectEntity != null) {
             ModelMapper modelMapper = new ModelMapper();
             ServerEntity serverEntity = new ServerEntity();
-            ServerEntityProjection serverEntityProjection = new ServerEntityProjection();
-            modelMapper.map(createServerDTO,serverEntity);
+            CreateServerResponse serverEntityProjection = new CreateServerResponse();
+            modelMapper.map(createServerRequest,serverEntity);
             serverEntity.setType(ResourceType.SERVER);
             modelMapper.map(serverEntity,serverEntityProjection);
-            serverEntityProjection.setConnections(new ArrayList<>());
+//            serverEntityProjection.setConnections(new ArrayList<>());
             ResourceOfRelationshipEntity resourceOfRelationshipEntity = new ResourceOfRelationshipEntity(serverEntity);
             projectEntity.addResource(resourceOfRelationshipEntity);
             projectRepo.save(projectEntity);
@@ -63,13 +64,13 @@ public class ServerController {
     }
 
     @PatchMapping("/{id}")
-    private String updateServer(@RequestBody PatchServerDTO patchServerDTO, @PathVariable String id) {
+    private String updateServer(@RequestBody PatchServerRequest patchServerRequest, @PathVariable String id) {
         try {
             Optional<ServerEntity> serverEntity = serverRepo.findById(id);
             if (serverEntity.isPresent()) {
                 ServerEntity newServerEntity = new ServerEntity();
                 ModelMapper modelMapper = new ModelMapper();
-                modelMapper.map(patchServerDTO,serverEntity);
+                modelMapper.map(patchServerRequest,serverEntity);
                 serverRepo.save(newServerEntity);
                 return "Success! Server has been updated.";
             }
@@ -95,18 +96,32 @@ public class ServerController {
 
 
     @PostMapping("/connect")
-    private ConnectResourcesResponseDTO connectServer(@RequestBody ConnectResourcesDTO connectResourcesDTO) throws Exception {
-        ServerEntity serverEntityA = serverRepo.findById(connectResourcesDTO.getResourceId()).orElse(null);
-        ServerEntity serverEntityB = serverRepo.findById(connectResourcesDTO.getServerId()).orElse(null);
+    private ConnectResourcesResponse connectServer(@RequestBody ConnectResourcesRequest connectResourcesRequest) throws Exception {
+        ServerEntity serverEntityA = serverRepo.findById(connectResourcesRequest.getResourceId()).orElse(null);
+        ServerEntity serverEntityB = serverRepo.findById(connectResourcesRequest.getServerId()).orElse(null);
         if (serverEntityA != null && serverEntityB != null) {
-            ConnectsRelationshipEntity relationshipEntityA = new ConnectsRelationshipEntity(connectResourcesDTO.getLatency(),serverEntityA);
-            ConnectsRelationshipEntity relationshipEntityB = new ConnectsRelationshipEntity(connectResourcesDTO.getLatency(),serverEntityB);
+            ConnectsRelationshipEntity relationshipEntityA = new ConnectsRelationshipEntity(connectResourcesRequest.getLatency(), connectResourcesRequest.getFrequency(),serverEntityA);
+            ConnectsRelationshipEntity relationshipEntityB = new ConnectsRelationshipEntity(connectResourcesRequest.getLatency(), connectResourcesRequest.getFrequency(),serverEntityB);
             serverEntityA.addResourceConnection(relationshipEntityB);
             serverEntityB.addResourceConnection(relationshipEntityA);
             serverRepo.saveAll(List.of(serverEntityA,serverEntityB));
-            return new ConnectResourcesResponseDTO(connectResourcesDTO.getResourceId(), connectResourcesDTO.getServerId());
+            return new ConnectResourcesResponse(connectResourcesRequest.getResourceId(), connectResourcesRequest.getServerId());
         }
         throw new Exception();
+    }
+
+    @GetMapping("/test")
+    private List<CreateServerResponse> connectServer() throws Exception {
+        List<ServerEntityProjection> serverEntityProjections = serverRepo.getServersByProjectId("69");
+        System.out.println(serverEntityProjections.get(0).getConnections());
+        System.out.println(serverEntityProjections.get(1).getConnections());
+        System.out.println(serverEntityProjections.get(2).getConnections());
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        return serverEntityProjections
+                .stream()
+                .map(source -> modelMapper.map(source, CreateServerResponse.class))
+                .collect(Collectors.toList());
     }
 
 }

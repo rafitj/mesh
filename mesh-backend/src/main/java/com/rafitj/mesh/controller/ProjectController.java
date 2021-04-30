@@ -1,9 +1,9 @@
 package com.rafitj.mesh.controller;
 
 import com.rafitj.mesh.controller.projections.ResourceEntityProjection;
-import com.rafitj.mesh.io.dto.CreateProjectDTO;
-import com.rafitj.mesh.io.dto.GetAllProjectsDTO;
-import com.rafitj.mesh.io.dto.PatchProjectDTO;
+import com.rafitj.mesh.io.dto.request.CreateProjectRequest;
+import com.rafitj.mesh.io.dto.response.GetAllProjectsResponse;
+import com.rafitj.mesh.io.dto.request.PatchProjectRequest;
 import com.rafitj.mesh.io.entities.*;
 import com.rafitj.mesh.io.repos.ClientRepo;
 import com.rafitj.mesh.io.repos.DatabaseRepo;
@@ -33,12 +33,12 @@ public class ProjectController {
     ClientRepo clientRepo;
 
     @GetMapping("/all")
-    private Collection<GetAllProjectsDTO> getProjects() {
+    private Collection<GetAllProjectsResponse> getProjects() {
         List<ProjectEntity> projectEntities = projectRepo.findAll();
         ModelMapper modelMapper = new ModelMapper();
         return projectEntities
                 .stream()
-                .map(source -> modelMapper.map(source, GetAllProjectsDTO.class))
+                .map(source -> modelMapper.map(source, GetAllProjectsResponse.class))
                 .collect(Collectors.toList());
     }
 
@@ -50,28 +50,28 @@ public class ProjectController {
     @GetMapping("/{id}/resources")
     private Collection<ResourceEntityProjection> getProjectResourcesById(@PathVariable String id) {
         Collection<ResourceEntityProjection> projectResources = new ArrayList<>();
-        projectResources.addAll(serverRepo.getServersByProjectId(id));
+//        projectResources.addAll(serverRepo.getServersByProjectId(id));
         projectResources.addAll(clientRepo.getClientsByProjectId(id));
         projectResources.addAll(dbRepo.getDatabasesByProjectId(id));
         return projectResources;
     }
 
     @PostMapping
-    private ProjectEntity createProject(@RequestBody CreateProjectDTO createProjectDTO) {
+    private ProjectEntity createProject(@RequestBody CreateProjectRequest createProjectRequest) {
         ProjectEntity projectEntity = new ProjectEntity();
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.map(createProjectDTO, projectEntity);
+        modelMapper.map(createProjectRequest, projectEntity);
         projectRepo.save(projectEntity);
         return projectEntity;
     }
 
     @PatchMapping
-    private ProjectEntity updateProject(@RequestBody PatchProjectDTO patchProjectDTO) throws Exception {
-        Optional<ProjectEntity> projectEntity = projectRepo.findById(patchProjectDTO.getId());
+    private ProjectEntity updateProject(@RequestBody PatchProjectRequest patchProjectRequest) throws Exception {
+        Optional<ProjectEntity> projectEntity = projectRepo.findById(patchProjectRequest.getId());
         if (projectEntity.isPresent()) {
             ProjectEntity updatedProjectEntity = new ProjectEntity();
             ModelMapper modelMapper = new ModelMapper();
-            modelMapper.map(patchProjectDTO, updatedProjectEntity);
+            modelMapper.map(patchProjectRequest, updatedProjectEntity);
             projectRepo.save(updatedProjectEntity);
             return updatedProjectEntity;
         }

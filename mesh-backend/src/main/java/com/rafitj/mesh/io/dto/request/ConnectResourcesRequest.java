@@ -1,7 +1,8 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.request;
 
-public class ConnectResourcesDTO {
+public class ConnectResourcesRequest {
     private int latency;
+    private int frequency;
     private String resourceId;
     private String serverId;
 
@@ -11,6 +12,14 @@ public class ConnectResourcesDTO {
 
     public void setLatency(int latency) {
         this.latency = latency;
+    }
+
+    public int getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(int frequency) {
+        this.frequency = frequency;
     }
 
     public String getResourceId() {

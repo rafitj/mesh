@@ -1,6 +1,6 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.request;
 
-public class PatchServerDTO {
+public class PatchServerRequest {
     private String label;
     private String instanceType;
     private String description;

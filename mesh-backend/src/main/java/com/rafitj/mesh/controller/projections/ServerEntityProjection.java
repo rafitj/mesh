@@ -1,15 +1,17 @@
 package com.rafitj.mesh.controller.projections;
 
-public class ServerEntityProjection extends ResourceEntityProjection {
+import com.rafitj.mesh.io.entities.ResourceType;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-    private String instanceType;
+import java.util.List;
 
-    public String getInstanceType() {
-        return instanceType;
-    }
-
-    public void setInstanceType(String instanceType) {
-        this.instanceType = instanceType;
-    }
-
+public interface ServerEntityProjection {
+    String getInstanceType();
+    String getId();
+    String getLabel();
+    Boolean getIsAlive();
+    Boolean getIsOriginResource();
+    ResourceType getType();
+    List<ConnectionProjection> getConnections();
 }

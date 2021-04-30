@@ -14,6 +14,7 @@ public class ClientEntity extends ResourceEntity {
     public ClientEntity(String label, int throughput, int clickRate) {
         this.throughput = throughput;
         this.clickRate = clickRate;
+        this.setOriginResource(true);
         this.setType(ResourceType.CLIENT);
         this.setLabel(label);
     }

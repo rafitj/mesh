@@ -1,6 +1,9 @@
 package com.rafitj.mesh.controller;
 
-import com.rafitj.mesh.io.entities.PingMessageEntity;
+import com.rafitj.mesh.io.repos.ClientRepo;
+import com.rafitj.mesh.io.repos.DatabaseRepo;
+import com.rafitj.mesh.io.repos.ServerRepo;
+import com.rafitj.mesh.threads.NetworkSimulation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -14,27 +17,33 @@ public class WSEventListener {
     @Autowired
     private SimpMessageSendingOperations sendingOperations;
 
+    @Autowired
+    ServerRepo serverRepo;
+
+    @Autowired
+    ClientRepo clientRepo;
+
+    @Autowired
+    DatabaseRepo databaseRepo;
+
+    private NetworkSimulation networkSimulation;
+
     @EventListener
-    public void handWSSubscribeListener(SessionSubscribeEvent event) throws InterruptedException {
+    public void handWSSubscribeListener(SessionSubscribeEvent event) {
         System.out.println("Subscribed");
-        int i = 0;
-        while (i < 10) {
-            PingMessageEntity pingMessageEntity = new PingMessageEntity();
-            pingMessageEntity.setLatency(i);
-            sendingOperations.convertAndSend("/topic/public", pingMessageEntity);
-            Thread.sleep(1000);
-            i+=1;
-        }
     }
 
 
     @EventListener
     public void handleWSConnectListener(SessionConnectedEvent event) {
         System.out.println("Connected");
+        networkSimulation = new NetworkSimulation(sendingOperations,serverRepo,clientRepo,databaseRepo);
+        networkSimulation.startSimulation("69");
     }
 
     @EventListener
-    public void handleWSDisconnectListener(SessionDisconnectEvent event)  {
+    public void handleWSDisconnectListener(SessionDisconnectEvent event) {
         System.out.println("Disconnected");
+        networkSimulation.stopSimulation();
     }
 }

@@ -1,15 +1,15 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.shared;
 
 import java.util.List;
 
-public class UserDto {
+public class UserDTO {
     private String id;
     private String name;
     private String email;
     private String password;
     private List<String> projects;
 
-    public UserDto(String id, String name, String email, String password, List<String> projects) {
+    public UserDTO(String id, String name, String email, String password, List<String> projects) {
         this.id = id;
         this.name = name;
         this.email = email;

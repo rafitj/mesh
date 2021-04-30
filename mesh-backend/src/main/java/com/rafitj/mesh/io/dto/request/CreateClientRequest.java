@@ -1,10 +1,11 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.request;
 
-public class PatchClientDTO {
+public class CreateClientRequest {
     private String label;
     private String description;
     private int throughput;
     private int clickRate;
+    private String projectId;
 
     public String getDescription() {
         return description;
@@ -12,6 +13,14 @@ public class PatchClientDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public String getLabel() {

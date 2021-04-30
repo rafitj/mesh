@@ -1,10 +1,11 @@
 package com.rafitj.mesh.controller;
 
 import com.rafitj.mesh.controller.projections.DatabaseEntityProjection;
-import com.rafitj.mesh.io.dto.ConnectResourcesDTO;
-import com.rafitj.mesh.io.dto.ConnectResourcesResponseDTO;
-import com.rafitj.mesh.io.dto.CreateDatabaseDTO;
-import com.rafitj.mesh.io.dto.PatchDatabaseDTO;
+import com.rafitj.mesh.io.dto.request.ConnectResourcesRequest;
+import com.rafitj.mesh.io.dto.response.ConnectResourcesResponse;
+import com.rafitj.mesh.io.dto.request.CreateDatabaseRequest;
+import com.rafitj.mesh.io.dto.request.PatchDatabaseRequest;
+import com.rafitj.mesh.io.dto.response.CreateDatabaseResponse;
 import com.rafitj.mesh.io.entities.*;
 import com.rafitj.mesh.io.repos.DatabaseRepo;
 import com.rafitj.mesh.io.repos.ProjectRepo;
@@ -13,9 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/database")
@@ -34,21 +33,21 @@ public class DatabaseController {
     }
 
     @PostMapping
-    private DatabaseEntityProjection createDatabase(@RequestBody CreateDatabaseDTO createDatabaseDTO) throws Exception {
-        String projectId = createDatabaseDTO.getProjectId();
+    private CreateDatabaseResponse createDatabase(@RequestBody CreateDatabaseRequest createDatabaseRequest) throws Exception {
+        String projectId = createDatabaseRequest.getProjectId();
         ProjectEntity projectEntity = projectRepo.findById(projectId).orElse(null);
         if (projectEntity != null) {
             ModelMapper modelMapper = new ModelMapper();
             DatabaseEntity databaseEntity = new DatabaseEntity();
-            DatabaseEntityProjection databaseEntityProjection = new DatabaseEntityProjection();
+            CreateDatabaseResponse databaseResponse = new CreateDatabaseResponse();
             databaseEntity.setType(ResourceType.DATABASE);
-            modelMapper.map(createDatabaseDTO, databaseEntity);
-            modelMapper.map(databaseEntity,databaseEntityProjection);
-            databaseEntityProjection.setConnections(new ArrayList<>());
+            modelMapper.map(createDatabaseRequest, databaseEntity);
+            modelMapper.map(databaseEntity,databaseResponse);
+//            databaseEntityProjection.setConnections(new ArrayList<>());
             ResourceOfRelationshipEntity resourceOfRelationshipEntity = new ResourceOfRelationshipEntity(databaseEntity);
             projectEntity.addResource(resourceOfRelationshipEntity);
             projectRepo.save(projectEntity);
-            return databaseEntityProjection;
+            return databaseResponse;
         }
         throw new Exception();
     }
@@ -65,11 +64,11 @@ public class DatabaseController {
     }
 
     @PatchMapping("/{id}")
-    private String updateDatabase(@RequestBody PatchDatabaseDTO patchDatabaseDTO, @PathVariable String id) {
+    private String updateDatabase(@RequestBody PatchDatabaseRequest patchDatabaseRequest, @PathVariable String id) {
         try {
             DatabaseEntity databaseEntity = new DatabaseEntity();
             ModelMapper modelMapper = new ModelMapper();
-            modelMapper.map(patchDatabaseDTO,databaseEntity);
+            modelMapper.map(patchDatabaseRequest,databaseEntity);
             databaseEntity.setId(id);
             databaseRepo.save(databaseEntity);
             return "Success! Database has been updated.";
@@ -80,15 +79,15 @@ public class DatabaseController {
     }
 
     @PostMapping("/connect")
-    private ConnectResourcesResponseDTO connectServer(@RequestBody ConnectResourcesDTO connectResourcesDTO) throws Exception {
-        DatabaseEntity databaseEntity = databaseRepo.findById(connectResourcesDTO.getResourceId()).orElse(null);
-        ServerEntity serverEntity = serverRepo.findById(connectResourcesDTO.getServerId()).orElse(null);
+    private ConnectResourcesResponse connectServer(@RequestBody ConnectResourcesRequest connectResourcesRequest) throws Exception {
+        DatabaseEntity databaseEntity = databaseRepo.findById(connectResourcesRequest.getResourceId()).orElse(null);
+        ServerEntity serverEntity = serverRepo.findById(connectResourcesRequest.getServerId()).orElse(null);
         if (databaseEntity != null && serverEntity != null) {
-            databaseEntity.addResourceConnection(new ConnectsRelationshipEntity(connectResourcesDTO.getLatency(),serverEntity));
-            serverEntity.addResourceConnection(new ConnectsRelationshipEntity(connectResourcesDTO.getLatency(),databaseEntity));
+            databaseEntity.addResourceConnection(new ConnectsRelationshipEntity(connectResourcesRequest.getLatency(), connectResourcesRequest.getFrequency(),serverEntity));
+            serverEntity.addResourceConnection(new ConnectsRelationshipEntity(connectResourcesRequest.getLatency(), connectResourcesRequest.getFrequency(),databaseEntity));
             serverRepo.save(serverEntity);
             databaseRepo.save(databaseEntity);
-            return new ConnectResourcesResponseDTO(connectResourcesDTO.getResourceId(), connectResourcesDTO.getServerId());
+            return new ConnectResourcesResponse(connectResourcesRequest.getResourceId(), connectResourcesRequest.getServerId());
         }
         throw new Exception();
     }

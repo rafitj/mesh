@@ -1,6 +1,6 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.request;
 
-public class DisconnectResourcesDTO {
+public class DisconnectResourcesRequest {
     private String resourceId;
     private String serverId;
 

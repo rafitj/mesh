@@ -1,10 +1,10 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.response;
 
-public class ConnectResourcesResponseDTO {
+public class ConnectResourcesResponse {
     private String target;
     private String source;
 
-    public ConnectResourcesResponseDTO(String target, String source) {
+    public ConnectResourcesResponse(String target, String source) {
         this.target = target;
         this.source = source;
     }

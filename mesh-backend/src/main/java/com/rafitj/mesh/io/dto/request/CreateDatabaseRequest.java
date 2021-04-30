@@ -1,10 +1,9 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.request;
 
-public class CreateClientDTO {
+public class CreateDatabaseRequest {
     private String label;
     private String description;
-    private int throughput;
-    private int clickRate;
+    private String dbType;
     private String projectId;
 
     public String getDescription() {
@@ -31,19 +30,11 @@ public class CreateClientDTO {
         this.label = label;
     }
 
-    public int getThroughput() {
-        return throughput;
+    public String getDbType() {
+        return dbType;
     }
 
-    public void setThroughput(int throughput) {
-        this.throughput = throughput;
-    }
-
-    public int getClickRate() {
-        return clickRate;
-    }
-
-    public void setClickRate(int clickRate) {
-        this.clickRate = clickRate;
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
     }
 }

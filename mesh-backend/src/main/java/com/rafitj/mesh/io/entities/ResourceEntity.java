@@ -15,6 +15,7 @@ public abstract class ResourceEntity {
     private Boolean isAlive = true;
     private ResourceType type;
     private Double cost;
+    private Boolean isOriginResource = false;
 
     @Relationship(type = "CONNECTS", direction = Relationship.Direction.OUTGOING)
     private List<ConnectsRelationshipEntity> resourceConnections;
@@ -74,11 +75,19 @@ public abstract class ResourceEntity {
         this.resourceConnections.add(resourceConnection);
     }
 
-    public Boolean getAlive() {
+    public Boolean isAlive() {
         return isAlive;
     }
 
     public void setAlive(Boolean alive) {
         isAlive = alive;
+    }
+
+    public Boolean isOriginResource() {
+        return isOriginResource;
+    }
+
+    public void setOriginResource(Boolean originResource) {
+        isOriginResource = originResource;
     }
 }

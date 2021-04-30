@@ -29,11 +29,11 @@ public class ResourceSeeder implements CommandLineRunner {
         ServerEntity server3 = new ServerEntity("client server","mxSmall");
         ClientEntity client1 = new ClientEntity("web portal",1000, 50);
         DatabaseEntity db1 = new DatabaseEntity( "user db","Postgres", List.of("Users", "Notes"));
-        ConnectsRelationshipEntity connection = new ConnectsRelationshipEntity(1, server2);
-        ConnectsRelationshipEntity connection1 = new ConnectsRelationshipEntity(2, server3);
-        ConnectsRelationshipEntity connection2 = new ConnectsRelationshipEntity(10, db1);
+        ConnectsRelationshipEntity connection = new ConnectsRelationshipEntity(1, 10, server2);
+        ConnectsRelationshipEntity connection1 = new ConnectsRelationshipEntity(2, 10, server3);
+        ConnectsRelationshipEntity connection2 = new ConnectsRelationshipEntity(10, 20, db1);
         server.setResourceConnections(List.of(connection,connection2,connection1));
-        ConnectsRelationshipEntity connection3 = new ConnectsRelationshipEntity(1, client1);
+        ConnectsRelationshipEntity connection3 = new ConnectsRelationshipEntity(1, 5, client1);
         server3.setResourceConnections(List.of(connection3));
         ResourceOfRelationshipEntity r1 = new ResourceOfRelationshipEntity(server);
         ResourceOfRelationshipEntity r2 = new ResourceOfRelationshipEntity(server2);
@@ -41,6 +41,7 @@ public class ResourceSeeder implements CommandLineRunner {
         ResourceOfRelationshipEntity r4 = new ResourceOfRelationshipEntity(client1);
         ResourceOfRelationshipEntity r5 = new ResourceOfRelationshipEntity(db1);
         ProjectEntity proj1 = new ProjectEntity("First Project", 10000, List.of(r1,r2,r3,r4,r5));
+        proj1.setId("69");
         serverRepo.deleteAll();
         clientRepo.deleteAll();
         dbRepo.deleteAll();

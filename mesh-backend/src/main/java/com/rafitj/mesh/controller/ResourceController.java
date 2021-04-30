@@ -1,7 +1,6 @@
 package com.rafitj.mesh.controller;
 
-import com.rafitj.mesh.io.dto.ConnectResourcesDTO;
-import com.rafitj.mesh.io.dto.DisconnectResourcesDTO;
+import com.rafitj.mesh.io.dto.request.DisconnectResourcesRequest;
 import com.rafitj.mesh.io.entities.*;
 import com.rafitj.mesh.io.repos.ClientRepo;
 import com.rafitj.mesh.io.repos.DatabaseRepo;
@@ -9,8 +8,6 @@ import com.rafitj.mesh.io.repos.ProjectRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
 
 @RestController
 @RequestMapping("/resource")
@@ -58,8 +55,8 @@ public class ResourceController {
     }
 
     @DeleteMapping("/disconnect")
-    private void disconnectServer(@RequestBody DisconnectResourcesDTO disconnectResourcesDTO)  {
-        projectRepo.deleteConnection(disconnectResourcesDTO.getResourceId(), disconnectResourcesDTO.getServerId());
+    private void disconnectServer(@RequestBody DisconnectResourcesRequest disconnectResourcesRequest)  {
+        projectRepo.deleteConnection(disconnectResourcesRequest.getResourceId(), disconnectResourcesRequest.getServerId());
     }
 
 }

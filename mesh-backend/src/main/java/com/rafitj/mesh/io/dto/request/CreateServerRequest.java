@@ -1,6 +1,6 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.request;
 
-public class CreateServerDTO {
+public class CreateServerRequest {
     private String label;
     private String description;
     private String instanceType;

@@ -1,9 +1,18 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.request;
 
-public class CreateProjectDTO {
+public class PatchProjectRequest {
     private String name;
     private String budget;
     private boolean isPublic;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public boolean isPublic() {
         return isPublic;

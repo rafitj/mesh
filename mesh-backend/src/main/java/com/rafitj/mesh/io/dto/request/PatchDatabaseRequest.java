@@ -1,10 +1,9 @@
-package com.rafitj.mesh.io.dto;
+package com.rafitj.mesh.io.dto.request;
 
-public class CreateDatabaseDTO {
+public class PatchDatabaseRequest {
     private String label;
     private String description;
     private String dbType;
-    private String projectId;
 
     public String getDescription() {
         return description;
@@ -12,14 +11,6 @@ public class CreateDatabaseDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
     }
 
     public String getLabel() {

@@ -9,7 +9,7 @@ public class PingEntity {
 
     private String msg;
 
-    private int id;
+    private long id;
 
     public String getMsg() {
         return msg;
@@ -35,11 +35,11 @@ public class PingEntity {
         this.targetId = targetId;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

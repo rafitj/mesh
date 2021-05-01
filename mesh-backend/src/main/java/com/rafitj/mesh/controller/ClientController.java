@@ -43,7 +43,7 @@ public class ClientController {
             modelMapper.map(createClientRequest, clientEntity);
             clientEntity.setType(ResourceType.CLIENT);
             modelMapper.map(clientEntity,clientResponse);
-            clientResponse.setConnections(new ArrayList<>());
+//            clientResponse.setConnections(new ArrayList<>());
             ResourceOfRelationshipEntity resourceOfRelationshipEntity = new ResourceOfRelationshipEntity(clientEntity);
             projectEntity.addResource(resourceOfRelationshipEntity);
             projectRepo.save(projectEntity);

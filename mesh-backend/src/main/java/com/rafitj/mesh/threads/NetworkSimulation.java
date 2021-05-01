@@ -1,8 +1,6 @@
 package com.rafitj.mesh.threads;
 
-import com.rafitj.mesh.controller.projections.ClientEntityProjection;
-import com.rafitj.mesh.controller.projections.DatabaseEntityProjection;
-import com.rafitj.mesh.controller.projections.ServerEntityProjection;
+import com.rafitj.mesh.controller.projections.*;
 import com.rafitj.mesh.io.repos.ClientRepo;
 import com.rafitj.mesh.io.repos.DatabaseRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
@@ -59,23 +57,20 @@ public class NetworkSimulation {
     }
 
     private void initSimulation(String projectId) {
-        Collection<ServerEntityProjection> serverConnections = serverRepo.getServersByProjectId(projectId);
-        for (ServerEntityProjection serverConnection: serverConnections) {
-            System.out.println(serverConnection.getConnections().size());
+        List<ServerEntityProjectionDTO> serverConnections = serverRepo.getServersByProjectId(projectId);
+        for (ServerEntityProjectionDTO serverConnection: serverConnections) {
             ServerThread serverThread = new ServerThread(serverConnection, sendingOperations, this);
             serverThreads.add(serverThread);
             resourceThreads.put(serverConnection.getId(),serverThread);
         }
-        Collection<ClientEntityProjection> clientConnections = clientRepo.getClientsByProjectId(projectId);
-        for (ClientEntityProjection clientConnection: clientConnections) {
-            System.out.println(clientConnection.getConnections().size());
+        List<ClientEntityProjectionDTO> clientConnections = clientRepo.getClientsByProjectId(projectId);
+        for (ClientEntityProjectionDTO clientConnection: clientConnections) {
             ClientThread clientThread = new ClientThread(clientConnection, sendingOperations, this);
             clientThreads.add(clientThread);
             resourceThreads.put(clientConnection.getId(),clientThread);
         }
-        Collection<DatabaseEntityProjection> databaseConnections = databaseRepo.getDatabasesByProjectId(projectId);
-        for (DatabaseEntityProjection databaseConnection: databaseConnections) {
-            System.out.println(databaseConnection.getConnections().size());
+        List<DatabaseProjectionDTO> databaseConnections = databaseRepo.getDatabasesByProjectId(projectId);
+        for (DatabaseProjectionDTO databaseConnection: databaseConnections) {
             DatabaseThread dbThread = new DatabaseThread(databaseConnection, sendingOperations, this);
             dbThreads.add(dbThread);
             resourceThreads.put(databaseConnection.getId(),dbThread);

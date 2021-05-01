@@ -1,6 +1,6 @@
 package com.rafitj.mesh.io.repos;
 
-import com.rafitj.mesh.controller.projections.ServerEntityProjection;
+import com.rafitj.mesh.controller.projections.ServerEntityProjectionDTO;
 import com.rafitj.mesh.io.entities.ServerEntity;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -10,8 +10,14 @@ import java.util.List;
 
 @Repository
 public interface ServerRepo extends Neo4jRepository<ServerEntity, String> {
-    @Query("MATCH (n:Server) WHERE exists((n)-[:RESOURCE_OF]->(:Project {id: $id})) OPTIONAL MATCH (n)-[r:CONNECTS]->(m)" +
-            " RETURN n, collect({relationId: id(r), latency: r.latency, frequency: r.frequency, target: m.id, src: n.id}) " +
-            "as connections")
-    List<ServerEntityProjection> getServersByProjectId(String id);
+    //    TODO: Refactor with connections projection
+
+//    @Query("MATCH (n:Server) WHERE exists((n)-[:RESOURCE_OF]->(:Project {id: $id})) OPTIONAL MATCH (n)-[r:CONNECTS]->(m)" +
+//            " RETURN n, collect(r) as connections")
+//    List<ServerEntityProjection> getServersByProjectId(String id);
+
+    @Query("MATCH (n:Server) WHERE exists((n)-[:RESOURCE_OF]->(:Project {id: $id})) OPTIONAL MATCH (n)<-[r:CONNECTS]->(m)" +
+            " RETURN n, collect(id(r)) as relationshipIds, collect(r.latency) as latencies, collect(r.frequency) as frequencies " +
+            ", collect(m.id) as targets, collect(r) as connections")
+    List<ServerEntityProjectionDTO> getServersByProjectId(String id);
 }

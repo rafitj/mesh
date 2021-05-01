@@ -1,13 +1,15 @@
 package com.rafitj.mesh.threads;
 
 import com.rafitj.mesh.controller.projections.ClientEntityProjection;
+import com.rafitj.mesh.controller.projections.ClientEntityProjectionDTO;
+import com.rafitj.mesh.io.entities.PingEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
 public class ClientThread extends ResourceThread {
 
-    private ClientEntityProjection client;
+    private ClientEntityProjectionDTO client;
 
-    public ClientThread(ClientEntityProjection client, SimpMessageSendingOperations sendingOperations,
+    public ClientThread(ClientEntityProjectionDTO client, SimpMessageSendingOperations sendingOperations,
                         NetworkSimulation simulation) {
         super(sendingOperations, simulation, Integer.MAX_VALUE);
         this.client = client;
@@ -19,23 +21,21 @@ public class ClientThread extends ResourceThread {
             // Acknowledge ping
             acknowledgePing();
             // Send ping
-            if (client.getIsOriginResource()) {
-                System.out.println(client.getConnections().size());
-//                for (ConnectionProjection c : client.getConnections()) {
-//                    System.out.println("HELLO");
-//                    try {
-//                        PingEntity p = new PingEntity();
-//                        p.setId((int) c.getRelationId());
-//                        p.setLatency(c.getLatency());
-//                        p.setSrcId(c.getSrc());
-//                        p.setTargetId(c.getTarget());
-//                        p.setMsg("Client thread message");
-//                        simulation.getResourceThreads().get(c.getTarget()).addPing(p);
-//                        Thread.sleep(c.getLatency()*1000);
-//                    } catch (InterruptedException e) {
-//                        Thread.currentThread().interrupt();
-//                    }
-//                }
+            if (client.getOriginResource() && client.getRelationshipIds() != null) {
+             for (int i = 0; i < client.getRelationshipIds().size(); ++i) {
+                    try {
+                        PingEntity p = new PingEntity();
+                        p.setId(client.getRelationshipIds().get(i));
+                        p.setLatency(client.getLatencies().get(i));
+                        p.setSrcId(client.getId());
+                        p.setTargetId(client.getTargets().get(i));
+                        p.setMsg("Client thread message");
+                        simulation.getResourceThreads().get(client.getTargets().get(i)).addPing(p);
+                        Thread.sleep(client.getLatencies().get(i)*1000);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
             }
             try {
                 Thread.sleep(5000);

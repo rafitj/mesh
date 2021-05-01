@@ -1,12 +1,11 @@
-package com.rafitj.mesh.io.dto.shared;
+package com.rafitj.mesh.controller.projections;
 
-import com.rafitj.mesh.controller.projections.ConnectionProjectionDTO;
 import com.rafitj.mesh.io.entities.ConnectsRelationshipEntity;
 import com.rafitj.mesh.io.entities.ResourceType;
 
 import java.util.List;
 
-public abstract class ResourceDTO {
+public class ResourceProjectionDTO {
     private String id;
     private String label;
     private String description;
@@ -17,7 +16,7 @@ public abstract class ResourceDTO {
     private List<String> targets;
     private List<Integer> latencies;
     private List<Integer> frequencies;
-    private List<Long> relationIds;
+    private List<Long> relationshipIds;
     private List<ConnectsRelationshipEntity> connections;
 
     public List<ConnectsRelationshipEntity> getConnections() {
@@ -26,6 +25,38 @@ public abstract class ResourceDTO {
 
     public void setConnections(List<ConnectsRelationshipEntity> connections) {
         this.connections = connections;
+    }
+
+    public List<String> getTargets() {
+        return targets;
+    }
+
+    public void setTargets(List<String> targets) {
+        this.targets = targets;
+    }
+
+    public List<Integer> getLatencies() {
+        return latencies;
+    }
+
+    public void setLatencies(List<Integer> latencies) {
+        this.latencies = latencies;
+    }
+
+    public List<Integer> getFrequencies() {
+        return frequencies;
+    }
+
+    public void setFrequencies(List<Integer> frequencies) {
+        this.frequencies = frequencies;
+    }
+
+    public List<Long> getRelationshipIds() {
+        return relationshipIds;
+    }
+
+    public void setRelationshipIds(List<Long> relationshipIds) {
+        this.relationshipIds = relationshipIds;
     }
 
     public String getId() {
@@ -82,37 +113,5 @@ public abstract class ResourceDTO {
 
     public void setOriginResource(Boolean originResource) {
         isOriginResource = originResource;
-    }
-
-    public List<String> getTargets() {
-        return targets;
-    }
-
-    public void setTargets(List<String> targets) {
-        this.targets = targets;
-    }
-
-    public List<Integer> getLatencies() {
-        return latencies;
-    }
-
-    public void setLatencies(List<Integer> latencies) {
-        this.latencies = latencies;
-    }
-
-    public List<Integer> getFrequencies() {
-        return frequencies;
-    }
-
-    public void setFrequencies(List<Integer> frequencies) {
-        this.frequencies = frequencies;
-    }
-
-    public List<Long> getRelationIds() {
-        return relationIds;
-    }
-
-    public void setRelationIds(List<Long> relationIds) {
-        this.relationIds = relationIds;
     }
 }

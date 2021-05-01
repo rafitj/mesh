@@ -1,6 +1,7 @@
 package com.rafitj.mesh.controller;
 
 import com.rafitj.mesh.controller.projections.ResourceEntityProjection;
+import com.rafitj.mesh.controller.projections.ResourceProjectionDTO;
 import com.rafitj.mesh.io.dto.request.CreateProjectRequest;
 import com.rafitj.mesh.io.dto.response.GetAllProjectsResponse;
 import com.rafitj.mesh.io.dto.request.PatchProjectRequest;
@@ -48,9 +49,9 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/resources")
-    private Collection<ResourceEntityProjection> getProjectResourcesById(@PathVariable String id) {
-        Collection<ResourceEntityProjection> projectResources = new ArrayList<>();
-//        projectResources.addAll(serverRepo.getServersByProjectId(id));
+    private Collection<ResourceProjectionDTO> getProjectResourcesById(@PathVariable String id) {
+        Collection<ResourceProjectionDTO> projectResources = new ArrayList<>();
+        projectResources.addAll(serverRepo.getServersByProjectId(id));
         projectResources.addAll(clientRepo.getClientsByProjectId(id));
         projectResources.addAll(dbRepo.getDatabasesByProjectId(id));
         return projectResources;

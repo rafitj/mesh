@@ -26,7 +26,7 @@ public abstract class ResourceThread extends Thread {
                 wait();
             }
             pingQ.add(p);
-            System.out.println("PING ADDED");
+            System.out.printf("PING ADDED TO %s %n", p.getTargetId());
             sendingOperations.convertAndSend("/topic/public", p);
         }
     }
@@ -35,7 +35,7 @@ public abstract class ResourceThread extends Thread {
         synchronized (pingQ) {
             PingEntity p = pingQ.poll();
             if (p != null) {
-                System.out.println("PING ACK");
+                System.out.printf("PING ACK BY %s %n", p.getSrcId());
                 sendingOperations.convertAndSend("/topic/public", p);
             }
         }

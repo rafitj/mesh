@@ -6,9 +6,4 @@ public interface ConnectionProjection {
     int getLatency();
     int getFrequency();
     long getRelationId();
-    void setSrc(String src);
-    void setTarget(String target);
-    void setLatency(int latency);
-    void setRelationId(long relationId);
-    void setFrequency(int frequency);
 }

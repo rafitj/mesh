@@ -1,6 +1,7 @@
 package com.rafitj.mesh.controller;
 
 import com.rafitj.mesh.controller.projections.ServerEntityProjection;
+import com.rafitj.mesh.controller.projections.ServerEntityProjectionDTO;
 import com.rafitj.mesh.io.dto.request.ConnectResourcesRequest;
 import com.rafitj.mesh.io.dto.response.ConnectResourcesResponse;
 import com.rafitj.mesh.io.dto.request.CreateServerRequest;
@@ -112,10 +113,10 @@ public class ServerController {
 
     @GetMapping("/test")
     private List<CreateServerResponse> connectServer() throws Exception {
-        List<ServerEntityProjection> serverEntityProjections = serverRepo.getServersByProjectId("69");
-        System.out.println(serverEntityProjections.get(0).getConnections());
-        System.out.println(serverEntityProjections.get(1).getConnections());
-        System.out.println(serverEntityProjections.get(2).getConnections());
+        List<ServerEntityProjectionDTO> serverEntityProjections = serverRepo.getServersByProjectId("69");
+//        System.out.println(serverEntityProjections.get(0).getConnections());
+//        System.out.println(serverEntityProjections.get(1).getConnections());
+//        System.out.println(serverEntityProjections.get(2).getConnections());
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         return serverEntityProjections

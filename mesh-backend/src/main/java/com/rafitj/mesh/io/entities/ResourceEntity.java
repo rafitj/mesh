@@ -18,7 +18,7 @@ public abstract class ResourceEntity {
     private Boolean isOriginResource = false;
 
     @Relationship(type = "CONNECTS", direction = Relationship.Direction.OUTGOING)
-    private List<ConnectsRelationshipEntity> resourceConnections;
+    private List<ConnectsRelationshipEntity> connections;
 
     public String getId() {
         return id;
@@ -60,19 +60,19 @@ public abstract class ResourceEntity {
         this.label = label;
     }
 
-    public List<ConnectsRelationshipEntity> getResourceConnections() {
-        return resourceConnections;
+    public List<ConnectsRelationshipEntity> getConnections() {
+        return connections;
     }
 
-    public void setResourceConnections(List<ConnectsRelationshipEntity> resourceConnections) {
-        this.resourceConnections = resourceConnections;
+    public void setConnections(List<ConnectsRelationshipEntity> connections) {
+        this.connections = connections;
     }
 
-    public void addResourceConnection(ConnectsRelationshipEntity resourceConnection) {
-        if (this.resourceConnections == null) {
-            this.resourceConnections = new ArrayList<>();
+    public void addResourceConnection(ConnectsRelationshipEntity connection) {
+        if (this.connections == null) {
+            this.connections = new ArrayList<>();
         }
-        this.resourceConnections.add(resourceConnection);
+        this.connections.add(connection);
     }
 
     public Boolean isAlive() {

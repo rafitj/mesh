@@ -1,9 +1,6 @@
-package com.rafitj.mesh.io.dto.response;
+package com.rafitj.mesh.proto.request;
 
-import com.rafitj.mesh.controller.projections.ClientEntityProjection;
-import com.rafitj.mesh.io.dto.shared.ResourceDTO;
-
-public class CreateClientResponse extends ResourceDTO {
+public class CreateClientRequest extends CreateResourceRequest {
     private int throughput;
     private int clickRate;
 

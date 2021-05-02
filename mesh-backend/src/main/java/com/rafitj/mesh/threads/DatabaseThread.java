@@ -1,16 +1,16 @@
 package com.rafitj.mesh.threads;
 
-import com.rafitj.mesh.controller.projections.DatabaseEntityProjection;
-import com.rafitj.mesh.controller.projections.DatabaseProjectionDTO;
+import com.rafitj.mesh.controller.projections.DatabaseEntityProjectionDTO;
+import com.rafitj.mesh.io.dto.shared.DatabaseDTO;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
 
 public class DatabaseThread extends ResourceThread {
 
-    private DatabaseProjectionDTO database;
+    private DatabaseDTO database;
 
-    public DatabaseThread(DatabaseProjectionDTO database, SimpMessageSendingOperations sendingOperations,
-                        NetworkSimulation simulation) {
+    public DatabaseThread(DatabaseDTO database, SimpMessageSendingOperations sendingOperations,
+                          NetworkSimulation simulation) {
         super(sendingOperations, simulation, 1);
         this.database = database;
     }

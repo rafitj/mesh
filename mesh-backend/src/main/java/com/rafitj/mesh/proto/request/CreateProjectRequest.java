@@ -1,4 +1,4 @@
-package com.rafitj.mesh.io.dto.request;
+package com.rafitj.mesh.proto.request;
 
 public class CreateProjectRequest {
     private String name;

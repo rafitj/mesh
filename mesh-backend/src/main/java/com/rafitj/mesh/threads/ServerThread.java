@@ -1,15 +1,15 @@
 package com.rafitj.mesh.threads;
 
-import com.rafitj.mesh.controller.projections.ServerEntityProjection;
-import com.rafitj.mesh.controller.projections.ServerEntityProjectionDTO;
+import com.rafitj.mesh.io.dto.shared.ConnectionDTO;
+import com.rafitj.mesh.io.dto.shared.ServerDTO;
 import com.rafitj.mesh.io.entities.PingEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
 public class ServerThread extends ResourceThread {
 
-    private ServerEntityProjectionDTO server;
+    private ServerDTO server;
 
-    public ServerThread(ServerEntityProjectionDTO server, SimpMessageSendingOperations sendingOperations,
+    public ServerThread(ServerDTO server, SimpMessageSendingOperations sendingOperations,
                         NetworkSimulation simulation) {
         super(sendingOperations, simulation, 1);
         this.server = server;
@@ -21,17 +21,13 @@ public class ServerThread extends ResourceThread {
             // Acknowledge ping
             acknowledgePing();
             // Send ping
-            if (server.getOriginResource() && server.getRelationshipIds() != null) {
-                for (int i = 0; i < server.getRelationshipIds().size(); ++i) {
+            if (server.getOriginResource() && server.getConnections() != null) {
+                for (ConnectionDTO connection : server.getConnections()) {
                     try {
-                        PingEntity p = new PingEntity();
-                        p.setId(server.getRelationshipIds().get(i));
-                        p.setLatency(server.getLatencies().get(i));
-                        p.setSrcId(server.getId());
-                        p.setTargetId(server.getTargets().get(i));
-                        p.setMsg("Server thread message");
-                        simulation.getResourceThreads().get(server.getTargets().get(i)).addPing(p);
-                        Thread.sleep(server.getLatencies().get(i)*1000);
+                        PingEntity p = new PingEntity(connection);
+                        p.setMsg("Client thread message");
+                        simulation.getResourceThreads().get(connection.getTarget()).addPing(p);
+                        Thread.sleep(connection.getLatency()*1000);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }

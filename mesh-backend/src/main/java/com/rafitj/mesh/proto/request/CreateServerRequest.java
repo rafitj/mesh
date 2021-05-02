@@ -1,8 +1,6 @@
-package com.rafitj.mesh.io.dto.response;
+package com.rafitj.mesh.proto.request;
 
-import com.rafitj.mesh.io.dto.shared.ResourceDTO;
-
-public class CreateServerResponse extends ResourceDTO {
+public class CreateServerRequest extends CreateResourceRequest {
     private String instanceType;
 
     public String getInstanceType() {

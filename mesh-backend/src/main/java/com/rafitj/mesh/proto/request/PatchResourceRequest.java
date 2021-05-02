@@ -1,8 +1,7 @@
-package com.rafitj.mesh.io.dto.request;
+package com.rafitj.mesh.proto.request;
 
-public class PatchServerRequest {
+public class PatchResourceRequest {
     private String label;
-    private String instanceType;
     private String description;
 
     public String getDescription() {
@@ -19,13 +18,5 @@ public class PatchServerRequest {
 
     public void setLabel(String label) {
         this.label = label;
-    }
-
-    public String getInstanceType() {
-        return instanceType;
-    }
-
-    public void setInstanceType(String instanceType) {
-        this.instanceType = instanceType;
     }
 }

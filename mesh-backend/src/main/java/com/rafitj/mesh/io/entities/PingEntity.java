@@ -1,46 +1,26 @@
 package com.rafitj.mesh.io.entities;
 
-public class PingEntity {
+import com.rafitj.mesh.io.dto.shared.ConnectionDTO;
+
+public class PingEntity extends MsgEntity {
     private int latency;
 
-    private String srcId;
+    private String src;
 
-    private String targetId;
-
-    private String msg;
+    private String target;
 
     private long id;
 
-    public String getMsg() {
-        return msg;
+    public PingEntity() {
+        setType(MESSAGE_TYPE.PING);
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getSrcId() {
-        return srcId;
-    }
-
-    public void setSrcId(String srcId) {
-        this.srcId = srcId;
-    }
-
-    public String getTargetId() {
-        return targetId;
-    }
-
-    public void setTargetId(String targetId) {
-        this.targetId = targetId;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public PingEntity(ConnectionDTO connection) {
+        setType(MESSAGE_TYPE.PING);
+        setLatency(connection.getLatency());
+        setSrc(connection.getSrc());
+        setTarget(connection.getTarget());
+        setId(connection.getRelationId());
     }
 
     public int getLatency() {
@@ -49,5 +29,29 @@ public class PingEntity {
 
     public void setLatency(int latency) {
         this.latency = latency;
+    }
+
+    public String getSrc() {
+        return src;
+    }
+
+    public void setSrc(String src) {
+        this.src = src;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

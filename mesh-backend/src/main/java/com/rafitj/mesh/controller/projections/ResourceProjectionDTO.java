@@ -17,15 +17,15 @@ public class ResourceProjectionDTO {
     private List<Integer> latencies;
     private List<Integer> frequencies;
     private List<Long> relationshipIds;
-    private List<ConnectsRelationshipEntity> connections;
+//    private List<ConnectsRelationshipEntity> connections;
 
-    public List<ConnectsRelationshipEntity> getConnections() {
-        return connections;
-    }
+//    public List<ConnectsRelationshipEntity> getConnections() {
+//        return connections;
+//    }
 
-    public void setConnections(List<ConnectsRelationshipEntity> connections) {
-        this.connections = connections;
-    }
+//    public void setConnections(List<ConnectsRelationshipEntity> connections) {
+//        this.connections = connections;
+//    }
 
     public List<String> getTargets() {
         return targets;

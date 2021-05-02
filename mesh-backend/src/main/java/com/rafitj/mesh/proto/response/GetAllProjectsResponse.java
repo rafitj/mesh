@@ -1,4 +1,4 @@
-package com.rafitj.mesh.io.dto.response;
+package com.rafitj.mesh.proto.response;
 
 public class GetAllProjectsResponse {
     private String id;

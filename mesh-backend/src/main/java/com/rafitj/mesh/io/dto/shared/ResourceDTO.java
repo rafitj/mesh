@@ -1,7 +1,5 @@
 package com.rafitj.mesh.io.dto.shared;
 
-import com.rafitj.mesh.controller.projections.ConnectionProjectionDTO;
-import com.rafitj.mesh.io.entities.ConnectsRelationshipEntity;
 import com.rafitj.mesh.io.entities.ResourceType;
 
 import java.util.List;
@@ -14,17 +12,13 @@ public abstract class ResourceDTO {
     private ResourceType type;
     private Double cost;
     private Boolean isOriginResource;
-    private List<String> targets;
-    private List<Integer> latencies;
-    private List<Integer> frequencies;
-    private List<Long> relationIds;
-    private List<ConnectsRelationshipEntity> connections;
+    private List<ConnectionDTO> connections;
 
-    public List<ConnectsRelationshipEntity> getConnections() {
+    public List<ConnectionDTO> getConnections() {
         return connections;
     }
 
-    public void setConnections(List<ConnectsRelationshipEntity> connections) {
+    public void setConnections(List<ConnectionDTO> connections) {
         this.connections = connections;
     }
 
@@ -84,35 +78,4 @@ public abstract class ResourceDTO {
         isOriginResource = originResource;
     }
 
-    public List<String> getTargets() {
-        return targets;
-    }
-
-    public void setTargets(List<String> targets) {
-        this.targets = targets;
-    }
-
-    public List<Integer> getLatencies() {
-        return latencies;
-    }
-
-    public void setLatencies(List<Integer> latencies) {
-        this.latencies = latencies;
-    }
-
-    public List<Integer> getFrequencies() {
-        return frequencies;
-    }
-
-    public void setFrequencies(List<Integer> frequencies) {
-        this.frequencies = frequencies;
-    }
-
-    public List<Long> getRelationIds() {
-        return relationIds;
-    }
-
-    public void setRelationIds(List<Long> relationIds) {
-        this.relationIds = relationIds;
-    }
 }

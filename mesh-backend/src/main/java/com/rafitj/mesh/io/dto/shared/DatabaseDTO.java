@@ -1,11 +1,8 @@
-package com.rafitj.mesh.io.dto.response;
-
-import com.rafitj.mesh.controller.projections.DatabaseEntityProjection;
-import com.rafitj.mesh.io.dto.shared.ResourceDTO;
+package com.rafitj.mesh.io.dto.shared;
 
 import java.util.List;
 
-public class CreateDatabaseResponse extends ResourceDTO {
+public class DatabaseDTO extends ResourceDTO {
     private String dbType;
     private List<String> dbResources;
 

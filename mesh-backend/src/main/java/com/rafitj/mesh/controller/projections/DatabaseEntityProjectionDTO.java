@@ -2,7 +2,7 @@ package com.rafitj.mesh.controller.projections;
 
 import java.util.List;
 
-public class DatabaseProjectionDTO extends ResourceProjectionDTO {
+public class DatabaseEntityProjectionDTO extends ResourceProjectionDTO {
     private String dbType;
     private List<String> dbResources;
 

@@ -1,10 +1,15 @@
 package com.rafitj.mesh.threads;
 
 import com.rafitj.mesh.controller.projections.*;
+import com.rafitj.mesh.io.dto.shared.ClientDTO;
+import com.rafitj.mesh.io.dto.shared.DatabaseDTO;
+import com.rafitj.mesh.io.dto.shared.ServerDTO;
 import com.rafitj.mesh.io.repos.ClientRepo;
 import com.rafitj.mesh.io.repos.DatabaseRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rafitj.mesh.service.impl.ClientServiceImpl;
+import com.rafitj.mesh.service.impl.DatabaseServiceImpl;
+import com.rafitj.mesh.service.impl.ServerServiceImpl;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 
@@ -13,14 +18,28 @@ import java.util.*;
 @Component
 public class NetworkSimulation {
     private boolean isActive;
-    ServerRepo serverRepo;
-    ClientRepo clientRepo;
-    DatabaseRepo databaseRepo;
+
     private List<ServerThread> serverThreads;
     private List<ClientThread> clientThreads;
     private List<DatabaseThread> dbThreads;
     private Map<String,ResourceThread> resourceThreads;
     private SimpMessageSendingOperations sendingOperations;
+
+    private final ServerServiceImpl serverService;
+    private final DatabaseServiceImpl databaseService;
+    private final ClientServiceImpl clientService;
+
+    public NetworkSimulation(SimpMessageSendingOperations sendingOperations, ServerServiceImpl serverService,
+                             DatabaseServiceImpl databaseService, ClientServiceImpl clientService) {
+        this.serverService = serverService;
+        this.databaseService = databaseService;
+        this.clientService = clientService;
+        this.sendingOperations = sendingOperations;
+        this.resourceThreads = new HashMap<>();
+        this.serverThreads = new ArrayList<>();
+        this.clientThreads = new ArrayList<>();
+        this.dbThreads = new ArrayList<>();
+    }
 
     public Map<String, ResourceThread> getResourceThreads() {
         return resourceThreads;
@@ -28,18 +47,6 @@ public class NetworkSimulation {
 
     public void setResourceThreads(Map<String, ResourceThread> resourceThreads) {
         this.resourceThreads = resourceThreads;
-    }
-
-    public NetworkSimulation(SimpMessageSendingOperations sendingOperations, ServerRepo serverRepo,
-                             ClientRepo clientRepo, DatabaseRepo databaseRepo) {
-        this.sendingOperations = sendingOperations;
-        this.serverRepo = serverRepo;
-        this.clientRepo = clientRepo;
-        this.databaseRepo = databaseRepo;
-        this.resourceThreads = new HashMap<>();
-        this.serverThreads = new ArrayList<>();
-        this.clientThreads = new ArrayList<>();
-        this.dbThreads = new ArrayList<>();
     }
 
     public void startSimulation(String projectId){
@@ -57,20 +64,20 @@ public class NetworkSimulation {
     }
 
     private void initSimulation(String projectId) {
-        List<ServerEntityProjectionDTO> serverConnections = serverRepo.getServersByProjectId(projectId);
-        for (ServerEntityProjectionDTO serverConnection: serverConnections) {
+        List<ServerDTO> serverConnections = serverService.getServersByProjectId(projectId);
+        for (ServerDTO serverConnection: serverConnections) {
             ServerThread serverThread = new ServerThread(serverConnection, sendingOperations, this);
             serverThreads.add(serverThread);
             resourceThreads.put(serverConnection.getId(),serverThread);
         }
-        List<ClientEntityProjectionDTO> clientConnections = clientRepo.getClientsByProjectId(projectId);
-        for (ClientEntityProjectionDTO clientConnection: clientConnections) {
+        List<ClientDTO> clientConnections = clientService.getClientsByProjectId(projectId);
+        for (ClientDTO clientConnection: clientConnections) {
             ClientThread clientThread = new ClientThread(clientConnection, sendingOperations, this);
             clientThreads.add(clientThread);
             resourceThreads.put(clientConnection.getId(),clientThread);
         }
-        List<DatabaseProjectionDTO> databaseConnections = databaseRepo.getDatabasesByProjectId(projectId);
-        for (DatabaseProjectionDTO databaseConnection: databaseConnections) {
+        List<DatabaseDTO> databaseConnections = databaseService.getDatabasesByProjectId(projectId);
+        for (DatabaseDTO databaseConnection: databaseConnections) {
             DatabaseThread dbThread = new DatabaseThread(databaseConnection, sendingOperations, this);
             dbThreads.add(dbThread);
             resourceThreads.put(databaseConnection.getId(),dbThread);

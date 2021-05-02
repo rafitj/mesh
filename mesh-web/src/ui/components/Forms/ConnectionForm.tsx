@@ -13,7 +13,7 @@ import {
   MenuList,
   Spacer,
   Stack,
-  useToast,
+  useToast
 } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React from 'react';
@@ -32,9 +32,7 @@ export const ConnectionForm = observer(() => {
 
   const toggleConnection = (resource: Resource) => {
     if (resourceToConnect) {
-      const isConnected =
-        resource.connections.includes(resourceToConnect.id) ||
-        resourceToConnect.connections.includes(resource.id);
+      const isConnected = resource.connections.map(c => [c.src,c.target]).flat().includes(resourceToConnect.id);
       const serverId =
         resourceToConnect.type === 'SERVER'
           ? resourceToConnect.id
@@ -61,8 +59,9 @@ export const ConnectionForm = observer(() => {
       } else {
         NetworkStore.connectResource(connectType, {
           latency: 100,
-          serverId,
-          resourceId,
+          target: serverId,
+          src: resourceId,
+          frequency: 15
         }).then(() => {
           toast({
             ...toastSettings,
@@ -79,13 +78,14 @@ export const ConnectionForm = observer(() => {
       const resource = NetworkStore.resources.find(
         (r) => r.id === resourceToConnect.id
       );
-      setConnectedResources(
-        NetworkStore.resources.map((r) => ({
-          id: r.id,
-          connected:
-            resource?.connections.includes(r.id) || r.id === resource?.id,
-        }))
-      );
+      if (resource) {
+        setConnectedResources(
+          NetworkStore.resources.map((r) => ({
+            id: r.id,
+            connected: r.connections.map(c => [c.src,c.target]).flat().includes(resource.id) 
+          }))
+        );
+      }
     }
   }, [resourceToConnect, NetworkStore.links, NetworkStore.resources]);
 
@@ -94,7 +94,7 @@ export const ConnectionForm = observer(() => {
   };
 
   return (
-    <FormControl id="resource-form" width="250px">
+    <FormControl id="connection-form" width="250px">
       <Stack>
         <Heading color="gray.400" size="sm">
           Create Connection

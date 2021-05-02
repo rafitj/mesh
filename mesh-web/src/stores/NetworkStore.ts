@@ -5,8 +5,9 @@ import {
   CreateClientRequest,
   CreateDatabaseRequest,
   CreateServerRequest,
-  DisconnectResourceRequest,
+  DisconnectResourceRequest
 } from '../network/protos';
+import { NetworkWS } from '../network/ws';
 import { Resource, ResourceType } from '../types/Resources';
 import { getResourceImg } from '../utils/helper';
 export class NetworkState {
@@ -20,6 +21,8 @@ export class NetworkState {
 
   statusMessage: string = '';
 
+  networkWS?: NetworkWS;
+
   constructor() {
     makeObservable(this, {
       resources: observable,
@@ -27,6 +30,7 @@ export class NetworkState {
       isLoading: observable,
       hasError: observable,
       statusMessage: observable,
+      networkWS: observable,
       links: computed,
       nodes: computed,
       graph: computed,
@@ -39,6 +43,7 @@ export class NetworkState {
       deleteResource: action,
       connectResource: action,
       disconnectResource: action,
+      initSimulation: action
     });
   }
 
@@ -52,7 +57,7 @@ export class NetworkState {
 
   get links() {
     return this.resources
-      .map((r) => r.connections.map((id) => ({ source: r.id, target: id })))
+      .map((r) => r.connections.map((c) => ({ source: c.src, target: c.target })))
       .flat();
   }
 
@@ -142,7 +147,7 @@ export class NetworkState {
         .filter((r) => r.id !== resource.id)
         .map((r) => ({
           ...r,
-          connections: r.connections.filter((c) => c !== resource.id),
+          connections: r.connections.filter((c) => (c.src !== resource.id && c.target !== resource.id)),
         }));
       this.hasError = false;
       this.statusMessage = 'Resource succesfully deleted';
@@ -161,10 +166,10 @@ export class NetworkState {
     try {
       await Api.connectResource(resourceType, payload);
       this.resources = this.resources.map((r) => {
-        if (r.id === payload.serverId) {
-          return { ...r, connections: [...r.connections, payload.resourceId] };
-        } else if (r.id === payload.resourceId) {
-          return { ...r, connections: [...r.connections, payload.serverId] };
+        if (r.id === payload.src) {
+          return { ...r, connections: [...r.connections, payload] };
+        } else if (r.id === payload.target) {
+          return { ...r, connections: [...r.connections, payload] };
         }
         return r;
       });
@@ -186,7 +191,7 @@ export class NetworkState {
           return {
             ...r,
             connections: r.connections.filter(
-              (c) => c !== payload.resourceId && c !== payload.serverId
+              (c) => c.src !== payload.resourceId && c.target !== payload.serverId
             ),
           };
         }
@@ -200,4 +205,8 @@ export class NetworkState {
     }
     this.isLoading = false;
   };
+
+  initSimulation = () => {
+    this.networkWS = new NetworkWS();
+  }
 }

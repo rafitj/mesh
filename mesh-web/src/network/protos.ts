@@ -1,5 +1,5 @@
 import { Project } from '../types/Projects';
-import { Client, Database, Resource, Server } from '../types/Resources';
+import { Client, Connection, Database, Resource, Server } from '../types/Resources';
 
 export interface GetProjectResponse {
   id: string;
@@ -47,17 +47,12 @@ export interface CreateClientResponse extends Client {}
 export interface CreateServerResponse extends Server {}
 export interface CreateDatabaseResponse extends Database {}
 
-export interface ConnectResourceRequest {
-  latency: number;
-  serverId: string;
-  resourceId: string;
-}
-
+export interface ConnectResourceRequest extends Connection {}
 export interface DisconnectResourceRequest {
   serverId: string;
   resourceId: string;
 }
 export interface ConnectResourceResponse {
   target: string;
-  source: string;
+  src: string;
 }

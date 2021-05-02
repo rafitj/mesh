@@ -5,7 +5,7 @@ export type ResourceType = 'SERVER' | 'CLIENT' | 'DATABASE';
 interface BaseResource {
   id: string;
   label: string;
-  connections: string[];
+  connections: Connection[];
   alive: boolean;
   type: ResourceType;
   cost: number;
@@ -23,4 +23,11 @@ export interface Database extends BaseResource {
 export interface Client extends BaseResource {
   throughput: number;
   clickrate: number;
+}
+
+export interface Connection {
+  src: string;
+  target: string;
+  latency: number;
+  frequency: number;
 }

@@ -13,7 +13,7 @@ import {
   NumberInputStepper,
   Spacer,
   Stack,
-  useToast,
+  useToast
 } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
@@ -48,7 +48,7 @@ export const CreateProjectForm = observer(
       });
     };
     return (
-      <FormControl id="resource-form">
+      <FormControl id="create-project-form">
         <Stack>
           <Heading color="gray.400" size="sm">
             Create New Project
@@ -59,6 +59,7 @@ export const CreateProjectForm = observer(
               placeholder="e.g Music Streaming Resource"
               textAlign="center"
               onChange={onChangeName}
+              id="project-name-input"
             />
           </Box>
           <Box width="100%">

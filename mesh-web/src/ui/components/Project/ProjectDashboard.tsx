@@ -1,7 +1,7 @@
 import { Box, Grid, GridItem, useToast } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { ProjectContext } from '../../../stores/MeshContext';
+import { NetworkContext, ProjectContext } from '../../../stores/MeshContext';
 import { toastSettings } from '../../styles/components';
 import { Network } from '../Network/Network';
 import { ProjectSelectBar } from './ProjectSelectBar';
@@ -10,6 +10,7 @@ import { ResourceInfo } from './ResourceInfo';
 export const ProjectDashboard = observer(() => {
   const toast = useToast();
   const ProjectStore = React.useContext(ProjectContext);
+  const NetworkStore = React.useContext(NetworkContext);
 
   React.useEffect(() => {
     ProjectStore.fetchProjects().then(() => {
@@ -19,6 +20,7 @@ export const ProjectDashboard = observer(() => {
         status: ProjectStore.hasError ? 'error' : 'success',
       });
     });
+    NetworkStore.initSimulation();
   });
 
   return (

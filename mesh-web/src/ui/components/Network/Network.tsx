@@ -47,7 +47,6 @@ export const Network = observer(() => {
   }, []);
 
   const resetGraph = React.useCallback(() => {
-    console.log('collbac');
     if (graphRef) {
       graphRef.resetNodesPositions();
       // TODO: Reset canvas zoom and pan

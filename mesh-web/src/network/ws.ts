@@ -9,20 +9,21 @@ export enum MSG_TYPE {
 
 export class NetworkWS {
   client: Client;
-  constructor() {
+  destination: string = '/topic/public';
+  constructor(wsHandler: (m: any) => void) {
     let subscription: StompSubscription;
     this.client = new Client({
       brokerURL: 'ws://localhost:8090/test',
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
+      reconnectDelay: 10000,
+      heartbeatIncoming: 5000,
+      heartbeatOutgoing: 5000,
       onConnect: (frame) => {
-        console.log(frame);
-        subscription = this.client.subscribe('/topic/public', this.msgHandler);
+        // console.log(frame);
+        subscription = this.client.subscribe(this.destination, wsHandler);
       },
       onStompError: (frame) => {
-        console.log('Broker reported error: ' + frame.headers.message);
-        console.log('Additional details: ' + frame.body);
+        // console.log('Broker reported error: ' + frame.headers.message);
+        // console.log('Additional details: ' + frame.body);
       },
       onDisconnect: (frame) => {
         if (subscription) {
@@ -30,16 +31,17 @@ export class NetworkWS {
         }
       },
     });
+  }
+  activate() {
     this.client.activate();
   }
-  msgHandler = (m: any) => {
-    try {
-      const msg = JSON.parse(m.body);
-      if (msg.type === MSG_TYPE.PING) {
-        console.log(msg);
-      }
-    } catch {
-      console.log('Something went wrong...');
-    }
-  };
+  pauseSimulation() {
+    const tx = this.client.begin();
+    this.client.publish({
+      destination: this.destination,
+      headers: { receipt: tx.id },
+      body: 'PAUSE',
+    });
+    tx.commit();
+  }
 }

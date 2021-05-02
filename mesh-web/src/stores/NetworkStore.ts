@@ -7,9 +7,9 @@ import {
   CreateServerRequest,
   DisconnectResourceRequest,
 } from '../network/protos';
-import { NetworkWS } from '../network/ws';
+import { MSG_TYPE, NetworkWS } from '../network/ws';
 import { NetworkLink } from '../types/Network';
-import { Connection, Resource, ResourceType } from '../types/Resources';
+import { Connection, Ping, Resource, ResourceType } from '../types/Resources';
 import { getResourceImg } from '../utils/helper';
 export class NetworkState {
   resources: Resource[] = [];
@@ -34,6 +34,8 @@ export class NetworkState {
 
   networkWS?: NetworkWS;
 
+  pingFeed: Map<number, Ping[]> = new Map();
+
   constructor() {
     makeObservable(this, {
       resources: observable,
@@ -47,6 +49,7 @@ export class NetworkState {
       hasError: observable,
       statusMessage: observable,
       networkWS: observable,
+      pingFeed: observable,
       links: computed,
       nodes: computed,
       graph: computed,
@@ -68,6 +71,7 @@ export class NetworkState {
       connectResource: action,
       disconnectResource: action,
       initSimulation: action,
+      wsHandler: action,
     });
   }
 
@@ -297,6 +301,33 @@ export class NetworkState {
   };
 
   initSimulation = () => {
-    this.networkWS = new NetworkWS();
+    this.networkWS = new NetworkWS(this.wsHandler);
+    this.networkWS.activate();
+  };
+
+  wsHandler = (m: any) => {
+    try {
+      const msg = JSON.parse(m.body);
+      if (msg.type === MSG_TYPE.PING) {
+        const pings = this.pingFeed.get(msg.id);
+        const newPing = {
+          src: msg.src,
+          target: msg.target,
+          id: msg.relationId,
+          latency: msg.latency,
+          msg: msg.msg,
+        };
+        if (pings) {
+          pings.push(newPing);
+          this.pingFeed.set(msg.id, pings);
+        } else {
+          this.pingFeed.set(msg.id, [newPing]);
+        }
+      }
+      this.hasError = false;
+    } catch {
+      this.hasError = true;
+      this.statusMessage = 'Something went wrong with Network Simulation';
+    }
   };
 }

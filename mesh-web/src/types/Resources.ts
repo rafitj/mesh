@@ -32,3 +32,11 @@ export interface Connection {
   frequency: number;
   relationId: number;
 }
+
+export interface Ping {
+  src: string;
+  target: string;
+  latency: number;
+  id: number;
+  msg: string;
+}

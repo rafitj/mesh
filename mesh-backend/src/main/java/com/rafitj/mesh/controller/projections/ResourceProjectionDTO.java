@@ -1,6 +1,5 @@
 package com.rafitj.mesh.controller.projections;
 
-import com.rafitj.mesh.io.entities.ConnectsRelationshipEntity;
 import com.rafitj.mesh.io.entities.ResourceType;
 
 import java.util.List;
@@ -17,15 +16,6 @@ public class ResourceProjectionDTO {
     private List<Integer> latencies;
     private List<Integer> frequencies;
     private List<Long> relationshipIds;
-//    private List<ConnectsRelationshipEntity> connections;
-
-//    public List<ConnectsRelationshipEntity> getConnections() {
-//        return connections;
-//    }
-
-//    public void setConnections(List<ConnectsRelationshipEntity> connections) {
-//        this.connections = connections;
-//    }
 
     public List<String> getTargets() {
         return targets;

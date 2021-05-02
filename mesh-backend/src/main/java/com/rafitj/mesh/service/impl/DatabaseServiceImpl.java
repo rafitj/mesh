@@ -50,6 +50,7 @@ public class DatabaseServiceImpl implements DatabaseService {
                 connection.setLatency(databaseEntity.getLatencies().get(i));
                 connection.setTarget(databaseEntity.getTargets().get(i));
                 connection.setSrc(databaseEntity.getId());
+                connections.add(connection);
             }
             DatabaseDTO databaseDTO = new DatabaseDTO();
             ModelMapper modelMapper = new ModelMapper();

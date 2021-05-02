@@ -22,7 +22,7 @@ public interface ClientRepo extends Neo4jRepository<ClientEntity, String> {
 
     @Query("MATCH (n:Client) WHERE exists((n)-[:RESOURCE_OF]->(:Project {id: $id})) OPTIONAL MATCH (n)<-[r:CONNECTS]->(m)" +
             " RETURN n, collect(id(r)) as relationshipIds, collect(r.latency) as latencies, collect(r.frequency) as frequencies " +
-            ", collect(m.id) as targets, collect(r) as connections")
+            ", collect(m.id) as targets")
     List<ClientEntityProjectionDTO> getClientsByProjectId(String id);
 }
 

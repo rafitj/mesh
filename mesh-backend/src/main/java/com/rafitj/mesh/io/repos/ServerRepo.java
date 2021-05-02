@@ -18,6 +18,6 @@ public interface ServerRepo extends Neo4jRepository<ServerEntity, String> {
 
     @Query("MATCH (n:Server) WHERE exists((n)-[:RESOURCE_OF]->(:Project {id: $id})) OPTIONAL MATCH (n)<-[r:CONNECTS]->(m)" +
             " RETURN n, collect(id(r)) as relationshipIds, collect(r.latency) as latencies, collect(r.frequency) as frequencies " +
-            ", collect(m.id) as targets, collect(r) as connections")
+            ", collect(m.id) as targets")
     List<ServerEntityProjectionDTO> getServersByProjectId(String id);
 }

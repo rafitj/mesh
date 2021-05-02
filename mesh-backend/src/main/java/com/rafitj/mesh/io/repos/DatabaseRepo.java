@@ -19,6 +19,6 @@ public interface DatabaseRepo extends Neo4jRepository<DatabaseEntity, String> {
 
     @Query("MATCH (n:Database) WHERE exists((n)-[:RESOURCE_OF]->(:Project {id: $id})) OPTIONAL MATCH (n)<-[r:CONNECTS]->(m)" +
             " RETURN n, collect(id(r)) as relationshipIds, collect(r.latency) as latencies, collect(r.frequency) as frequencies " +
-            ", collect(m.id) as targets, collect(r) as connections")
+            ", collect(m.id) as targets")
     List<DatabaseEntityProjectionDTO> getDatabasesByProjectId(String id);
 }

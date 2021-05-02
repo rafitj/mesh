@@ -48,6 +48,7 @@ public class ClientServiceImpl implements ClientService {
                 connection.setLatency(clientEntity.getLatencies().get(i));
                 connection.setTarget(clientEntity.getTargets().get(i));
                 connection.setSrc(clientEntity.getId());
+                connection.setRelationId(clientEntity.getRelationshipIds().get(i));
                 connections.add(connection);
             }
             ClientDTO clientDTO = new ClientDTO();

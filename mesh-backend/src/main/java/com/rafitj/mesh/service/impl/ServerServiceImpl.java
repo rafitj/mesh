@@ -48,6 +48,7 @@ public class ServerServiceImpl implements ServerService {
                 connection.setLatency(serverEntity.getLatencies().get(i));
                 connection.setTarget(serverEntity.getTargets().get(i));
                 connection.setSrc(serverEntity.getId());
+                connection.setRelationId(serverEntity.getRelationshipIds().get(i));
                 connections.add(connection);
             }
             ServerDTO serverDTO = new ServerDTO();

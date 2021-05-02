@@ -4,6 +4,10 @@ public class ClientDTO extends ResourceDTO {
     private int latency;
     private int frequency;
 
+    public ClientDTO(){
+        setOriginResource(true);
+    }
+
     public int getLatency() {
         return latency;
     }

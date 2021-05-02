@@ -33,4 +33,9 @@ public class WSEventListener {
         System.out.println("Disconnected");
         networkSimulation.stopSimulation();
     }
+
+    @EventListener
+    public void handleWSIncomingMsg(Session){
+
+    }
 }

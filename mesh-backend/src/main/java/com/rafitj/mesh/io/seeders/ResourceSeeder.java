@@ -36,10 +36,9 @@ public class ResourceSeeder implements CommandLineRunner {
         ConnectsRelationshipEntity connection2 = new ConnectsRelationshipEntity(10, 20, db1);
         server.setConnections(List.of(connection,connection2,connection1));
         ConnectsRelationshipEntity connection3 = new ConnectsRelationshipEntity(1, 5, client1);
-        server3.setConnections(List.of(connection3));
         ConnectsRelationshipEntity connection4 = new ConnectsRelationshipEntity(5, 15, client2);
         ConnectsRelationshipEntity connection5 = new ConnectsRelationshipEntity(5, 15, client3);
-        server3.setConnections(List.of(connection4,connection5));
+        server3.setConnections(List.of(connection3,connection4,connection5));
         ResourceOfRelationshipEntity r1 = new ResourceOfRelationshipEntity(server);
         ResourceOfRelationshipEntity r2 = new ResourceOfRelationshipEntity(server2);
         ResourceOfRelationshipEntity r3 = new ResourceOfRelationshipEntity(server3);

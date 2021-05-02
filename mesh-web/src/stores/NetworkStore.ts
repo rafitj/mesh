@@ -5,15 +5,26 @@ import {
   CreateClientRequest,
   CreateDatabaseRequest,
   CreateServerRequest,
-  DisconnectResourceRequest
+  DisconnectResourceRequest,
 } from '../network/protos';
 import { NetworkWS } from '../network/ws';
-import { Resource, ResourceType } from '../types/Resources';
+import { NetworkLink } from '../types/Network';
+import { Connection, Resource, ResourceType } from '../types/Resources';
 import { getResourceImg } from '../utils/helper';
 export class NetworkState {
   resources: Resource[] = [];
 
   selectedItem?: Resource;
+
+  hoveredItem?: Resource;
+
+  hoveringItem: boolean = false;
+
+  selectedLink?: Connection;
+
+  hoveredLink?: Connection;
+
+  hoveringLink: boolean = false;
 
   isLoading: boolean = false;
 
@@ -27,6 +38,11 @@ export class NetworkState {
     makeObservable(this, {
       resources: observable,
       selectedItem: observable,
+      hoveredItem: observable,
+      hoveringItem: observable,
+      selectedLink: observable,
+      hoveredLink: observable,
+      hoveringLink: observable,
       isLoading: observable,
       hasError: observable,
       statusMessage: observable,
@@ -34,8 +50,16 @@ export class NetworkState {
       links: computed,
       nodes: computed,
       graph: computed,
+      connections: computed,
+      focusItem: computed,
+      focusLink: computed,
       deselectItem: action,
       selectNode: action,
+      hoverNode: action,
+      unhoverNode: action,
+      selectLink: action,
+      hoverLink: action,
+      unhoverLink: action,
       fetchProjectResources: action,
       createClient: action,
       createDatabase: action,
@@ -43,8 +67,16 @@ export class NetworkState {
       deleteResource: action,
       connectResource: action,
       disconnectResource: action,
-      initSimulation: action
+      initSimulation: action,
     });
+  }
+
+  get focusItem() {
+    return this.hoveringItem ? this.hoveredItem : this.selectedItem;
+  }
+
+  get focusLink() {
+    return this.hoveringLink ? this.hoveredLink : this.selectedLink;
   }
 
   get graph() {
@@ -56,9 +88,22 @@ export class NetworkState {
   }
 
   get links() {
-    return this.resources
-      .map((r) => r.connections.map((c) => ({ source: c.src, target: c.target })))
-      .flat();
+    const links: NetworkLink[] = [];
+    const seen = new Set<number>();
+    this.resources.forEach((r) => {
+      r.connections.forEach((c) => {
+        if (!seen.has(c.relationId)) {
+          seen.add(c.relationId);
+          links.push({
+            source: c.src,
+            target: c.target,
+            latency: c.latency,
+            id: c.relationId,
+          });
+        }
+      });
+    });
+    return links;
   }
 
   get nodes() {
@@ -69,16 +114,58 @@ export class NetworkState {
     }));
   }
 
+  get connections() {
+    const connections: Connection[] = [];
+    const seen = new Set<number>();
+    this.resources.forEach((r) => {
+      r.connections.forEach((c) => {
+        if (!seen.has(c.relationId)) {
+          seen.add(c.relationId);
+          connections.push(c);
+        }
+      });
+    });
+    return connections;
+  }
+
   deselectItem = () => {
     this.selectedItem = undefined;
   };
 
   selectNode = (nodeId: string) => {
+    this.hoveringItem = false;
     this.selectedItem = this.resources.find((r) => r.id === nodeId);
   };
 
-  selectLink = (linkId: string) => {
-    console.log(linkId);
+  hoverNode = (nodeId: string) => {
+    this.hoveredItem = this.resources.find((r) => r.id === nodeId);
+    this.hoveringItem = true;
+  };
+
+  unhoverNode = () => {
+    this.hoveringItem = false;
+  };
+
+  selectLink = (src: string, target: string) => {
+    this.hoveringLink = false;
+    this.selectedLink = this.connections.find(
+      (c) =>
+        (c.src === src && c.target === target) ||
+        (c.src === target && c.target === src)
+    );
+  };
+
+  hoverLink = (src: string, target: string) => {
+    this.hoveredLink = this.connections.find(
+      (c) =>
+        (c.src === src && c.target === target) ||
+        (c.src === target && c.target === src)
+    );
+    this.hoveringLink = true;
+  };
+
+  unhoverLink = () => {
+    this.hoveringLink = false;
   };
 
   fetchProjectResources = async (projectId: string) => {
@@ -147,7 +234,9 @@ export class NetworkState {
         .filter((r) => r.id !== resource.id)
         .map((r) => ({
           ...r,
-          connections: r.connections.filter((c) => (c.src !== resource.id && c.target !== resource.id)),
+          connections: r.connections.filter(
+            (c) => c.src !== resource.id && c.target !== resource.id
+          ),
         }));
       this.hasError = false;
       this.statusMessage = 'Resource succesfully deleted';
@@ -191,7 +280,8 @@ export class NetworkState {
           return {
             ...r,
             connections: r.connections.filter(
-              (c) => c.src !== payload.resourceId && c.target !== payload.serverId
+              (c) =>
+                c.src !== payload.resourceId && c.target !== payload.serverId
             ),
           };
         }
@@ -208,5 +298,5 @@ export class NetworkState {
 
   initSimulation = () => {
     this.networkWS = new NetworkWS();
-  }
+  };
 }

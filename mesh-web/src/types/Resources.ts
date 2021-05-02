@@ -30,4 +30,5 @@ export interface Connection {
   target: string;
   latency: number;
   frequency: number;
+  relationId: number;
 }

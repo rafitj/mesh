@@ -13,7 +13,7 @@ import {
   NumberInputStepper,
   Spacer,
   Stack,
-  useToast
+  useToast,
 } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';

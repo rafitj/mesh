@@ -10,6 +10,7 @@ import {
 } from '../stores/MeshContext';
 import { Home } from './components/Home';
 import { ProjectDashboard } from './components/Project/ProjectDashboard';
+import './styles/app.css';
 import theme from './styles/theme';
 
 export const App = observer(() => {

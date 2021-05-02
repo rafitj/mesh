@@ -11,12 +11,15 @@ import {
 import { observer } from 'mobx-react';
 import React from 'react';
 import { AiOutlineNodeIndex } from 'react-icons/ai';
-import { HiServer } from 'react-icons/hi';
+import { HiOutlineRefresh, HiServer } from 'react-icons/hi';
 import '../../styles/override.css';
 import { ConnectionForm } from '../Forms/ConnectionForm';
 import { ResourceForm } from '../Forms/ResourceForm';
+interface NetworkToolsProps {
+  resetGraph: () => void;
+}
 
-export const NetworkTools = observer(() => {
+export const NetworkTools = observer(({ resetGraph }: NetworkToolsProps) => {
   return (
     <Box position="absolute" right="0">
       <ButtonGroup>
@@ -43,6 +46,11 @@ export const NetworkTools = observer(() => {
             <PopoverCloseButton />
           </PopoverContent>
         </Popover>
+        <IconButton
+          aria-label="Reset Graph"
+          icon={<HiOutlineRefresh />}
+          onClick={resetGraph}
+        />
       </ButtonGroup>
     </Box>
   );

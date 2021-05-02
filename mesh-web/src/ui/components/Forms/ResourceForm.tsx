@@ -14,7 +14,7 @@ import {
   Spacer,
   Stack,
   Textarea,
-  useToast
+  useToast,
 } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
@@ -23,7 +23,7 @@ import { IoIosRocket } from 'react-icons/io';
 import {
   CreateClientRequest,
   CreateDatabaseRequest,
-  CreateServerRequest
+  CreateServerRequest,
 } from '../../../network/protos';
 import { NetworkContext } from '../../../stores/MeshContext';
 import { ResourceType } from '../../../types/Resources';

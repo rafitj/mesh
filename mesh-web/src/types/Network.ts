@@ -6,6 +6,8 @@ export interface NetworkNode {
 export interface NetworkLink {
   source: string;
   target: string;
+  latency: number;
+  id: number;
 }
 export interface NetworkData {
   nodes: NetworkNode[];

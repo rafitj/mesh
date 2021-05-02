@@ -13,7 +13,7 @@ import {
   MenuList,
   Spacer,
   Stack,
-  useToast
+  useToast,
 } from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React from 'react';
@@ -32,7 +32,10 @@ export const ConnectionForm = observer(() => {
 
   const toggleConnection = (resource: Resource) => {
     if (resourceToConnect) {
-      const isConnected = resource.connections.map(c => [c.src,c.target]).flat().includes(resourceToConnect.id);
+      const isConnected = resource.connections
+        .map((c) => [c.src, c.target])
+        .flat()
+        .includes(resourceToConnect.id);
       const serverId =
         resourceToConnect.type === 'SERVER'
           ? resourceToConnect.id
@@ -61,7 +64,8 @@ export const ConnectionForm = observer(() => {
           latency: 100,
           target: serverId,
           src: resourceId,
-          frequency: 15
+          frequency: 15,
+          relationId: 69,
         }).then(() => {
           toast({
             ...toastSettings,
@@ -82,7 +86,10 @@ export const ConnectionForm = observer(() => {
         setConnectedResources(
           NetworkStore.resources.map((r) => ({
             id: r.id,
-            connected: r.connections.map(c => [c.src,c.target]).flat().includes(resource.id) 
+            connected: r.connections
+              .map((c) => [c.src, c.target])
+              .flat()
+              .includes(resource.id),
           }))
         );
       }

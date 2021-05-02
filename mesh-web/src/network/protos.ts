@@ -1,5 +1,11 @@
 import { Project } from '../types/Projects';
-import { Client, Connection, Database, Resource, Server } from '../types/Resources';
+import {
+  Client,
+  Connection,
+  Database,
+  Resource,
+  Server,
+} from '../types/Resources';
 
 export interface GetProjectResponse {
   id: string;

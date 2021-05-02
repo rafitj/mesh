@@ -1,15 +1,15 @@
 import { Client, StompSubscription } from '@stomp/stompjs';
 
 export enum MSG_TYPE {
-  UNKNOWN,
-  PING,
-  ACTION,
-  STATS,
+  UNKNOWN = '',
+  PING = 'PING',
+  ACTION = 'ACTION',
+  STATS = 'STATS',
 }
 
 export class NetworkWS {
   client: Client;
-  constructor(){
+  constructor() {
     let subscription: StompSubscription;
     this.client = new Client({
       brokerURL: 'ws://localhost:8090/test',
@@ -28,18 +28,18 @@ export class NetworkWS {
         if (subscription) {
           subscription.unsubscribe();
         }
-      }
+      },
     });
     this.client.activate();
   }
   msgHandler = (m: any) => {
     try {
-      const msg = JSON.parse(m.body)
+      const msg = JSON.parse(m.body);
       if (msg.type === MSG_TYPE.PING) {
-       console.log(msg) 
+        console.log(msg);
       }
     } catch {
-      console.log("Something went wrong...");
+      console.log('Something went wrong...');
     }
   };
 }

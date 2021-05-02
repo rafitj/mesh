@@ -41,7 +41,7 @@ export const ResourceInfo = observer(() => {
   const toast = useToast();
   return (
     <>
-      {NetworkStore.selectedItem ? (
+      {NetworkStore.focusItem ? (
         <Grid
           height="100%"
           templateColumns="repeat(10, 1fr)"
@@ -53,8 +53,9 @@ export const ResourceInfo = observer(() => {
               <Image
                 width="100%"
                 boxSize="125px"
-                src={getResourceImg(NetworkStore.selectedItem.type)}
-                alt={NetworkStore.selectedItem.type}
+                src={getResourceImg(NetworkStore.focusItem.type)}
+                alt={NetworkStore.focusItem.type}
+                fallbackSrc={'https://via.placeholder.com/150'}
               />
               <Stack p="3" direction="column">
                 <Box d="flex" alignItems="baseline">
@@ -66,7 +67,7 @@ export const ResourceInfo = observer(() => {
                     textTransform="uppercase"
                     mr="2"
                   >
-                    {NetworkStore.selectedItem.type}
+                    {NetworkStore.focusItem.type}
                   </Box>
                   <Badge borderRadius="full" px="2" colorScheme="teal">
                     ACTIVE
@@ -79,7 +80,7 @@ export const ResourceInfo = observer(() => {
                   lineHeight="tight"
                   isTruncated={true}
                 >
-                  {NetworkStore.selectedItem.label.toUpperCase()}
+                  {NetworkStore.focusItem.label.toUpperCase()}
                 </Box>
                 <Box>
                   <Text color="gray.300" isTruncated={true}>
@@ -101,8 +102,9 @@ export const ResourceInfo = observer(() => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {Object.entries(NetworkStore.selectedItem).map(
-                    ([key, value]) => {
+                  {Object.entries(NetworkStore.focusItem)
+                    .filter((e) => e[0] !== 'connections')
+                    .map(([key, value]) => {
                       return (
                         <Tr key={key}>
                           <Th>{key}</Th>
@@ -111,8 +113,7 @@ export const ResourceInfo = observer(() => {
                           </Td>
                         </Tr>
                       );
-                    }
-                  )}
+                    })}
                 </Tbody>
                 <Tfoot />
               </Table>
@@ -175,16 +176,16 @@ export const ResourceInfo = observer(() => {
                   colorScheme="red"
                   variant="outline"
                   onClick={() => {
-                    if (NetworkStore.selectedItem) {
-                      NetworkStore.deleteResource(
-                        NetworkStore.selectedItem
-                      ).then(() => {
-                        toast({
-                          ...toastSettings,
-                          title: NetworkStore.statusMessage,
-                          status: NetworkStore.hasError ? 'error' : 'success',
-                        });
-                      });
+                    if (NetworkStore.focusItem) {
+                      NetworkStore.deleteResource(NetworkStore.focusItem).then(
+                        () => {
+                          toast({
+                            ...toastSettings,
+                            title: NetworkStore.statusMessage,
+                            status: NetworkStore.hasError ? 'error' : 'success',
+                          });
+                        }
+                      );
                     }
                   }}
                 >

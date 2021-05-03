@@ -44,14 +44,16 @@ public class DatabaseServiceImpl implements DatabaseService {
         List<DatabaseDTO> databaseDTOList = new ArrayList<>();
         for (DatabaseEntityProjectionDTO databaseEntity : databaseEntities) {
             List<ConnectionDTO> connections = new ArrayList<>();
-            for (int i = 0; i < databaseEntity.getRelationshipIds().size(); ++i) {
-                ConnectionDTO connection = new ConnectionDTO();
-                connection.setFrequency(databaseEntity.getFrequencies().get(i));
-                connection.setLatency(databaseEntity.getLatencies().get(i));
-                connection.setTarget(databaseEntity.getTargets().get(i));
-                connection.setSrc(databaseEntity.getId());
-                connection.setRelationId(databaseEntity.getRelationshipIds().get(i));
-                connections.add(connection);
+            if (databaseEntity.getRelationshipIds() != null) {
+                for (int i = 0; i < databaseEntity.getRelationshipIds().size(); ++i) {
+                    ConnectionDTO connection = new ConnectionDTO();
+                    connection.setFrequency(databaseEntity.getFrequencies().get(i));
+                    connection.setLatency(databaseEntity.getLatencies().get(i));
+                    connection.setTarget(databaseEntity.getTargets().get(i));
+                    connection.setSrc(databaseEntity.getId());
+                    connection.setRelationId(databaseEntity.getRelationshipIds().get(i));
+                    connections.add(connection);
+                }
             }
             DatabaseDTO databaseDTO = new DatabaseDTO();
             ModelMapper modelMapper = new ModelMapper();
@@ -102,8 +104,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public ConnectionDTO connectDatabase(ConnectResourcesRequest connectResourcesRequest) {
-        DatabaseEntity databaseEntity = databaseRepo.findById(connectResourcesRequest.getResourceId()).orElse(null);
-        ServerEntity serverEntity = serverRepo.findById(connectResourcesRequest.getServerId()).orElse(null);
+        DatabaseEntity databaseEntity = databaseRepo.findById(connectResourcesRequest.getSrc()).orElse(null);
+        ServerEntity serverEntity = serverRepo.findById(connectResourcesRequest.getTarget()).orElse(null);
         if (databaseEntity != null && serverEntity != null) {
             ConnectsRelationshipEntity relationshipEntityA = new ConnectsRelationshipEntity(
                     connectResourcesRequest.getLatency(), connectResourcesRequest.getFrequency(),databaseEntity);

@@ -17,7 +17,9 @@ import java.util.*;
 
 @Component
 public class NetworkSimulation {
-    private boolean isActive;
+    private boolean isActive = false;
+    private boolean isInitialized = false;
+    private String projectId;
 
     private List<ServerThread> serverThreads;
     private List<ClientThread> clientThreads;
@@ -49,21 +51,20 @@ public class NetworkSimulation {
         this.resourceThreads = resourceThreads;
     }
 
-    public void startSimulation(String projectId){
-        initSimulation(projectId);
-        System.out.print(resourceThreads.values().size());
+    private void startSimulation(){
         for (ResourceThread thread: resourceThreads.values()) {
             thread.start();
         }
     }
 
-    public void stopSimulation(){
+    private void stopSimulation(){
         for (ResourceThread thread: resourceThreads.values()) {
             thread.interrupt();
         }
     }
 
-    private void initSimulation(String projectId) {
+    public void initSimulation(String projectId) {
+        this.projectId = projectId;
         List<ServerDTO> serverConnections = serverService.getServersByProjectId(projectId);
         for (ServerDTO serverConnection: serverConnections) {
             ServerThread serverThread = new ServerThread(serverConnection, sendingOperations, this);
@@ -82,6 +83,30 @@ public class NetworkSimulation {
             dbThreads.add(dbThread);
             resourceThreads.put(databaseConnection.getId(),dbThread);
         }
+        isInitialized = true;
     }
+
+    public void stop() {
+        if (this.isActive && this.isInitialized) {
+            stopSimulation();
+            this.isActive = false;
+        }
+    }
+
+    public void start() {
+        if (!this.isActive && this.isInitialized) {
+            startSimulation();
+            this.isActive = true;
+        }
+    }
+
+    public void reset() {
+        if (this.isInitialized) {
+            initSimulation(this.projectId);
+            startSimulation();
+            this.isActive = true;
+        }
+    }
+
 
 }

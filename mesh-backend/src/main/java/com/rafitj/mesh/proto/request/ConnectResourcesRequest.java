@@ -3,8 +3,10 @@ package com.rafitj.mesh.proto.request;
 public class ConnectResourcesRequest {
     private int latency;
     private int frequency;
-    private String resourceId;
-    private String serverId;
+    // src is some resource
+    private String src;
+    // target is a server
+    private String target;
 
     public int getLatency() {
         return latency;
@@ -22,19 +24,19 @@ public class ConnectResourcesRequest {
         this.frequency = frequency;
     }
 
-    public String getResourceId() {
-        return resourceId;
+    public String getSrc() {
+        return src;
     }
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
+    public void setSrc(String src) {
+        this.src = src;
     }
 
-    public String getServerId() {
-        return serverId;
+    public String getTarget() {
+        return target;
     }
 
-    public void setServerId(String serverId) {
-        this.serverId = serverId;
+    public void setTarget(String target) {
+        this.target = target;
     }
 }

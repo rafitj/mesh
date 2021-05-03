@@ -21,21 +21,17 @@ public class WSEventListener {
         System.out.println("Subscribed");
     }
 
-
     @EventListener
     public void handleWSConnectListener(SessionConnectedEvent event) {
         System.out.println("Connected");
-        networkSimulation.startSimulation("69");
+        networkSimulation.initSimulation("69");
+//        networkSimulation.start();
     }
 
     @EventListener
     public void handleWSDisconnectListener(SessionDisconnectEvent event) {
         System.out.println("Disconnected");
-        networkSimulation.stopSimulation();
+        networkSimulation.stop();
     }
 
-    @EventListener
-    public void handleWSIncomingMsg(Session){
-
-    }
 }

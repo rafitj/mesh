@@ -11,6 +11,12 @@ public class ClientEntity extends ResourceEntity {
         this.setType(ResourceType.CLIENT);
     }
 
+    public ClientEntity(ClientEntity clientEntity) {
+        super(clientEntity);
+        this.setThroughput(clientEntity.getThroughput());
+        this.setClickRate(clientEntity.getClickRate());
+    }
+
     public ClientEntity(String label, int throughput, int clickRate) {
         this.throughput = throughput;
         this.clickRate = clickRate;

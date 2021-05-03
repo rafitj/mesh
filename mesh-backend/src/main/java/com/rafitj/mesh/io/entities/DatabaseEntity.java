@@ -16,6 +16,12 @@ public class DatabaseEntity extends ResourceEntity{
         this.setLabel(label);
     }
 
+    public DatabaseEntity(DatabaseEntity databaseEntity) {
+        super(databaseEntity);
+        this.setDbResources(databaseEntity.getDbResources());
+        this.setDbType(databaseEntity.getDbType());
+    }
+
     public DatabaseEntity() {
         this.setType(ResourceType.DATABASE);
     }

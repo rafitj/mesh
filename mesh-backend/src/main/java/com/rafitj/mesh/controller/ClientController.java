@@ -1,5 +1,6 @@
 package com.rafitj.mesh.controller;
 
+import com.rafitj.mesh.io.dto.shared.ServerDTO;
 import com.rafitj.mesh.proto.request.ConnectResourcesRequest;
 import com.rafitj.mesh.proto.request.CreateClientRequest;
 import com.rafitj.mesh.proto.request.PatchClientRequest;
@@ -36,6 +37,11 @@ public class ClientController {
     @PatchMapping("/{id}")
     private ClientDTO updateClient(@RequestBody PatchClientRequest patchClientRequest, @PathVariable String id) {
         return clientService.updateClient(patchClientRequest, id);
+    }
+
+    @PostMapping("/{id}/duplicate")
+    private ClientDTO duplicateClient(@PathVariable String id)  {
+        return clientService.duplicateClient(id);
     }
 
     @PostMapping("/connect")

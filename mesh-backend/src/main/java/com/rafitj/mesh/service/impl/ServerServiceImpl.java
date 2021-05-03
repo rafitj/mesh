@@ -1,6 +1,7 @@
 package com.rafitj.mesh.service.impl;
 
 import com.rafitj.mesh.controller.projections.ServerEntityProjectionDTO;
+import com.rafitj.mesh.io.dto.shared.DatabaseDTO;
 import com.rafitj.mesh.proto.request.ConnectResourcesRequest;
 import com.rafitj.mesh.proto.request.CreateServerRequest;
 import com.rafitj.mesh.proto.request.PatchServerRequest;
@@ -10,6 +11,7 @@ import com.rafitj.mesh.io.entities.*;
 import com.rafitj.mesh.io.repos.ProjectRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
 import com.rafitj.mesh.service.intf.ServerService;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -92,11 +94,30 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public ServerDTO updateServer(PatchServerRequest patchServerRequest, String id) {
+        ServerEntity serverEntity = serverRepo.findById(id).orElse(null);
+        if (serverEntity != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+            modelMapper.map(patchServerRequest,serverEntity);
+            ServerDTO serverDTO = new ServerDTO();
+            modelMapper.map(serverEntity,serverDTO);
+            serverRepo.save(serverEntity);
+            return serverDTO;
+        }
         return null;
     }
 
     @Override
     public ServerDTO duplicateServer(String id) {
+        ServerEntity serverEntity = serverRepo.findById(id).orElse(null);
+        if (serverEntity != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            ServerEntity newServerEntity = new ServerEntity(serverEntity);
+            serverRepo.save(newServerEntity);
+            ServerDTO serverDTO = new ServerDTO();
+            modelMapper.map(newServerEntity,serverDTO);
+            return serverDTO;
+        }
         return null;
     }
 

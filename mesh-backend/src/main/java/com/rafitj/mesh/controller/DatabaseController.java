@@ -1,5 +1,6 @@
 package com.rafitj.mesh.controller;
 
+import com.rafitj.mesh.io.dto.shared.ClientDTO;
 import com.rafitj.mesh.proto.request.ConnectResourcesRequest;
 import com.rafitj.mesh.proto.request.CreateDatabaseRequest;
 import com.rafitj.mesh.proto.request.PatchDatabaseRequest;
@@ -36,6 +37,11 @@ public class DatabaseController {
     @PatchMapping("/{id}")
     private DatabaseDTO updateDatabase(@RequestBody PatchDatabaseRequest patchDatabaseRequest, @PathVariable String id) {
         return databaseService.updateDatabase(patchDatabaseRequest, id);
+    }
+
+    @PostMapping("/{id}/duplicate")
+    private DatabaseDTO duplicateDatabase(@PathVariable String id)  {
+        return databaseService.duplicateDatabase(id);
     }
 
     @PostMapping("/connect")

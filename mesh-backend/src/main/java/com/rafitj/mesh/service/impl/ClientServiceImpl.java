@@ -1,6 +1,7 @@
 package com.rafitj.mesh.service.impl;
 
 import com.rafitj.mesh.controller.projections.ClientEntityProjectionDTO;
+import com.rafitj.mesh.io.dto.shared.DatabaseDTO;
 import com.rafitj.mesh.proto.request.*;
 import com.rafitj.mesh.io.dto.shared.ClientDTO;
 import com.rafitj.mesh.io.dto.shared.ConnectionDTO;
@@ -9,6 +10,8 @@ import com.rafitj.mesh.io.repos.ClientRepo;
 import com.rafitj.mesh.io.repos.ProjectRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
 import com.rafitj.mesh.service.intf.ClientService;
+import com.rafitj.mesh.service.intf.ResourceService;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +32,10 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO getClientById(String clientId) {
-        ClientEntity serverEntity = clientRepo.findById(clientId).orElse(null);
+        ClientEntity clientEntity = clientRepo.findById(clientId).orElse(null);
         ClientDTO clientDTO = new ClientDTO();
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.map(serverEntity, clientDTO);
+        modelMapper.map(clientEntity, clientDTO);
         return clientDTO;
     }
 
@@ -92,11 +95,30 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO updateClient(PatchClientRequest patchClientRequest, String id) {
+        ClientEntity clientEntity = clientRepo.findById(id).orElse(null);
+        if (clientEntity != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+            modelMapper.map(patchClientRequest,clientEntity);
+            ClientDTO clientDTO = new ClientDTO();
+            modelMapper.map(clientEntity,clientDTO);
+            clientRepo.save(clientEntity);
+            return clientDTO;
+        }
         return null;
     }
 
     @Override
     public ClientDTO duplicateClient(String id) {
+        ClientEntity clientEntity = clientRepo.findById(id).orElse(null);
+        if (clientEntity != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            ClientEntity newClientEntity = new ClientEntity(clientEntity);
+            clientRepo.save(newClientEntity);
+            ClientDTO clientDTO = new ClientDTO();
+            modelMapper.map(newClientEntity,clientDTO);
+            return clientDTO;
+        }
         return null;
     }
 

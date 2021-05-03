@@ -90,4 +90,16 @@ public abstract class ResourceEntity {
     public void setOriginResource(Boolean originResource) {
         isOriginResource = originResource;
     }
+
+    public ResourceEntity(ResourceEntity resourceEntity) {
+        setCost(resourceEntity.getCost());
+        setType(resourceEntity.getType());
+        setDescription(resourceEntity.getDescription());
+        setLabel(resourceEntity.getLabel());
+        setAlive(resourceEntity.isAlive());
+        setOriginResource(resourceEntity.isOriginResource());
+    }
+
+    public ResourceEntity() {
+    }
 }

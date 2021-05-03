@@ -1,6 +1,8 @@
 package com.rafitj.mesh.service.impl;
 
 import com.rafitj.mesh.controller.projections.DatabaseEntityProjectionDTO;
+import com.rafitj.mesh.io.dto.shared.ClientDTO;
+import com.rafitj.mesh.io.dto.shared.ServerDTO;
 import com.rafitj.mesh.proto.request.ConnectResourcesRequest;
 import com.rafitj.mesh.proto.request.CreateDatabaseRequest;
 import com.rafitj.mesh.proto.request.PatchDatabaseRequest;
@@ -11,6 +13,7 @@ import com.rafitj.mesh.io.repos.DatabaseRepo;
 import com.rafitj.mesh.io.repos.ProjectRepo;
 import com.rafitj.mesh.io.repos.ServerRepo;
 import com.rafitj.mesh.service.intf.DatabaseService;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -94,11 +97,30 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public DatabaseDTO updateDatabase(PatchDatabaseRequest patchDatabaseRequest, String id) {
+        DatabaseEntity databaseEntity = databaseRepo.findById(id).orElse(null);
+        if (databaseEntity != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+            modelMapper.map(patchDatabaseRequest,databaseEntity);
+            DatabaseDTO databaseDTO = new DatabaseDTO();
+            modelMapper.map(databaseEntity,databaseDTO);
+            databaseRepo.save(databaseEntity);
+            return databaseDTO;
+        }
         return null;
     }
 
     @Override
     public DatabaseDTO duplicateDatabase(String id) {
+        DatabaseEntity databaseEntity = databaseRepo.findById(id).orElse(null);
+        if (databaseEntity != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            DatabaseEntity newDatabaseEntity = new DatabaseEntity(databaseEntity);
+            databaseRepo.save(newDatabaseEntity);
+            DatabaseDTO databaseDTO = new DatabaseDTO();
+            modelMapper.map(newDatabaseEntity,databaseDTO);
+            return databaseDTO;
+        }
         return null;
     }
 

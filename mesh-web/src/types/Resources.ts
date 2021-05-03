@@ -9,6 +9,7 @@ interface BaseResource {
   alive: boolean;
   type: ResourceType;
   cost: number;
+  description: string;
 }
 
 export interface Server extends BaseResource {

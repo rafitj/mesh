@@ -59,7 +59,7 @@ export const DatabaseForm = observer(
     };
     React.useEffect(() => {
       setForm();
-    }, []);
+    });
 
     const getDBIcon = (db: string) => {
       if (db === 'Postgres') {

@@ -33,6 +33,7 @@ export const Network = observer(() => {
       fontColor: 'white',
       strokeWidth: 2.5,
       opacity: 0.8,
+      strokeLinecap: 'round',
     },
     focusZoom: 1.25,
     initialZoom: 1,

@@ -84,9 +84,7 @@ export const ResourceInfo = observer(() => {
                 </Box>
                 <Box>
                   <Text color="gray.300" isTruncated={true}>
-                    The purpose of this server is to interact with the core
-                    database and analytics server to effectivley serialize the
-                    datastream for machine learning applications
+                    {NetworkStore.focusItem.description}
                   </Text>
                 </Box>
               </Stack>
@@ -107,9 +105,21 @@ export const ResourceInfo = observer(() => {
                     .map(([key, value]) => {
                       return (
                         <Tr key={key}>
-                          <Th>{key}</Th>
                           <Td>
-                            <Text isTruncated={true}>{value}</Text>
+                            <Text fontSize="sm" color="gray.400">
+                              <strong>
+                                {key.charAt(0).toUpperCase() + key.substring(1)}
+                              </strong>
+                            </Text>
+                          </Td>
+                          <Td>
+                            <Text
+                              fontSize="sm"
+                              isTruncated={true}
+                              maxWidth="15vw"
+                            >
+                              {value === null ? '?' : value.toString()}
+                            </Text>
                           </Td>
                         </Tr>
                       );
@@ -168,6 +178,10 @@ export const ResourceInfo = observer(() => {
                   leftIcon={<HiDuplicate />}
                   colorScheme="purple"
                   variant="outline"
+                  onClick={() =>
+                    NetworkStore.focusItem &&
+                    NetworkStore.duplicateResource(NetworkStore.focusItem)
+                  }
                 >
                   Duplicate
                 </Button>

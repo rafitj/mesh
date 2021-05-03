@@ -187,6 +187,7 @@ export class NetworkState {
     this.isLoading = false;
   };
 
+  // TODO: focus on created item
   createClient = async (payload: CreateClientRequest) => {
     this.isLoading = true;
     try {
@@ -249,6 +250,24 @@ export class NetworkState {
     } catch (e) {
       this.hasError = true;
       this.statusMessage = 'Failed to delete resource';
+    }
+    this.isLoading = false;
+  };
+
+  duplicateResource = async (resource: Resource) => {
+    this.isLoading = true;
+    try {
+      const duplicatedResource = await Api.duplicateResource(
+        resource.type,
+        resource.id
+      );
+      this.resources = [...this.resources, duplicatedResource];
+      // TODO: focus on duplicated item
+      this.hasError = false;
+      this.statusMessage = 'Resource succesfully duplicated';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to duplicate resource';
     }
     this.isLoading = false;
   };

@@ -1,7 +1,7 @@
 import {
   Box,
+  Button,
   ButtonGroup,
-  IconButton,
   Popover,
   PopoverArrow,
   PopoverCloseButton,
@@ -25,7 +25,7 @@ export const NetworkTools = observer(({ resetGraph }: NetworkToolsProps) => {
       <ButtonGroup>
         <Popover placement="left-end" size="md" id="chakra-popover">
           <PopoverTrigger>
-            <IconButton aria-label="Add Server" icon={<HiServer />} />
+            <Button leftIcon={<HiServer />}>Add Resource</Button>
           </PopoverTrigger>
           <PopoverContent p={3}>
             <PopoverArrow />
@@ -35,10 +35,7 @@ export const NetworkTools = observer(({ resetGraph }: NetworkToolsProps) => {
         </Popover>
         <Popover placement="left-end" size="md" id="chakra-popover">
           <PopoverTrigger>
-            <IconButton
-              aria-label="Add Connection"
-              icon={<AiOutlineNodeIndex />}
-            />
+            <Button leftIcon={<AiOutlineNodeIndex />}>Add Link</Button>
           </PopoverTrigger>
           <PopoverContent p={3}>
             <PopoverArrow />
@@ -46,11 +43,9 @@ export const NetworkTools = observer(({ resetGraph }: NetworkToolsProps) => {
             <PopoverCloseButton />
           </PopoverContent>
         </Popover>
-        <IconButton
-          aria-label="Reset Graph"
-          icon={<HiOutlineRefresh />}
-          onClick={resetGraph}
-        />
+        <Button leftIcon={<HiOutlineRefresh />} onClick={resetGraph}>
+          Reset View
+        </Button>
       </ButtonGroup>
     </Box>
   );

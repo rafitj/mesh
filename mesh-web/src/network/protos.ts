@@ -55,6 +55,8 @@ export interface CreateClientResponse extends Client {}
 export interface CreateServerResponse extends Server {}
 export interface CreateDatabaseResponse extends Database {}
 
+export type DuplicateResourceResponse = Client | Server | Database;
+
 export interface ConnectResourceRequest extends Connection {}
 export interface DisconnectResourceRequest {
   serverId: string;

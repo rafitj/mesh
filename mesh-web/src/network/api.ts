@@ -12,6 +12,7 @@ import {
   CreateServerRequest,
   CreateServerResponse,
   DisconnectResourceRequest,
+  DuplicateResourceResponse,
   GetProjectInfoResponse,
   GetProjectResourcesResponse,
   GetProjectResponse,
@@ -118,6 +119,14 @@ export class Api {
     const data = await Api.createRequest<null, null>(
       `${resourceType.toLowerCase()}/${id}`,
       'DELETE'
+    );
+    return data;
+  };
+
+  static duplicateResource = async (resourceType: ResourceType, id: string) => {
+    const data = await Api.createRequest<null, DuplicateResourceResponse>(
+      `${resourceType.toLowerCase()}/${id}/duplicate`,
+      'POST'
     );
     return data;
   };

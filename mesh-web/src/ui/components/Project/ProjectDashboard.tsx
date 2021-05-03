@@ -1,6 +1,18 @@
-import { Box, Grid, GridItem, useToast } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Grid,
+  GridItem,
+  Heading,
+  Icon,
+  Stack,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
 import { observer } from 'mobx-react';
 import React from 'react';
+import { IoMdResize } from 'react-icons/io';
+import { useWindowSize } from '../../../hooks/useWindowSize';
 import { NetworkContext, ProjectContext } from '../../../stores/MeshContext';
 import { toastSettings } from '../../styles/components';
 import { Network } from '../Network/Network';
@@ -11,6 +23,8 @@ export const ProjectDashboard = observer(() => {
   const toast = useToast();
   const ProjectStore = React.useContext(ProjectContext);
   const NetworkStore = React.useContext(NetworkContext);
+  const [w, h] = useWindowSize();
+  const [plsResize, setPlsResize] = React.useState(false);
 
   React.useEffect(() => {
     ProjectStore.fetchProjects().then(() => {
@@ -21,39 +35,69 @@ export const ProjectDashboard = observer(() => {
       });
     });
     NetworkStore.initSimulation();
-  });
+  }, []);
+
+  React.useEffect(() => {
+    setPlsResize(w < 1280 || h < 720);
+  }, [w, h]);
 
   return (
-    <Box padding={5} height="100vh">
-      <Grid
-        h="100%"
-        templateRows="repeat(6, 1fr)"
-        templateColumns="repeat(14, 1fr)"
-        gap={4}
-      >
-        <GridItem
-          rowSpan={6}
-          colSpan={3}
-          bg="gray.900"
-          rounded={'md'}
-          overflowY="scroll"
-          overflowX="hidden"
+    <>
+      {plsResize && (
+        <Center
+          width="100vw"
+          height="100vh"
+          position="absolute"
+          zIndex={99}
+          overflow={'hidden'}
+          backgroundColor="gray.900"
+          opacity={0.95}
         >
-          <ProjectSelectBar />
-        </GridItem>
-        <GridItem rowSpan={4} colSpan={11} position="relative">
-          <Network />
-        </GridItem>
-        <GridItem
-          rowSpan={2}
-          colSpan={11}
-          bg="gray.900"
-          rounded={'md'}
-          overflowY="hidden"
+          <Stack textAlign="center" width="100%">
+            <Icon
+              as={IoMdResize}
+              w={10}
+              h={10}
+              color="green.400"
+              margin="0 auto"
+            />
+            <Heading>Please resize your browser</Heading>
+            <Text>Make sure your screen is at least 1280px by 720px</Text>
+          </Stack>
+        </Center>
+      )}
+      <Box padding={5} height="100vh">
+        <Grid
+          h="100%"
+          templateRows="repeat(6, 1fr)"
+          templateColumns="repeat(14, 1fr)"
+          gap={4}
+          opacity={plsResize ? 0.5 : 1}
         >
-          <ResourceInfo />
-        </GridItem>
-      </Grid>
-    </Box>
+          <GridItem
+            rowSpan={6}
+            colSpan={3}
+            bg="gray.900"
+            rounded={'md'}
+            overflowY="scroll"
+            overflowX="hidden"
+          >
+            <ProjectSelectBar />
+          </GridItem>
+          <GridItem rowSpan={4} colSpan={11} position="relative">
+            <Network />
+          </GridItem>
+          <GridItem
+            rowSpan={2}
+            colSpan={11}
+            bg="gray.900"
+            rounded={'md'}
+            overflowY="hidden"
+          >
+            <ResourceInfo />
+          </GridItem>
+        </Grid>
+      </Box>
+    </>
   );
 });

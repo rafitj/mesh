@@ -4,6 +4,7 @@ import {
   Connection,
   Database,
   Resource,
+  ResourceType,
   Server,
 } from '../types/Resources';
 
@@ -34,6 +35,7 @@ export interface CreateResourceRequest {
   label: string;
   description: string;
   projectId: string;
+  type: ResourceType;
 }
 
 export interface CreateClientRequest extends CreateResourceRequest {

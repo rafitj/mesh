@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   FormLabel,
-  Heading,
   Menu,
   MenuButton,
   MenuItem,
@@ -54,6 +53,7 @@ export const DatabaseForm = observer(
           label,
           dbType: DBType,
           projectId: ProjectStore.selectedProject!.id,
+          type: 'DATABASE',
         });
       }
     };
@@ -88,11 +88,7 @@ export const DatabaseForm = observer(
 
     return (
       <Box width="100%">
-        <FormLabel>
-          <Heading color="gray.500" size="sm">
-            DB Type
-          </Heading>
-        </FormLabel>
+        <FormLabel color="gray.500">DB Type</FormLabel>
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />} width="100%">
             {DBType}

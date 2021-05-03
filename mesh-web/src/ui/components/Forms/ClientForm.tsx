@@ -1,7 +1,6 @@
 import {
   Box,
   FormLabel,
-  Heading,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -33,6 +32,7 @@ export const ClientForm = observer(
           throughput,
           clickRate,
           projectId: ProjectStore.selectedProject!.id,
+          type: 'CLIENT',
         });
       }
     };
@@ -41,26 +41,24 @@ export const ClientForm = observer(
     });
 
     const onChangeThroughput = (_: string, t: number) => {
-      setThroughput(t);
+      setThroughput(isNaN(t) ? 0 : t);
       setForm();
     };
     const onChangeClickRate = (_: string, t: number) => {
-      setClickRate(t);
+      setClickRate(isNaN(t) ? 0 : t);
       setForm();
     };
 
     return (
       <Stack>
         <Box>
-          <FormLabel>
-            <Heading color="gray.500" size="sm">
-              Throughput
-            </Heading>
-          </FormLabel>
+          <FormLabel color="gray.500">Throughput</FormLabel>
           <NumberInput
             allowMouseWheel={true}
             onChange={onChangeThroughput}
             id="throughput-input"
+            aria-required={true}
+            value={isNaN(throughput) ? 0 : throughput}
           >
             <NumberInputField textAlign="center" />
             <NumberInputStepper>
@@ -70,15 +68,13 @@ export const ClientForm = observer(
           </NumberInput>
         </Box>
         <Box>
-          <FormLabel>
-            <Heading color="gray.500" size="sm">
-              Clickrate
-            </Heading>
-          </FormLabel>
+          <FormLabel color="gray.500">Clickrate</FormLabel>
           <NumberInput
             allowMouseWheel={true}
             onChange={onChangeClickRate}
             id="clickrate-input"
+            aria-required={true}
+            value={isNaN(clickRate) ? 0 : clickRate}
           >
             <NumberInputField textAlign="center" />
             <NumberInputStepper>

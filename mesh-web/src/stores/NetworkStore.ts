@@ -72,6 +72,8 @@ export class NetworkState {
       disconnectResource: action,
       initSimulation: action,
       wsHandler: action,
+      pauseSimulation: action,
+      playSimulation: action,
     });
   }
 
@@ -95,7 +97,7 @@ export class NetworkState {
     const links: NetworkLink[] = [];
     const seen = new Set<number>();
     this.resources.forEach((r) => {
-      r.connections.forEach((c) => {
+      r.connections?.forEach((c) => {
         if (!seen.has(c.relationId)) {
           seen.add(c.relationId);
           links.push({
@@ -122,7 +124,7 @@ export class NetworkState {
     const connections: Connection[] = [];
     const seen = new Set<number>();
     this.resources.forEach((r) => {
-      r.connections.forEach((c) => {
+      r.connections?.forEach((c) => {
         if (!seen.has(c.relationId)) {
           seen.add(c.relationId);
           connections.push(c);
@@ -194,7 +196,7 @@ export class NetworkState {
       this.statusMessage = 'Client succesfully created';
     } catch (e) {
       this.hasError = true;
-      this.statusMessage = 'Failed to create Client';
+      this.statusMessage = 'Failed to create client';
     }
     this.isLoading = false;
   };
@@ -208,7 +210,7 @@ export class NetworkState {
       this.statusMessage = 'Server succesfully created';
     } catch (e) {
       this.hasError = true;
-      this.statusMessage = 'Failed to create Server';
+      this.statusMessage = 'Failed to create server';
     }
     this.isLoading = false;
   };
@@ -222,7 +224,7 @@ export class NetworkState {
       this.statusMessage = 'Database succesfully created';
     } catch (e) {
       this.hasError = true;
-      this.statusMessage = 'Failed to create Database';
+      this.statusMessage = 'Failed to create database';
     }
     this.isLoading = false;
   };
@@ -238,7 +240,7 @@ export class NetworkState {
         .filter((r) => r.id !== resource.id)
         .map((r) => ({
           ...r,
-          connections: r.connections.filter(
+          connections: r.connections?.filter(
             (c) => c.src !== resource.id && c.target !== resource.id
           ),
         }));
@@ -246,7 +248,7 @@ export class NetworkState {
       this.statusMessage = 'Resource succesfully deleted';
     } catch (e) {
       this.hasError = true;
-      this.statusMessage = 'Failed to delete Resource';
+      this.statusMessage = 'Failed to delete resource';
     }
     this.isLoading = false;
   };
@@ -260,9 +262,9 @@ export class NetworkState {
       await Api.connectResource(resourceType, payload);
       this.resources = this.resources.map((r) => {
         if (r.id === payload.src) {
-          return { ...r, connections: [...r.connections, payload] };
+          return { ...r, connections: [...(r.connections || []), payload] };
         } else if (r.id === payload.target) {
-          return { ...r, connections: [...r.connections, payload] };
+          return { ...r, connections: [...(r.connections || []), payload] };
         }
         return r;
       });
@@ -270,7 +272,7 @@ export class NetworkState {
       this.statusMessage = 'Resource succesfully connected';
     } catch (e) {
       this.hasError = true;
-      this.statusMessage = 'Failed to connect Resource';
+      this.statusMessage = 'Failed to connect resource';
     }
     this.isLoading = false;
   };
@@ -283,7 +285,7 @@ export class NetworkState {
         if (r.id === payload.serverId || r.id === payload.resourceId) {
           return {
             ...r,
-            connections: r.connections.filter(
+            connections: r.connections?.filter(
               (c) =>
                 c.src !== payload.resourceId && c.target !== payload.serverId
             ),
@@ -295,7 +297,7 @@ export class NetworkState {
       this.statusMessage = 'Resource succesfully disconnected';
     } catch (e) {
       this.hasError = true;
-      this.statusMessage = 'Failed to disconnected Resource';
+      this.statusMessage = 'Failed to disconnected resource';
     }
     this.isLoading = false;
   };
@@ -303,6 +305,18 @@ export class NetworkState {
   initSimulation = () => {
     this.networkWS = new NetworkWS(this.wsHandler);
     this.networkWS.activate();
+  };
+
+  pauseSimulation = () => {
+    this.networkWS?.pauseSimulation();
+  };
+
+  playSimulation = () => {
+    this.networkWS?.playSimulation();
+  };
+
+  resetSimulation = () => {
+    this.networkWS?.resetSimulation();
   };
 
   wsHandler = (m: any) => {
@@ -327,7 +341,7 @@ export class NetworkState {
       this.hasError = false;
     } catch {
       this.hasError = true;
-      this.statusMessage = 'Something went wrong with Network Simulation';
+      this.statusMessage = 'Something went wrong with network simulation';
     }
   };
 }

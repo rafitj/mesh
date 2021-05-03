@@ -11,8 +11,10 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { IoMdPause, IoMdPlay, IoMdRefresh } from 'react-icons/io';
 import { useStopwatch } from 'react-timer-hook';
+import { NetworkContext } from '../../../stores/MeshContext';
 
 export const ProjectSimController = observer(() => {
+  const NetworkStore = React.useContext(NetworkContext);
   const [isSimulating, setIsSimulating] = React.useState(true);
   const { seconds, minutes, start, pause, reset } = useStopwatch({
     autoStart: true,
@@ -21,8 +23,10 @@ export const ProjectSimController = observer(() => {
   const onToggle = () => {
     if (isSimulating) {
       pause();
+      NetworkStore.pauseSimulation();
     } else {
       start();
+      NetworkStore.playSimulation();
     }
     setIsSimulating(!isSimulating);
   };

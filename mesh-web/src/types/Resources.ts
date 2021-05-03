@@ -5,7 +5,7 @@ export type ResourceType = 'SERVER' | 'CLIENT' | 'DATABASE';
 interface BaseResource {
   id: string;
   label: string;
-  connections: Connection[];
+  connections?: Connection[];
   alive: boolean;
   type: ResourceType;
   cost: number;

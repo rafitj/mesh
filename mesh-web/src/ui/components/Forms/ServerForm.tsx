@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   FormLabel,
-  Heading,
   Menu,
   MenuButton,
   MenuItem,
@@ -44,6 +43,7 @@ export const ServerForm = observer(
           label,
           instanceType: serverInstance.instanceType,
           projectId: ProjectStore.selectedProject!.id,
+          type: 'SERVER',
         });
       }
     };
@@ -68,11 +68,7 @@ export const ServerForm = observer(
 
     return (
       <Box width="100%">
-        <FormLabel>
-          <Heading color="gray.500" size="sm">
-            Instance
-          </Heading>
-        </FormLabel>
+        <FormLabel color="gray.500">Instance</FormLabel>
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />} width="100%">
             {`${serverInstance.instanceType} (${serverInstance.provider})`}

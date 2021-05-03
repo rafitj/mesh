@@ -6,6 +6,7 @@ import {
 } from '@chakra-ui/icons';
 import {
   Badge,
+  Box,
   Button,
   Flex,
   Heading,
@@ -47,7 +48,7 @@ export const ProjectStats = observer(() => {
     setResourceType(undefined);
   };
   return (
-    <Stack spacing={4}>
+    <Stack spacing={3}>
       <Flex alignItems="center" justifyContent="space-between">
         <Heading color="gray.400" size="sm">
           Simulated Metrics
@@ -76,17 +77,29 @@ export const ProjectStats = observer(() => {
           </MenuList>
         </Menu>
       </Flex>
-      <Stack direction="row">
-        <Badge display="flex" alignItems="center" colorScheme="green">
-          <Icon as={CheckIcon} mr={1} /> 5 Alive
+      <Box display="flex" flexDirection="row" flexWrap="wrap" width="100%">
+        <Badge
+          display="flex"
+          alignItems="center"
+          colorScheme="green"
+          mr={2}
+          mt={2}
+        >
+          <Icon as={CheckIcon} /> 5 Alive
         </Badge>
-        <Badge display="flex" alignItems="center" colorScheme="red">
-          <Icon as={NotAllowedIcon} mr={1} /> 0 Dead
+        <Badge
+          display="flex"
+          alignItems="center"
+          colorScheme="red"
+          mr={2}
+          mt={2}
+        >
+          <Icon as={NotAllowedIcon} /> 0 Dead
         </Badge>
-        <Badge display="flex" alignItems="center" colorScheme="yellow">
-          <Icon as={SpinnerIcon} mr={1} /> 1 Paused
+        <Badge display="flex" alignItems="center" colorScheme="yellow" mt={2}>
+          <Icon as={SpinnerIcon} /> 1 Paused
         </Badge>
-      </Stack>
+      </Box>
       <StatGroup>
         <Stat>
           <StatLabel>Avg. Latency</StatLabel>

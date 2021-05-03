@@ -40,6 +40,7 @@ export const ResourceForm = observer(() => {
   );
   const [resourceLabel, setResourceLabel] = React.useState('');
   const [resourceDesc, setResourceDesc] = React.useState('');
+  const [isValidForm, setIsValidForm] = React.useState(false);
   const [
     clientRequest,
     setClientRequest,
@@ -52,6 +53,27 @@ export const ResourceForm = observer(() => {
     databaseRequest,
     setDatabaseRequest,
   ] = React.useState<CreateDatabaseRequest>();
+  React.useEffect(() => {
+    const validResource = resourceDesc !== '' && resourceLabel !== '';
+    const validClientReq =
+      clientRequest !== undefined &&
+      Object.values(clientRequest).every((field) => field !== undefined);
+    const validServerReq =
+      serverRequest !== undefined &&
+      Object.values(serverRequest).every((field) => field !== undefined);
+    const validDBReq =
+      databaseRequest !== undefined &&
+      Object.values(databaseRequest).every((field) => field !== undefined);
+    setIsValidForm(
+      validResource && (validClientReq || validServerReq || validDBReq)
+    );
+  }, [
+    resourceLabel,
+    resourceDesc,
+    serverRequest,
+    clientRequest,
+    databaseRequest,
+  ]);
   const onSelectServer = () => {
     setResourceType('SERVER');
   };
@@ -101,7 +123,7 @@ export const ResourceForm = observer(() => {
     }
   };
   return (
-    <FormControl id="resource-form" width="250px">
+    <FormControl id="resource-form" width="250px" isRequired={true}>
       <Stack>
         <Heading color="gray.400" size="sm">
           Create Resource
@@ -189,6 +211,7 @@ export const ResourceForm = observer(() => {
           leftIcon={<IoIosRocket />}
           colorScheme="teal"
           onClick={createResource}
+          disabled={!isValidForm}
         >
           Create
         </Button>

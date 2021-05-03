@@ -38,9 +38,24 @@ export class NetworkWS {
   pauseSimulation() {
     const tx = this.client.begin();
     this.client.publish({
-      destination: this.destination,
+      destination: '/app/pause',
       headers: { receipt: tx.id },
-      body: 'PAUSE',
+    });
+    tx.commit();
+  }
+  playSimulation() {
+    const tx = this.client.begin();
+    this.client.publish({
+      destination: '/app/play',
+      headers: { receipt: tx.id },
+    });
+    tx.commit();
+  }
+  resetSimulation() {
+    const tx = this.client.begin();
+    this.client.publish({
+      destination: '/app/reset',
+      headers: { receipt: tx.id },
     });
     tx.commit();
   }

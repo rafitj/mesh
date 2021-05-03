@@ -32,10 +32,12 @@ export const ConnectionForm = observer(() => {
 
   const toggleConnection = (resource: Resource) => {
     if (resourceToConnect) {
-      const isConnected = resource.connections
-        .map((c) => [c.src, c.target])
-        .flat()
-        .includes(resourceToConnect.id);
+      const isConnected =
+        resource.connections &&
+        resource.connections
+          .map((c) => [c.src, c.target])
+          .flat()
+          .includes(resourceToConnect.id);
       const serverId =
         resourceToConnect.type === 'SERVER'
           ? resourceToConnect.id
@@ -86,10 +88,12 @@ export const ConnectionForm = observer(() => {
         setConnectedResources(
           NetworkStore.resources.map((r) => ({
             id: r.id,
-            connected: r.connections
-              .map((c) => [c.src, c.target])
-              .flat()
-              .includes(resource.id),
+            connected:
+              r.connections !== undefined &&
+              r.connections
+                .map((c) => [c.src, c.target])
+                .flat()
+                .includes(resource.id),
           }))
         );
       }

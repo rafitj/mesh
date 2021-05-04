@@ -14,6 +14,7 @@ public class ProjectEntity {
     private String id = UUID.randomUUID().toString().replace("-", "");;
     private String name;
     private int budget;
+    private String slug;
     private boolean isPublic = false;
     @Relationship(type = "RESOURCE_OF", direction = Relationship.Direction.INCOMING)
     private List<ResourceOfRelationshipEntity> resources;
@@ -22,6 +23,7 @@ public class ProjectEntity {
         this.name = name;
         this.budget = budget;
         this.resources = resources;
+        this.slug = name.toLowerCase().replaceAll(" ", "-");
     }
 
     public ProjectEntity() {
@@ -49,6 +51,7 @@ public class ProjectEntity {
 
     public void setName(String name) {
         this.name = name;
+        this.slug = name.toLowerCase().replaceAll(" ", "-");
     }
 
     public int getBudget() {
@@ -72,5 +75,9 @@ public class ProjectEntity {
             this.resources = new ArrayList<>();
         }
         this.resources.add(resource);
+    }
+
+    public String getSlug() {
+        return slug;
     }
 }

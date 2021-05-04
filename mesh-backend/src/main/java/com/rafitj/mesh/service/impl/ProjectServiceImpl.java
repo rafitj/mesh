@@ -47,8 +47,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDTO getProjectById(String id) {
-        Optional<ProjectEntity> projectEntity = projectRepo.findById(id);
-        if (projectEntity.isPresent()) {
+        ProjectEntity projectEntity = projectRepo.findById(id).orElse(null);
+        if (projectEntity != null) {
             ProjectDTO projectDTO = new ProjectDTO();
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.map(projectEntity,projectDTO);
@@ -88,8 +88,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDTO updateProject(PatchProjectRequest patchProjectRequest) {
-        Optional<ProjectEntity> projectEntity = projectRepo.findById(patchProjectRequest.getId());
+    public ProjectDTO updateProject(PatchProjectRequest patchProjectRequest, String id) {
+        Optional<ProjectEntity> projectEntity = projectRepo.findById(id);
         if (projectEntity.isPresent()) {
             ProjectEntity updatedProjectEntity = new ProjectEntity();
             ProjectDTO projectDTO = new ProjectDTO();

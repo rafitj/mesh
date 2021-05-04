@@ -15,5 +15,5 @@ public interface ProjectService {
     List<ResourceDTO> getProjectResources(String id);
     ProjectDTO createProject(CreateProjectRequest createProjectRequest);
     String deleteProject(String id);
-    ProjectDTO updateProject(PatchProjectRequest patchProjectRequest);
+    ProjectDTO updateProject(PatchProjectRequest patchProjectRequest, String id);
 }

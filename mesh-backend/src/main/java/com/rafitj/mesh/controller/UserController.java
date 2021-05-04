@@ -1,25 +1,28 @@
 package com.rafitj.mesh.controller;
 
-import com.rafitj.mesh.io.documents.UserDocument;
-import com.rafitj.mesh.io.repos.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rafitj.mesh.io.dto.shared.UserDTO;
+import com.rafitj.mesh.service.impl.UserServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
-    private final UserRepo userRepo;
+    private final UserServiceImpl userService;
 
-    public UserController(UserRepo userRepo) {
-        this.userRepo = userRepo;
+    public UserController(UserServiceImpl userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("/all")
-    public List<UserDocument> getUser(){
-       return userRepo.findAll();
+    @GetMapping("/")
+    public UserDTO getUser(@RequestBody String username){
+        return userService.getUser(username);
+    }
+
+    @GetMapping("/check")
+    public boolean checkUsernameAvailability(@RequestBody String username){
+        return userService.checkUsernameAvailability(username);
     }
 }

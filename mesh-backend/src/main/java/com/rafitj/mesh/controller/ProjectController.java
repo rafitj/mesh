@@ -40,9 +40,9 @@ public class ProjectController {
         return projectService.createProject(createProjectRequest);
     }
 
-    @PatchMapping
-    private ProjectDTO updateProject(@RequestBody PatchProjectRequest patchProjectRequest) {
-        return projectService.updateProject(patchProjectRequest);
+    @PatchMapping("/{id}")
+    private ProjectDTO updateProject(@RequestBody PatchProjectRequest patchProjectRequest, @PathVariable String id) {
+        return projectService.updateProject(patchProjectRequest, id);
     }
 
     @DeleteMapping("/{id}")

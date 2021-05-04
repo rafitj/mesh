@@ -10,11 +10,21 @@ public class UserDocument {
     @Id
     private String id;
     private String username;
+    private String pin;
     private List<String> projects;
 
-    public UserDocument(String username, List<String> projects) {
+    public UserDocument(String username, String pin, List<String> projects) {
+        this.pin = pin;
         this.username = username;
         this.projects = projects;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
     }
 
     public String getId() {

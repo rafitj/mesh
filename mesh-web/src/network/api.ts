@@ -1,5 +1,6 @@
 import axios, { Method } from 'axios';
 import { ResourceType } from '../types/Resources';
+import { User } from '../types/User';
 import {
   ConnectResourceRequest,
   ConnectResourceResponse,
@@ -17,6 +18,13 @@ import {
   GetProjectResourcesResponse,
   GetProjectResponse,
   PatchProjectRequest,
+  UpdateClientRequest,
+  UpdateClientResponse,
+  UpdateDatabaseRequest,
+  UpdateDatabaseResponse,
+  UpdateServerRequest,
+  UpdateServerResponse,
+  UserRequest,
 } from './protos';
 
 export const baseUrl = 'http://localhost:8090/';
@@ -39,10 +47,7 @@ export class Api {
         });
         resolve(response.data as S);
       } catch (e) {
-        const {
-          response: { data },
-        } = e;
-        reject(data);
+        reject(e);
       }
     });
 
@@ -74,7 +79,7 @@ export class Api {
     const data = await Api.createRequest<
       PatchProjectRequest,
       GetProjectInfoResponse
-    >(`project`, 'PATCH', payload);
+    >(`project/${payload.id}`, 'PATCH', payload);
     return data;
   };
 
@@ -115,6 +120,30 @@ export class Api {
     return data;
   };
 
+  static updateServer = async (payload: UpdateServerRequest) => {
+    const data = await Api.createRequest<
+      UpdateServerRequest,
+      UpdateServerResponse
+    >(`server/${payload.id}`, 'PATCH', payload);
+    return data;
+  };
+
+  static updateClient = async (payload: UpdateClientRequest) => {
+    const data = await Api.createRequest<
+      UpdateClientRequest,
+      UpdateClientResponse
+    >(`client/${payload.id}`, 'PATCH', payload);
+    return data;
+  };
+
+  static updateDatabase = async (payload: UpdateDatabaseRequest) => {
+    const data = await Api.createRequest<
+      UpdateDatabaseRequest,
+      UpdateDatabaseResponse
+    >(`database/${payload.id}`, 'PATCH', payload);
+    return data;
+  };
+
   static deleteResource = async (resourceType: ResourceType, id: string) => {
     const data = await Api.createRequest<null, null>(
       `${resourceType.toLowerCase()}/${id}`,
@@ -146,6 +175,33 @@ export class Api {
     const data = await Api.createRequest<DisconnectResourceRequest, null>(
       `resource/disconnect`,
       'DELETE',
+      payload
+    );
+    return data;
+  };
+
+  static checkUsernameAvailability = async (username: string) => {
+    const data = await Api.createRequest<string, boolean>(
+      `user/check`,
+      'GET',
+      username
+    );
+    return data;
+  };
+
+  static loginUser = async (payload: UserRequest) => {
+    const data = await Api.createRequest<UserRequest, User>(
+      `user/login`,
+      'POST',
+      payload
+    );
+    return data;
+  };
+
+  static signupUser = async (payload: UserRequest) => {
+    const data = await Api.createRequest<UserRequest, User>(
+      `user/signup`,
+      'POST',
       payload
     );
     return data;

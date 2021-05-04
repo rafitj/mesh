@@ -28,13 +28,16 @@ interface ServerFormProps {
   description: string;
   label: string;
   onFormChange: (s: CreateServerRequest) => void;
+  data?: CreateServerRequest;
 }
 
 export const ServerForm = observer(
-  ({ onFormChange, description, label }: ServerFormProps) => {
+  ({ onFormChange, description, label, data }: ServerFormProps) => {
     const ProjectStore = React.useContext(ProjectContext);
     const [serverInstance, setServerInstance] = React.useState<ServerInstance>(
-      InstanceList[2]
+      data?.instanceType
+        ? { provider: 'AWS', instanceType: data.instanceType }
+        : InstanceList[2]
     );
     const setForm = () => {
       if (ProjectStore.selectedProject) {
@@ -49,7 +52,7 @@ export const ServerForm = observer(
     };
     React.useEffect(() => {
       setForm();
-    });
+    }, []);
 
     const getProviderIcon = (p: ServerProvider) => {
       if (p === 'AWS') {

@@ -3,4 +3,5 @@ export interface Project {
   name: string;
   budget: number;
   public: boolean;
+  slug: string;
 }

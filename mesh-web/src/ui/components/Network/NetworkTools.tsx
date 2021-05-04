@@ -20,16 +20,36 @@ interface NetworkToolsProps {
 }
 
 export const NetworkTools = observer(({ resetGraph }: NetworkToolsProps) => {
+  const [isOpen, setIsOpen] = React.useState(false);
   return (
     <Box position="absolute" right="0">
       <ButtonGroup>
-        <Popover placement="left-end" size="md" id="chakra-popover">
+        <Popover
+          placement="left-end"
+          size="md"
+          id="chakra-popover"
+          isOpen={isOpen}
+          onClose={() => {
+            setIsOpen(false);
+          }}
+        >
           <PopoverTrigger>
-            <Button leftIcon={<HiServer />}>Add Resource</Button>
+            <Button
+              leftIcon={<HiServer />}
+              onClick={() => {
+                setIsOpen(true);
+              }}
+            >
+              Add Resource
+            </Button>
           </PopoverTrigger>
           <PopoverContent p={3}>
             <PopoverArrow />
-            <ResourceForm />
+            <ResourceForm
+              onClose={() => {
+                setIsOpen(false);
+              }}
+            />
             <PopoverCloseButton />
           </PopoverContent>
         </Popover>

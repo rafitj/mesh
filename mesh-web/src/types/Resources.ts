@@ -23,7 +23,7 @@ export interface Database extends BaseResource {
 
 export interface Client extends BaseResource {
   throughput: number;
-  clickrate: number;
+  clickRate: number;
 }
 
 export interface Connection {

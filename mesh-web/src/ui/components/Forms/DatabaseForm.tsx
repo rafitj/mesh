@@ -39,12 +39,15 @@ interface DatabaseFormProps {
   description: string;
   label: string;
   onFormChange: (s: CreateDatabaseRequest) => void;
+  data?: CreateDatabaseRequest;
 }
 
 export const DatabaseForm = observer(
-  ({ onFormChange, label, description }: DatabaseFormProps) => {
+  ({ onFormChange, label, description, data }: DatabaseFormProps) => {
     const ProjectStore = React.useContext(ProjectContext);
-    const [DBType, setDBType] = React.useState<string>(DBTypeList[0]);
+    const [DBType, setDBType] = React.useState<string>(
+      data?.dbType ?? DBTypeList[0]
+    );
 
     const setForm = () => {
       if (ProjectStore.selectedProject) {
@@ -52,6 +55,7 @@ export const DatabaseForm = observer(
           description,
           label,
           dbType: DBType,
+          dbResources: [],
           projectId: ProjectStore.selectedProject!.id,
           type: 'DATABASE',
         });
@@ -59,7 +63,7 @@ export const DatabaseForm = observer(
     };
     React.useEffect(() => {
       setForm();
-    });
+    }, []);
 
     const getDBIcon = (db: string) => {
       if (db === 'Postgres') {

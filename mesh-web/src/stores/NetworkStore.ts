@@ -6,6 +6,9 @@ import {
   CreateDatabaseRequest,
   CreateServerRequest,
   DisconnectResourceRequest,
+  UpdateClientRequest,
+  UpdateDatabaseRequest,
+  UpdateServerRequest,
 } from '../network/protos';
 import { MSG_TYPE, NetworkWS } from '../network/ws';
 import { NetworkLink } from '../types/Network';
@@ -67,6 +70,9 @@ export class NetworkState {
       createClient: action,
       createDatabase: action,
       createServer: action,
+      updateClient: action,
+      updateDatabase: action,
+      updateServer: action,
       deleteResource: action,
       connectResource: action,
       disconnectResource: action,
@@ -187,7 +193,7 @@ export class NetworkState {
     this.isLoading = false;
   };
 
-  // TODO: focus on created item
+  // TODO: focus on created/updated item
   createClient = async (payload: CreateClientRequest) => {
     this.isLoading = true;
     try {
@@ -226,6 +232,48 @@ export class NetworkState {
     } catch (e) {
       this.hasError = true;
       this.statusMessage = 'Failed to create database';
+    }
+    this.isLoading = false;
+  };
+
+  updateClient = async (payload: UpdateClientRequest) => {
+    this.isLoading = true;
+    try {
+      const newResource = await Api.updateClient(payload);
+      this.resources = [...this.resources, newResource];
+      this.hasError = false;
+      this.statusMessage = 'Client succesfully updated';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to update client';
+    }
+    this.isLoading = false;
+  };
+
+  updateServer = async (payload: UpdateServerRequest) => {
+    this.isLoading = true;
+    try {
+      const newResource = await Api.updateServer(payload);
+      this.resources = [...this.resources, newResource];
+      this.hasError = false;
+      this.statusMessage = 'Server succesfully updated';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to update server';
+    }
+    this.isLoading = false;
+  };
+
+  updateDatabase = async (payload: UpdateDatabaseRequest) => {
+    this.isLoading = true;
+    try {
+      const newResource = await Api.updateDatabase(payload);
+      this.resources = [...this.resources, newResource];
+      this.hasError = false;
+      this.statusMessage = 'Database succesfully updated';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to update database';
     }
     this.isLoading = false;
   };

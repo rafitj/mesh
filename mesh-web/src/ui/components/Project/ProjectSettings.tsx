@@ -69,7 +69,7 @@ export const ProjectSettings = observer(() => {
             leftIcon={<LinkIcon />}
             onClick={() => {
               navigator.clipboard.writeText(
-                `www.mesh-app.com/${ProjectStore.selectedProject?.id}}`
+                `http://localhost:3000/view/${ProjectStore.selectedProjectInfo?.slug}`
               );
               toast({
                 ...toastSettings,

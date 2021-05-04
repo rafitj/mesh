@@ -8,6 +8,7 @@ import {
 import { observer } from 'mobx-react';
 import React from 'react';
 import { Resource } from '../../../types/Resources';
+import { ResourceForm } from './ResourceForm';
 
 interface ResourceEditDialogProps {
   isOpen: boolean;
@@ -22,7 +23,9 @@ export const ResourceEditDialog = observer(
         <ModalOverlay />
         <ModalContent p={4}>
           <ModalCloseButton />
-          <ModalBody></ModalBody>
+          <ModalBody>
+            <ResourceForm resource={{ ...resource }} onClose={onClose} />
+          </ModalBody>
         </ModalContent>
       </Modal>
     );

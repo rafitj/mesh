@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Center,
   Container,
   Heading,
@@ -8,11 +7,12 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
+import { observer } from 'mobx-react';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import MeshLogo from '../assets/MeshLogoTransparent.svg';
+import MeshLogo from '../../assets/MeshLogoTransparent.svg';
+import { HomeAuth } from './HomeAuth';
 
-export const Home = () => {
+export const Home = observer(() => {
   return (
     <Container centerContent={true} height={'100vh'}>
       <Center h={'100vh'}>
@@ -28,16 +28,12 @@ export const Home = () => {
             <Text size="md">Welcome to</Text>
             <Heading size="lg">mesh</Heading>
           </Box>
-          <Text color="gray.500">
+          <Text color="gray.500" mb={1}>
             Build and simulate server architecture to optimize your applications
           </Text>
-          <Link to="/projects">
-            <Button width="100%" my={1}>
-              Start
-            </Button>
-          </Link>
+          <HomeAuth />
         </Stack>
       </Center>
     </Container>
   );
-};
+});

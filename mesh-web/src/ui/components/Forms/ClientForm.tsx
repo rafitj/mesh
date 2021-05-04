@@ -17,11 +17,12 @@ interface ClientFormProps {
   description: string;
   label: string;
   onFormChange: (s: CreateClientRequest) => void;
+  data?: CreateClientRequest;
 }
 export const ClientForm = observer(
-  ({ description, label, onFormChange }: ClientFormProps) => {
-    const [throughput, setThroughput] = React.useState(1000);
-    const [clickRate, setClickRate] = React.useState(1000);
+  ({ description, label, onFormChange, data }: ClientFormProps) => {
+    const [throughput, setThroughput] = React.useState(data?.throughput ?? 100);
+    const [clickRate, setClickRate] = React.useState(data?.clickRate ?? 100);
 
     const ProjectStore = React.useContext(ProjectContext);
     const setForm = () => {
@@ -38,7 +39,7 @@ export const ClientForm = observer(
     };
     React.useEffect(() => {
       setForm();
-    });
+    }, []);
 
     const onChangeThroughput = (_: string, t: number) => {
       setThroughput(isNaN(t) ? 0 : t);

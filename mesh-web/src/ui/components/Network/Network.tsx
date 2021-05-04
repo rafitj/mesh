@@ -36,6 +36,8 @@ export const Network = observer(() => {
       strokeLinecap: 'round',
     },
     focusZoom: 1.25,
+    maxZoom: 3,
+    minZoom: 0.5,
     initialZoom: 1,
     highlightOpacity: 0.5,
     d3: {

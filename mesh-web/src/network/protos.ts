@@ -11,6 +11,7 @@ import {
 export interface GetProjectResponse {
   id: string;
   name: string;
+  slug: string;
 }
 
 export interface GetProjectInfoResponse extends Project {}
@@ -49,13 +50,23 @@ export interface CreateServerRequest extends CreateResourceRequest {
 
 export interface CreateDatabaseRequest extends CreateResourceRequest {
   dbType: string;
+  dbResources: string[];
 }
+
+export interface UpdateClientRequest extends Client {}
+export interface UpdateDatabaseRequest extends Database {}
+export interface UpdateServerRequest extends Server {}
 
 export interface CreateClientResponse extends Client {}
 export interface CreateServerResponse extends Server {}
 export interface CreateDatabaseResponse extends Database {}
+export interface UpdateClientResponse extends Client {}
+export interface UpdateServerResponse extends Server {}
+export interface UpdateDatabaseResponse extends Database {}
 
 export type DuplicateResourceResponse = Client | Server | Database;
+
+export type UpdateResourceRequest = Client | Server | Database;
 
 export interface ConnectResourceRequest extends Connection {}
 export interface DisconnectResourceRequest {
@@ -65,4 +76,9 @@ export interface DisconnectResourceRequest {
 export interface ConnectResourceResponse {
   target: string;
   src: string;
+}
+
+export interface UserRequest {
+  username: string;
+  pin: string;
 }

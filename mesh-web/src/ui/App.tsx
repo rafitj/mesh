@@ -8,7 +8,7 @@ import {
   ProjectContext,
   ProjectStore,
 } from '../stores/MeshContext';
-import { Home } from './components/Home';
+import { Home } from './components/Home/Home';
 import { ProjectDashboard } from './components/Project/ProjectDashboard';
 import './styles/app.css';
 import theme from './styles/theme';
@@ -19,10 +19,17 @@ export const App = observer(() => {
       <Router>
         <div>
           <Switch>
-            <Route exact={true} path="/">
+            <Route exact={true} path="/home">
               <Home />
             </Route>
-            <Route exact={true} path="/projects">
+            <Route exact={true} path="/">
+              <NetworkContext.Provider value={NetworkStore}>
+                <ProjectContext.Provider value={ProjectStore}>
+                  <ProjectDashboard />
+                </ProjectContext.Provider>
+              </NetworkContext.Provider>
+            </Route>
+            <Route exact={true} path="/view/:slug">
               <NetworkContext.Provider value={NetworkStore}>
                 <ProjectContext.Provider value={ProjectStore}>
                   <ProjectDashboard />

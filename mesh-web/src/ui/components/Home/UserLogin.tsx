@@ -1,3 +1,4 @@
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import {
   Box,
   FormControl,
@@ -10,7 +11,6 @@ import {
   Text,
 } from '@chakra-ui/react';
 import React from 'react';
-import { IoEnter } from 'react-icons/io5';
 import { useHistory } from 'react-router';
 import { UserContext } from '../../../stores/MeshContext';
 
@@ -27,9 +27,11 @@ export const UserLogin = () => {
     UserStore.loginUser({ username, pin }).then(() => {
       if (UserStore.hasError) {
         setFormError('Incorrect pin');
+      } else {
+        setFormError('');
+        history.push('/');
       }
     });
-    history.push('/');
   };
   const onSubmit = () => {
     setEnterPinMode(true);
@@ -50,9 +52,10 @@ export const UserLogin = () => {
                 value={username}
                 onChange={changeUsername}
                 onKeyDown={handleEnter}
+                size="md"
               />
               <IconButton
-                icon={<IoEnter />}
+                icon={<ArrowForwardIcon />}
                 colorScheme="gray"
                 type="submit"
                 aria-label="Enter"
@@ -61,8 +64,8 @@ export const UserLogin = () => {
                 onClick={onSubmit}
               />
             </Stack>
-            <Box rounded="md" background="blackAlpha.200" py={1}>
-              {username === '' && (
+            <Box rounded="md" background="transparent" py={1}>
+              {formError === '' && (
                 <Text mt={2} fontSize="sm" color="green.300">
                   Enter existing username
                 </Text>
@@ -78,8 +81,18 @@ export const UserLogin = () => {
         {enterPinMode && (
           <>
             <HStack justifyContent="center">
+              <IconButton
+                icon={<ArrowBackIcon />}
+                colorScheme="gray"
+                type="submit"
+                aria-label="Back"
+                size="md"
+                onClick={() => {
+                  setEnterPinMode(false);
+                }}
+              />
               <PinInput
-                size="sm"
+                size="md"
                 autoFocus={true}
                 variant="filled"
                 onComplete={onComplete}
@@ -90,14 +103,14 @@ export const UserLogin = () => {
                 <PinInputField />
               </PinInput>
             </HStack>
-            <Box rounded="md" background="blackAlpha.200" py={1}>
+            <Box rounded="md" mt={2} background="transparent" py={1}>
               {formError === '' && (
-                <Text mt={2} fontSize="sm" color="green.300">
-                  Enter your pin
+                <Text fontSize="sm" color="green.300">
+                  Hi {username}, enter your pin
                 </Text>
               )}
               {formError !== '' && (
-                <Text mt={2} fontSize="sm" color="red.300">
+                <Text fontSize="sm" color="red.300">
                   {formError}
                 </Text>
               )}

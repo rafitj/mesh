@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   HStack,
   PinInput,
@@ -17,34 +18,51 @@ interface ReturningAuthProps {
 export const ReturningAuth = observer(
   ({ onNotReturning }: ReturningAuthProps) => {
     const UserStore = React.useContext(UserContext);
+    const returningUser = UserStore.returningUser.username;
     const history = useHistory();
     const [formError, setFormError] = React.useState('');
     const [enterPinMode, setEnterPinMode] = React.useState(false);
     const onComplete = (pin: string) => {
-      UserStore.loginUser({ username: 'Rafit', pin }).then(() => {
+      UserStore.loginUser({ username: returningUser, pin }).then(() => {
         if (UserStore.hasError) {
           setFormError('Incorrect pin');
+        } else {
+          setFormError('');
+          history.push('/');
         }
       });
-      history.push('/');
     };
     return (
       <>
         {enterPinMode ? (
-          <HStack justifyContent="center">
-            <PinInput
-              size="sm"
-              autoFocus={true}
-              variant="filled"
-              isInvalid={formError !== ''}
-              onComplete={onComplete}
-            >
-              <PinInputField />
-              <PinInputField />
-              <PinInputField />
-              <PinInputField />
-            </PinInput>
-          </HStack>
+          <>
+            <HStack justifyContent="center">
+              <PinInput
+                size="md"
+                autoFocus={true}
+                variant="filled"
+                isInvalid={formError !== ''}
+                onComplete={onComplete}
+              >
+                <PinInputField />
+                <PinInputField />
+                <PinInputField />
+                <PinInputField />
+              </PinInput>
+            </HStack>
+            <Box rounded="md" background="transparent" py={1}>
+              {formError === '' && (
+                <Text fontSize="sm" color="green.300">
+                  Hi Rafit, enter your pin
+                </Text>
+              )}
+              {formError !== '' && (
+                <Text fontSize="sm" color="red.300">
+                  {formError}
+                </Text>
+              )}
+            </Box>
+          </>
         ) : (
           <Button
             width="100%"
@@ -53,12 +71,12 @@ export const ReturningAuth = observer(
             }}
             autoFocus={true}
           >
-            Welcome back Rafit
+            Welcome back {returningUser}
           </Button>
         )}
         <Button size="sm" colorScheme="blackAlpha" onClick={onNotReturning}>
           <Text fontSize="sm" cursor="pointer" color="purple.300">
-            I'm not Rafit...
+            I'm not {returningUser}...
           </Text>
         </Button>
       </>

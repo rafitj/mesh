@@ -118,24 +118,6 @@ export const ProjectStats = observer(() => {
           </StatHelpText>
         </Stat>
       </StatGroup>
-      <StatGroup>
-        <Stat>
-          <StatLabel>Avg. Efficiency</StatLabel>
-          <StatNumber>39%</StatNumber>
-          <StatHelpText>
-            <StatArrow type="increase" />
-            3.23%
-          </StatHelpText>
-        </Stat>
-        <Stat>
-          <StatLabel>Avg. Delay</StatLabel>
-          <StatNumber>0.1ms</StatNumber>
-          <StatHelpText>
-            <StatArrow type="decrease" />
-            0.07%
-          </StatHelpText>
-        </Stat>
-      </StatGroup>
     </Stack>
   );
 });

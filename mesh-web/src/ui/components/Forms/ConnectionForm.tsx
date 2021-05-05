@@ -89,6 +89,7 @@ export const ConnectionForm = observer(() => {
           NetworkStore.resources.map((r) => ({
             id: r.id,
             connected:
+              r.connections !== null &&
               r.connections !== undefined &&
               r.connections
                 .map((c) => [c.src, c.target])

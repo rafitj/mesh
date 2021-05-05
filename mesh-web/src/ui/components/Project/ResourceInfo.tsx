@@ -21,6 +21,7 @@ import {
   Tfoot,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useToast,
 } from '@chakra-ui/react';
@@ -40,6 +41,7 @@ import { ResourceEditDialog } from '../Forms/ResourceEditDialog';
 export const ResourceInfo = observer(() => {
   const NetworkStore = React.useContext(NetworkContext);
   const [isOpen, setIsOpen] = React.useState(false);
+  const [tooltipOpen, setTooltipOpen] = React.useState(false);
   const toast = useToast();
   return (
     <>
@@ -186,13 +188,28 @@ export const ResourceInfo = observer(() => {
                   >
                     Edit Info
                   </Button>
-                  <Button
-                    leftIcon={<HiOutlineLightningBolt />}
-                    colorScheme="yellow"
-                    variant="outline"
+                  <Tooltip
+                    colorScheme="blackAlpha"
+                    label="Coming Soon!"
+                    aria-label="tooltip"
+                    isOpen={tooltipOpen}
                   >
-                    Toggle Live
-                  </Button>
+                    <Button
+                      leftIcon={<HiOutlineLightningBolt />}
+                      colorScheme="yellow"
+                      variant="outline"
+                      cursor="not-allowed"
+                      opacity={0.25}
+                      onMouseEnter={() => {
+                        setTooltipOpen(true);
+                      }}
+                      onMouseLeave={() => {
+                        setTooltipOpen(false);
+                      }}
+                    >
+                      Toggle Live
+                    </Button>
+                  </Tooltip>
                   <Button
                     leftIcon={<HiDuplicate />}
                     colorScheme="purple"

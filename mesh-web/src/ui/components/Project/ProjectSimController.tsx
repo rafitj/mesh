@@ -45,7 +45,7 @@ export const ProjectSimController = observer(() => {
         <Badge colorScheme={isSimulating ? 'green' : 'yellow'}>
           {isSimulating ? 'ACTIVE' : 'PAUSED'}
         </Badge>
-        <Text color="gray.600">{`${
+        <Text fontSize="sm" color="gray.600">{`${
           isSimulating ? 'Simulating' : 'Simulated'
         } for ${minutes} min ${seconds} sec`}</Text>
       </Stack>

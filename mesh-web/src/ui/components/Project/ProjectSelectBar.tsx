@@ -23,6 +23,7 @@ import { ProjectInfo } from './ProjectInfo';
 import { ProjectSettings } from './ProjectSettings';
 import { ProjectSimController } from './ProjectSimController';
 import { ProjectStats } from './ProjectStats';
+import { UserControl } from './UserControl';
 
 export const ProjectSelectBar = observer(() => {
   const ProjectStore = React.useContext(ProjectContext);
@@ -58,6 +59,10 @@ export const ProjectSelectBar = observer(() => {
       />
       <Box>
         <Stack p={4} direction="column">
+          <UserControl />
+          <Spacer />
+          <Divider />
+          <Spacer />
           <Heading color="gray.400" size="sm">
             Selected Project
           </Heading>

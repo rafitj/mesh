@@ -8,24 +8,28 @@ type AuthMode = 'LOGIN' | 'SIGNUP';
 
 export const NormalAuth = observer(() => {
   const [authMode, setAuthMode] = React.useState<AuthMode>();
+  const enterLoginMode = () => {
+    setAuthMode('LOGIN');
+  };
+  const enterSignupMode = () => {
+    setAuthMode('SIGNUP');
+  };
   return (
     <>
       {authMode === undefined && (
         <HStack justifyContent="center">
-          <Button width="50%">Login</Button>
-          <Button width="50%">Signup</Button>
+          <Button width="50%" size="md" onClick={enterLoginMode}>
+            Login
+          </Button>
+          <Button width="50%" size="md" onClick={enterSignupMode}>
+            Signup
+          </Button>
         </HStack>
       )}
       {authMode === 'LOGIN' && (
         <>
           <UserLogin />
-          <Button
-            size="sm"
-            colorScheme="blackAlpha"
-            onClick={() => {
-              setAuthMode('SIGNUP');
-            }}
-          >
+          <Button size="sm" colorScheme="blackAlpha" onClick={enterSignupMode}>
             <Text fontSize="sm" cursor="pointer" color="purple.300">
               Actually, I'll sign up...
             </Text>
@@ -35,13 +39,7 @@ export const NormalAuth = observer(() => {
       {authMode === 'SIGNUP' && (
         <>
           <UserSignup />
-          <Button
-            size="sm"
-            colorScheme="blackAlpha"
-            onClick={() => {
-              setAuthMode('LOGIN');
-            }}
-          >
+          <Button size="sm" colorScheme="blackAlpha" onClick={enterLoginMode}>
             <Text fontSize="sm" cursor="pointer" color="purple.300">
               Actually, I'll login...
             </Text>

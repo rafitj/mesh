@@ -28,6 +28,7 @@ export interface CreateProjectResponse extends GetProjectInfoResponse {}
 export interface CreateProjectRequest {
   name: string;
   budget: number;
+  userId: string;
 }
 
 export type GetProjectResourcesResponse = Resource[];

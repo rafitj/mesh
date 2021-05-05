@@ -80,6 +80,7 @@ export class NetworkState {
       wsHandler: action,
       pauseSimulation: action,
       playSimulation: action,
+      clearNetwork: action,
     });
   }
 
@@ -139,6 +140,16 @@ export class NetworkState {
     });
     return connections;
   }
+
+  clearNetwork = () => {
+    this.selectedItem = undefined;
+    this.resources = [];
+    this.hoveredItem = undefined;
+    this.hoveringItem = false;
+    this.selectedLink = undefined;
+    this.hoveredLink = undefined;
+    this.hoveringLink = false;
+  };
 
   deselectItem = () => {
     this.selectedItem = undefined;

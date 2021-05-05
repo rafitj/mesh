@@ -13,7 +13,11 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { IoMdResize } from 'react-icons/io';
 import { useWindowSize } from '../../../hooks/useWindowSize';
-import { NetworkContext, ProjectContext } from '../../../stores/MeshContext';
+import {
+  NetworkContext,
+  ProjectContext,
+  UserContext,
+} from '../../../stores/MeshContext';
 import { toastSettings } from '../../styles/components';
 import { Network } from '../Network/Network';
 import { ProjectSelectBar } from './ProjectSelectBar';
@@ -23,11 +27,12 @@ export const ProjectDashboard = observer(() => {
   const toast = useToast();
   const ProjectStore = React.useContext(ProjectContext);
   const NetworkStore = React.useContext(NetworkContext);
+  const UserStore = React.useContext(UserContext);
   const [w, h] = useWindowSize();
   const [plsResize, setPlsResize] = React.useState(false);
 
   React.useEffect(() => {
-    ProjectStore.fetchProjects().then(() => {
+    ProjectStore.fetchProjectsByUserId(UserStore.user!.id).then(() => {
       toast({
         ...toastSettings,
         title: ProjectStore.statusMessage,

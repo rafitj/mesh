@@ -1,7 +1,8 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { Api } from '../network/api';
 import { UserRequest } from '../network/protos';
 import { User } from '../types/User';
+import { ProjectState } from './ProjectStore';
 
 export class UserState {
   isAuthorized: boolean = false;
@@ -14,17 +15,36 @@ export class UserState {
 
   user?: User;
 
-  constructor() {
+  projectState: ProjectState;
+
+  constructor(projectState: ProjectState) {
     makeObservable(this, {
       isAuthorized: observable,
       isLoading: observable,
       hasError: observable,
       statusMessage: observable,
       user: observable,
+      projectState: observable,
       loginUser: action,
       checkUsernameAvailability: action,
       signupUser: action,
+      logoutUser: action,
+      returningUser: computed,
     });
+    this.projectState = projectState;
+    const user = this.returningUser;
+    if (user !== null) {
+      this.isAuthorized = true;
+      this.user = user;
+    }
+  }
+
+  get returningUser() {
+    const user = localStorage.getItem('user');
+    if (user != null) {
+      return JSON.parse(user);
+    }
+    return null;
   }
 
   checkUsernameAvailability = async (username: string) => {
@@ -48,6 +68,8 @@ export class UserState {
     try {
       const data = await Api.loginUser(payload);
       this.user = data;
+      localStorage.setItem('user', JSON.stringify(this.user));
+      this.isAuthorized = true;
       // Project stuff
       this.hasError = false;
       this.statusMessage = 'User logged-in';
@@ -62,12 +84,30 @@ export class UserState {
     this.isLoading = true;
     try {
       this.user = await Api.signupUser(payload);
+      this.isAuthorized = true;
       // Project stuff
       this.hasError = false;
       this.statusMessage = 'User registered';
     } catch (e) {
       this.hasError = true;
       this.statusMessage = 'Failed to register new user';
+    }
+    this.isLoading = false;
+  };
+
+  logoutUser = async () => {
+    this.isLoading = true;
+    try {
+      this.user = undefined;
+      localStorage.clear();
+      this.projectState.clearProjects();
+      // Project stuff
+      this.isAuthorized = false;
+      this.hasError = false;
+      this.statusMessage = 'User logged out';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to logout user';
     }
     this.isLoading = false;
   };

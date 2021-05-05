@@ -51,9 +51,9 @@ export class Api {
       }
     });
 
-  static getProjects = async () => {
+  static getAllUserProjects = async (id: string) => {
     const data = await Api.createRequest<null, GetProjectResponse[]>(
-      'project/all',
+      `project/all/${id}`,
       'GET'
     );
     return data;
@@ -181,10 +181,9 @@ export class Api {
   };
 
   static checkUsernameAvailability = async (username: string) => {
-    const data = await Api.createRequest<string, boolean>(
-      `user/check`,
-      'GET',
-      username
+    const data = await Api.createRequest<null, boolean>(
+      `user/check/${username}`,
+      'GET'
     );
     return data;
   };

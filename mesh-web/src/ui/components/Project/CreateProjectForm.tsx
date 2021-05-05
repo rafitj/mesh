@@ -18,7 +18,7 @@ import {
 import { observer } from 'mobx-react';
 import React, { ChangeEvent } from 'react';
 import { IoIosRocket } from 'react-icons/io';
-import { ProjectContext } from '../../../stores/MeshContext';
+import { ProjectContext, UserContext } from '../../../stores/MeshContext';
 import { toastSettings } from '../../styles/components';
 
 interface CreateProjectFormProps {
@@ -28,6 +28,7 @@ interface CreateProjectFormProps {
 export const CreateProjectForm = observer(
   ({ closeDialog }: CreateProjectFormProps) => {
     const ProjectStore = React.useContext(ProjectContext);
+    const UserStore = React.useContext(UserContext);
     const toast = useToast();
     const [name, setName] = React.useState('');
     const [budget, setBudget] = React.useState(1000);
@@ -38,7 +39,11 @@ export const CreateProjectForm = observer(
       setName(e.target.value);
     };
     const createProject = () => {
-      ProjectStore.createProject({ budget, name }).then(() => {
+      ProjectStore.createProject({
+        budget,
+        name,
+        userId: UserStore.user!.id,
+      }).then(() => {
         closeDialog();
         toast({
           ...toastSettings,

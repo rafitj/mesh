@@ -39,12 +39,15 @@ export class ProjectState {
       resourceCost: computed,
       fetchProjectInfo: action,
       selectProject: action,
-      fetchProjects: action,
+      fetchProjectsByUserId: action,
       createProject: action,
       updateProject: action,
       deleteProject: action,
+      clearProjects: action,
+      getInitialProject: action,
     });
     this.networkState = networkState;
+    this.getInitialProject();
   }
 
   get resourceCost() {
@@ -93,6 +96,7 @@ export class ProjectState {
       this.selectedProject = project;
       await this.fetchProjectInfo(project.id);
       await this.networkState.fetchProjectResources(project.id);
+      localStorage.setItem('project', JSON.stringify(this.selectedProject));
       this.hasError = false;
       this.statusMessage = 'New project selected';
     } catch (e) {
@@ -102,13 +106,30 @@ export class ProjectState {
     this.isLoading = false;
   };
 
-  fetchProjects = async () => {
+  getInitialProject = async () => {
     this.isLoading = true;
     try {
-      this.projects = await Api.getProjects();
-      if (this.projects.length > 0) {
+      const projectJSON = localStorage.getItem('project');
+      if (projectJSON) {
+        const project: GetProjectResponse = JSON.parse(projectJSON);
+        await this.selectProject(project);
+      } else if (this.projects.length > 0) {
         await this.selectProject(this.projects[0]);
       }
+      this.hasError = false;
+      this.statusMessage = 'Initial project fetched';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to fetch initial project';
+    }
+    this.isLoading = false;
+  };
+
+  fetchProjectsByUserId = async (userId: string) => {
+    this.isLoading = true;
+    try {
+      this.projects = await Api.getAllUserProjects(userId);
+      this.getInitialProject();
       this.hasError = false;
       this.statusMessage = 'Projects loaded';
     } catch (e) {
@@ -148,12 +169,33 @@ export class ProjectState {
     this.isLoading = true;
     try {
       await Api.deleteProject(id);
-      this.projects.filter((p) => p.id !== id);
+      this.projects = this.projects.filter((p) => p.id !== id);
+      if (this.selectedProject?.id === id) {
+        this.selectedProject = undefined;
+        this.selectedProjectInfo = undefined;
+        localStorage.removeItem('project');
+      }
       this.hasError = false;
       this.statusMessage = 'Project deleted';
     } catch (e) {
       this.hasError = true;
       this.statusMessage = 'Failed to delete project';
+    }
+    this.isLoading = false;
+  };
+
+  clearProjects = async () => {
+    this.isLoading = true;
+    try {
+      this.projects = [];
+      this.selectedProject = undefined;
+      this.selectedProjectInfo = undefined;
+      this.networkState.clearNetwork();
+      this.hasError = false;
+      this.statusMessage = 'Projects cleared';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to clear project';
     }
     this.isLoading = false;
   };

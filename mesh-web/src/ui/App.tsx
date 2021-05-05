@@ -10,6 +10,7 @@ import {
 import { UserContext } from '../stores/MeshContext';
 import { Home } from './components/Home/Home';
 import { ProjectDashboard } from './components/Project/ProjectDashboard';
+import { ProjectViewMode } from './components/Project/ProjectViewMode';
 import './styles/app.css';
 import theme from './styles/theme';
 
@@ -31,7 +32,7 @@ export const App = observer(() => {
               )}
             </Route>
             <Route exact={true} path="/view/:slug">
-              <ProjectDashboard />
+              <ProjectViewMode />
             </Route>
           </Switch>
         </div>

@@ -31,35 +31,39 @@ export const ProjectSettings = observer(() => {
       {ProjectStore.selectedProjectInfo && (
         <Stack spacing={3}>
           <Heading color="gray.400" size="sm">
-            Share Settings
+            {ProjectStore.viewMode ? 'Project Share' : 'Share Settings'}
           </Heading>
-          <Box>
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Box
+          {!ProjectStore.viewMode && (
+            <Box>
+              <Stack
+                direction="row"
                 alignItems="center"
-                opacity={ProjectStore.selectedProjectInfo.public ? 0.5 : 1}
+                justifyContent="space-between"
               >
-                <Badge>Private</Badge>
-                <LockIcon ml={2} />
-              </Box>
-              <Switch
-                colorScheme="teal"
-                size="lg"
-                isChecked={ProjectStore.selectedProjectInfo.public}
-                onChange={togglePrivacy}
-              />
-              <Box opacity={ProjectStore.selectedProjectInfo.public ? 1 : 0.5}>
-                <UnlockIcon mr={2} />
-                <Badge>Public</Badge>
-              </Box>
-            </Stack>
-          </Box>
+                <Box
+                  alignItems="center"
+                  opacity={ProjectStore.selectedProjectInfo.public ? 0.5 : 1}
+                >
+                  <Badge>Private</Badge>
+                  <LockIcon ml={2} />
+                </Box>
+                <Switch
+                  colorScheme="teal"
+                  size="lg"
+                  isChecked={ProjectStore.selectedProjectInfo.public}
+                  onChange={togglePrivacy}
+                />
+                <Box
+                  opacity={ProjectStore.selectedProjectInfo.public ? 1 : 0.5}
+                >
+                  <UnlockIcon mr={2} />
+                  <Badge>Public</Badge>
+                </Box>
+              </Stack>
+            </Box>
+          )}
           <Text color="gray.500">
-            {ProjectStore.selectedProjectInfo.public
+            {!ProjectStore.selectedProjectInfo.public
               ? 'This project is private and only you can see or edit it'
               : 'This project is public and anyone with a link can view but not edit it'}
           </Text>

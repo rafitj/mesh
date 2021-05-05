@@ -10,10 +10,11 @@ import React from 'react';
 import { HiLogout } from 'react-icons/hi';
 import { MdAccountBox } from 'react-icons/md';
 import { useHistory } from 'react-router';
-import { UserContext } from '../../../stores/MeshContext';
+import { ProjectContext, UserContext } from '../../../stores/MeshContext';
 
 export const UserControl = observer(() => {
   const UserStore = React.useContext(UserContext);
+  const ProjectStore = React.useContext(ProjectContext);
   const history = useHistory();
   const logout = () => {
     UserStore.logoutUser();
@@ -23,12 +24,12 @@ export const UserControl = observer(() => {
   return (
     <>
       <Heading color="gray.400" size="sm">
-        Account
+        {ProjectStore.viewMode ? 'Made By' : 'Account'}
       </Heading>
       <Popover placement={'right'}>
         <PopoverTrigger>
-          <Button leftIcon={<MdAccountBox />}>
-            {UserStore.user?.username}
+          <Button leftIcon={<MdAccountBox />} disabled={ProjectStore.viewMode}>
+            {UserStore.user?.username ?? 'Anonymous'}
           </Button>
         </PopoverTrigger>
         <PopoverContent color="white" width="150px">

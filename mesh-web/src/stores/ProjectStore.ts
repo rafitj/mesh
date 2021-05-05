@@ -1,6 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { Api } from '../network/api';
 import {
+  CanProjectViewResponse,
   CreateProjectRequest,
   GetProjectResponse,
   PatchProjectRequest,
@@ -22,6 +23,8 @@ export class ProjectState {
   statusMessage: string = '';
 
   networkState: NetworkState;
+
+  viewMode: boolean = false;
 
   constructor(networkState: NetworkState) {
     makeObservable(this, {
@@ -45,6 +48,8 @@ export class ProjectState {
       deleteProject: action,
       clearProjects: action,
       getInitialProject: action,
+      viewMode: observable,
+      enableViewMode: action,
     });
     this.networkState = networkState;
     this.getInitialProject();
@@ -196,6 +201,40 @@ export class ProjectState {
     } catch (e) {
       this.hasError = true;
       this.statusMessage = 'Failed to clear project';
+    }
+    this.isLoading = false;
+  };
+
+  canProjectView = async (slug: string) => {
+    this.isLoading = true;
+    let data: CanProjectViewResponse;
+    try {
+      data = await Api.canProjectView(slug);
+      this.hasError = false;
+      this.statusMessage = 'Project is viewable';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to check if project is viewable';
+      data = { canView: false, msg: this.statusMessage };
+    }
+    this.isLoading = false;
+    return data;
+  };
+
+  enableViewMode = async (id: string) => {
+    this.isLoading = true;
+    try {
+      this.viewMode = true;
+      await this.fetchProjectInfo(id);
+      if (this.selectedProjectInfo) {
+        await this.networkState.fetchProjectResources(id);
+        this.selectedProject = { ...this.selectedProjectInfo };
+      }
+      this.hasError = false;
+      this.statusMessage = 'Project fetched for view';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to fetch project for view';
     }
     this.isLoading = false;
   };

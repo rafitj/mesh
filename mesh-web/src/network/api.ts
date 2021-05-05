@@ -2,6 +2,7 @@ import axios, { Method } from 'axios';
 import { ResourceType } from '../types/Resources';
 import { User } from '../types/User';
 import {
+  CanProjectViewResponse,
   ConnectResourceRequest,
   ConnectResourceResponse,
   CreateClientRequest,
@@ -202,6 +203,14 @@ export class Api {
       `user/signup`,
       'POST',
       payload
+    );
+    return data;
+  };
+
+  static canProjectView = async (slug: string) => {
+    const data = await Api.createRequest<null, CanProjectViewResponse>(
+      `project/check/${slug}`,
+      'GET'
     );
     return data;
   };

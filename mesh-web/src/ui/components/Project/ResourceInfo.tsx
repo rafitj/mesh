@@ -32,7 +32,7 @@ import {
   HiDuplicate,
   HiOutlineLightningBolt,
 } from 'react-icons/hi';
-import { NetworkContext } from '../../../stores/MeshContext';
+import { NetworkContext, ProjectContext } from '../../../stores/MeshContext';
 import { getResourceImg } from '../../../utils/helper';
 import { toastSettings } from '../../styles/components';
 import '../../styles/graph.css';
@@ -40,6 +40,7 @@ import { ResourceEditDialog } from '../Forms/ResourceEditDialog';
 
 export const ResourceInfo = observer(() => {
   const NetworkStore = React.useContext(NetworkContext);
+  const ProjectStore = React.useContext(ProjectContext);
   const [isOpen, setIsOpen] = React.useState(false);
   const [tooltipOpen, setTooltipOpen] = React.useState(false);
   const toast = useToast();
@@ -185,6 +186,7 @@ export const ResourceInfo = observer(() => {
                     onClick={() => {
                       setIsOpen(true);
                     }}
+                    disabled={ProjectStore.viewMode}
                   >
                     Edit Info
                   </Button>
@@ -214,6 +216,7 @@ export const ResourceInfo = observer(() => {
                     leftIcon={<HiDuplicate />}
                     colorScheme="purple"
                     variant="outline"
+                    disabled={ProjectStore.viewMode}
                     onClick={() =>
                       NetworkStore.focusItem &&
                       NetworkStore.duplicateResource(NetworkStore.focusItem)
@@ -225,6 +228,7 @@ export const ResourceInfo = observer(() => {
                     leftIcon={<DeleteIcon />}
                     colorScheme="red"
                     variant="outline"
+                    disabled={ProjectStore.viewMode}
                     onClick={() => {
                       if (NetworkStore.focusItem) {
                         NetworkStore.deleteResource(

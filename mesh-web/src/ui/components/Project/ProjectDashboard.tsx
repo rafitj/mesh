@@ -32,13 +32,15 @@ export const ProjectDashboard = observer(() => {
   const [plsResize, setPlsResize] = React.useState(false);
 
   React.useEffect(() => {
-    ProjectStore.fetchProjectsByUserId(UserStore.user!.id).then(() => {
-      toast({
-        ...toastSettings,
-        title: ProjectStore.statusMessage,
-        status: ProjectStore.hasError ? 'error' : 'success',
+    if (UserStore.user && !ProjectStore.viewMode) {
+      ProjectStore.fetchProjectsByUserId(UserStore.user.id).then(() => {
+        toast({
+          ...toastSettings,
+          title: ProjectStore.statusMessage,
+          status: ProjectStore.hasError ? 'error' : 'success',
+        });
       });
-    });
+    }
     NetworkStore.initSimulation();
   }, []);
 

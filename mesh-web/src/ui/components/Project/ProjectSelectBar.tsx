@@ -32,6 +32,7 @@ export const ProjectSelectBar = observer(() => {
     'CREATE'
   );
   const toast = useToast();
+
   return (
     <>
       <ProjectDialog
@@ -44,7 +45,10 @@ export const ProjectSelectBar = observer(() => {
         changeToViewMode={() => {
           setDialogState('VIEW');
         }}
-        isOpen={isDialogOpen || ProjectStore.projects.length < 1}
+        isOpen={
+          isDialogOpen ||
+          (ProjectStore.projects.length < 1 && !ProjectStore.viewMode)
+        }
         state={ProjectStore.projects.length < 1 ? 'CREATE' : dialogState}
         onClose={() => {
           if (ProjectStore.projects.length < 1) {
@@ -64,10 +68,14 @@ export const ProjectSelectBar = observer(() => {
           <Divider />
           <Spacer />
           <Heading color="gray.400" size="sm">
-            Selected Project
+            {ProjectStore.viewMode ? 'Project Title' : ' Selected Project'}
           </Heading>
           <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              disabled={ProjectStore.viewMode}
+            >
               {ProjectStore.selectedProject
                 ? ProjectStore.selectedProject.name
                 : 'None'}

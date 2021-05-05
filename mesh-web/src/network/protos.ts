@@ -83,3 +83,8 @@ export interface UserRequest {
   username: string;
   pin: string;
 }
+
+export interface CanProjectViewResponse {
+  canView: boolean;
+  msg: string;
+}

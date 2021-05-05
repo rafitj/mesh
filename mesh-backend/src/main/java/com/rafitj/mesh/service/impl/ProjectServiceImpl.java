@@ -1,5 +1,7 @@
 package com.rafitj.mesh.service.impl;
 
+import com.rafitj.mesh.io.documents.UserDocument;
+import com.rafitj.mesh.io.repos.UserRepo;
 import com.rafitj.mesh.proto.request.CreateProjectRequest;
 import com.rafitj.mesh.proto.request.PatchProjectRequest;
 import com.rafitj.mesh.proto.response.GetAllProjectsResponse;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,11 +27,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final  ProjectRepo projectRepo;
     private final  ServerService serverService;
+    private final UserRepo userRepo;
     private final ClientService clientService;
     private final DatabaseService databaseService;
 
-    public ProjectServiceImpl(ProjectRepo projectRepo, ServerService serverService, ClientService clientService,
+    public ProjectServiceImpl(UserRepo userRepo, ProjectRepo projectRepo, ServerService serverService, ClientService clientService,
                               DatabaseService databaseService) {
+        this.userRepo = userRepo;
         this.projectRepo = projectRepo;
         this.serverService = serverService;
         this.clientService = clientService;
@@ -36,13 +41,20 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<GetAllProjectsResponse> getAllProjects() {
-        List<ProjectEntity> projectEntities = projectRepo.findAll();
-        ModelMapper modelMapper = new ModelMapper();
-        return projectEntities
-                .stream()
-                .map(source -> modelMapper.map(source, GetAllProjectsResponse.class))
-                .collect(Collectors.toList());
+    public List<GetAllProjectsResponse> getAllProjectsByUserId(String id) {
+        UserDocument userDocument = userRepo.findById(id).orElse(null);
+        if (userDocument != null) {
+            List<ProjectEntity> projectEntities = userDocument.getProjects().stream()
+                    .map(p -> projectRepo.findById(p).orElse(null))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            ModelMapper modelMapper = new ModelMapper();
+            return projectEntities
+                    .stream()
+                    .map(source -> modelMapper.map(source, GetAllProjectsResponse.class))
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -68,19 +80,32 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDTO createProject(CreateProjectRequest createProjectRequest) {
-        ProjectEntity projectEntity = new ProjectEntity();
-        ProjectDTO projectDTO = new ProjectDTO();
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.map(createProjectRequest, projectEntity);
-        modelMapper.map(projectEntity, projectDTO);
-        projectRepo.save(projectEntity);
-        return projectDTO;
+        UserDocument userDocument = userRepo.findById(createProjectRequest.getUserId()).orElse(null);
+        if (userDocument != null) {
+            ProjectEntity projectEntity = new ProjectEntity();
+            ProjectDTO projectDTO = new ProjectDTO();
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.map(createProjectRequest, projectEntity);
+            modelMapper.map(projectEntity, projectDTO);
+            projectRepo.save(projectEntity);
+            List<String> projects = userDocument.getProjects();
+            projects.add(projectEntity.getId());
+            userDocument.setProjects(projects);
+            userRepo.save(userDocument);
+            return projectDTO;
+        }
+        return null;
     }
 
     @Override
     public String deleteProject(String id) {
         try {
             projectRepo.deleteById(id);
+            UserDocument userDocument = userRepo.findFirstByProjectsContaining(id);
+            List<String> projects = userDocument.getProjects();
+            projects.remove(id);
+            userDocument.setProjects(projects);
+            userRepo.save(userDocument);
             return "Success! Project has been deleted.";
         } catch (Exception e) {
             return "Something went wrong... Try again!";

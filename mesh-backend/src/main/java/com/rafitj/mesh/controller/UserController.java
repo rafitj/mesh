@@ -25,8 +25,8 @@ public class UserController {
         return userService.registerUser(userRequest);
     }
 
-    @GetMapping("/check")
-    public boolean checkUsernameAvailability(@RequestBody String username){
+    @GetMapping("/check/{username}")
+    public boolean checkUsernameAvailability(@PathVariable String username){
         return userService.checkUsernameAvailability(username);
     }
 }

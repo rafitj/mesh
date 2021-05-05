@@ -4,6 +4,15 @@ public class CreateProjectRequest {
     private String name;
     private String budget;
     private boolean isPublic;
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public boolean isPublic() {
         return isPublic;

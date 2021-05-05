@@ -10,7 +10,7 @@ import com.rafitj.mesh.io.dto.shared.ResourceDTO;
 import java.util.List;
 
 public interface ProjectService {
-    List<GetAllProjectsResponse> getAllProjects();
+    List<GetAllProjectsResponse> getAllProjectsByUserId(String id);
     ProjectDTO getProjectById(String id);
     List<ResourceDTO> getProjectResources(String id);
     ProjectDTO createProject(CreateProjectRequest createProjectRequest);

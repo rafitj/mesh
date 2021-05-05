@@ -20,9 +20,9 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @GetMapping("/all")
-    private List<GetAllProjectsResponse> getProjects() {
-       return projectService.getAllProjects();
+    @GetMapping("/all/{userId}")
+    private List<GetAllProjectsResponse> getProjects(@PathVariable String userId) {
+       return projectService.getAllProjectsByUserId(userId);
     }
 
     @GetMapping("/{id}")

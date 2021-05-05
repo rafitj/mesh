@@ -4,6 +4,7 @@ import com.rafitj.mesh.io.documents.UserDocument;
 import com.rafitj.mesh.io.repos.UserRepo;
 import com.rafitj.mesh.proto.request.CreateProjectRequest;
 import com.rafitj.mesh.proto.request.PatchProjectRequest;
+import com.rafitj.mesh.proto.response.CanViewProjectResponse;
 import com.rafitj.mesh.proto.response.GetAllProjectsResponse;
 import com.rafitj.mesh.io.dto.shared.ProjectDTO;
 import com.rafitj.mesh.io.dto.shared.ResourceDTO;
@@ -125,5 +126,24 @@ public class ProjectServiceImpl implements ProjectService {
             return projectDTO;
         }
         return null;
+    }
+
+    @Override
+    public CanViewProjectResponse canViewProject(String slug) {
+        ProjectEntity projectEntity = projectRepo.findFirstBySlug(slug);
+        CanViewProjectResponse res = new CanViewProjectResponse();
+        if (projectEntity != null) {
+            if (projectEntity.isPublic()) {
+                res.setCanView(true);
+                res.setMsg(projectEntity.getId());
+            } else {
+                res.setCanView(false);
+                res.setMsg("Project is not public");
+            }
+        } else {
+            res.setCanView(false);
+            res.setMsg("Project does not exist");
+        }
+        return res;
     }
 }

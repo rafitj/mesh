@@ -3,6 +3,7 @@ package com.rafitj.mesh.service.intf;
 
 import com.rafitj.mesh.proto.request.CreateProjectRequest;
 import com.rafitj.mesh.proto.request.PatchProjectRequest;
+import com.rafitj.mesh.proto.response.CanViewProjectResponse;
 import com.rafitj.mesh.proto.response.GetAllProjectsResponse;
 import com.rafitj.mesh.io.dto.shared.ProjectDTO;
 import com.rafitj.mesh.io.dto.shared.ResourceDTO;
@@ -16,4 +17,5 @@ public interface ProjectService {
     ProjectDTO createProject(CreateProjectRequest createProjectRequest);
     String deleteProject(String id);
     ProjectDTO updateProject(PatchProjectRequest patchProjectRequest, String id);
+    CanViewProjectResponse canViewProject(String slug);
 }

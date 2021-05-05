@@ -48,6 +48,7 @@ public class ResourceSeeder implements CommandLineRunner {
         ResourceOfRelationshipEntity r7 = new ResourceOfRelationshipEntity(client3);
         ProjectEntity proj1 = new ProjectEntity("First Project", 10000, List.of(r1,r2,r3,r4,r5,r6,r7));
         proj1.setId("69");
+        proj1.setPublic(true);
         serverRepo.deleteAll();
         clientRepo.deleteAll();
         dbRepo.deleteAll();

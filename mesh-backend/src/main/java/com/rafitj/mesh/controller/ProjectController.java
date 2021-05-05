@@ -1,6 +1,7 @@
 package com.rafitj.mesh.controller;
 
 import com.rafitj.mesh.proto.request.CreateProjectRequest;
+import com.rafitj.mesh.proto.response.CanViewProjectResponse;
 import com.rafitj.mesh.proto.response.GetAllProjectsResponse;
 import com.rafitj.mesh.proto.request.PatchProjectRequest;
 import com.rafitj.mesh.io.dto.shared.ProjectDTO;
@@ -48,5 +49,10 @@ public class ProjectController {
     @DeleteMapping("/{id}")
     private String deleteProject(@PathVariable String id) {
         return projectService.deleteProject(id);
+    }
+
+    @GetMapping("/check/{slug}")
+    private CanViewProjectResponse canViewProject(@PathVariable String slug) {
+        return projectService.canViewProject(slug);
     }
 }

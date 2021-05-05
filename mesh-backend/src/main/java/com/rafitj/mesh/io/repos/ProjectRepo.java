@@ -11,4 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface ProjectRepo extends Neo4jRepository<ProjectEntity, String> {
     @Query("MATCH (n)-[r]->(m) WHERE (n.id = $idA AND m.id = $idB) OR (n.id = $idB AND m.id = $idA) DELETE r ")
     void deleteConnection(String idA, String idB);
+
+    @Query("MATCH (n:Project) WHERE (n.slug = $slug) RETURN n")
+    ProjectEntity findFirstBySlug(String slug);
 }

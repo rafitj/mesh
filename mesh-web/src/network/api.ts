@@ -1,4 +1,5 @@
 import axios, { Method } from 'axios';
+import { UserStore } from '../stores/MeshContext';
 import { ResourceType } from '../types/Resources';
 import { User } from '../types/User';
 import {
@@ -42,6 +43,8 @@ export class Api {
           url: `${baseUrl}${endpoint}`,
           method: requestType,
           headers: {
+            Authorization:
+              (UserStore.authToken && `Bearer ${UserStore.authToken}`) || '',
             'Content-Type': 'application/json',
           },
           data: payload || {},
@@ -190,11 +193,16 @@ export class Api {
   };
 
   static loginUser = async (payload: UserRequest) => {
-    const data = await Api.createRequest<UserRequest, User>(
+    const data = await Api.createRequest<UserRequest, string>(
       `user/login`,
       'POST',
       payload
     );
+    return data;
+  };
+
+  static getUser = async (username: string) => {
+    const data = await Api.createRequest<null, User>(`user/${username}`, 'GET');
     return data;
   };
 

@@ -34,7 +34,7 @@ export const UserSignup = () => {
     validateUsername(e.target.value);
   };
   const onComplete = (pin: string) => {
-    UserStore.signupUser({ username, pin }).then(() => {
+    UserStore.signupUser({ username, password: pin }).then(() => {
       if (UserStore.hasError) {
         setFormError('Failed to create user');
       } else {
@@ -69,6 +69,7 @@ export const UserSignup = () => {
                 onChange={changeUsername}
                 onKeyDown={handleEnter}
                 size="md"
+                autoFocus
               />
               <IconButton
                 icon={<ArrowForwardIcon />}

@@ -18,19 +18,21 @@ interface ReturningAuthProps {
 export const ReturningAuth = observer(
   ({ onNotReturning }: ReturningAuthProps) => {
     const UserStore = React.useContext(UserContext);
-    const returningUser = UserStore.returningUser.username;
+    const returningUser = UserStore.returningUsername || '';
     const history = useHistory();
     const [formError, setFormError] = React.useState('');
     const [enterPinMode, setEnterPinMode] = React.useState(false);
     const onComplete = (pin: string) => {
-      UserStore.loginUser({ username: returningUser, pin }).then(() => {
-        if (UserStore.hasError) {
-          setFormError('Incorrect pin');
-        } else {
-          setFormError('');
-          history.push('/');
+      UserStore.loginUser({ username: returningUser, password: pin }).then(
+        () => {
+          if (UserStore.hasError) {
+            setFormError('Incorrect pin');
+          } else {
+            setFormError('');
+            history.push('/');
+          }
         }
-      });
+      );
     };
     return (
       <>

@@ -1,4 +1,4 @@
-import { action, computed, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { Api } from '../network/api';
 import { UserRequest } from '../network/protos';
 import { User } from '../types/User';
@@ -15,7 +15,11 @@ export class UserState {
 
   user?: User;
 
+  authToken?: string;
+
   projectState: ProjectState;
+
+  returningUsername?: string;
 
   constructor(projectState: ProjectState) {
     makeObservable(this, {
@@ -25,26 +29,27 @@ export class UserState {
       statusMessage: observable,
       user: observable,
       projectState: observable,
+      authToken: observable,
+      returningUsername: observable,
       loginUser: action,
       checkUsernameAvailability: action,
       signupUser: action,
       logoutUser: action,
-      returningUser: computed,
+      fetchUser: action,
+      checkSession: action,
+      fetchUserAndProjects: action,
     });
     this.projectState = projectState;
-    const user = this.returningUser;
-    if (user !== null) {
-      this.isAuthorized = true;
-      this.user = user;
-    }
+    this.checkSession();
   }
 
-  get returningUser() {
-    const user = localStorage.getItem('user');
-    if (user != null) {
-      return JSON.parse(user);
+  checkSession() {
+    const token = localStorage.getItem('auth');
+    if (token != null) {
+      this.returningUsername = token.split(' ')[0];
+      this.authToken = token.split(' ')[1];
+      this.isAuthorized = true;
     }
-    return null;
   }
 
   checkUsernameAvailability = async (username: string) => {
@@ -63,14 +68,43 @@ export class UserState {
     }
   };
 
+  fetchUserAndProjects = async (username: string) => {
+    this.isLoading = true;
+    try {
+      const data = await Api.getUser(username);
+      this.user = data;
+      await this.projectState.fetchProjectsByUserId(this.user.id);
+      this.hasError = false;
+      this.statusMessage = 'User logged-in';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to login user';
+    }
+    this.isLoading = false;
+  };
+
+  fetchUser = async (username: string) => {
+    this.isLoading = true;
+    try {
+      const data = await Api.getUser(username);
+      this.user = data;
+      this.hasError = false;
+      this.statusMessage = 'User data fetched';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to fetch user';
+    }
+    this.isLoading = false;
+  };
+
   loginUser = async (payload: UserRequest) => {
     this.isLoading = true;
     try {
       const data = await Api.loginUser(payload);
-      this.user = data;
-      localStorage.setItem('user', JSON.stringify(this.user));
+      this.authToken = data.split(' ')[1];
+      localStorage.setItem('auth', data);
+      await this.fetchUser(payload.username);
       this.isAuthorized = true;
-      // Project stuff
       this.hasError = false;
       this.statusMessage = 'User logged-in';
     } catch (e) {
@@ -83,9 +117,8 @@ export class UserState {
   signupUser = async (payload: UserRequest) => {
     this.isLoading = true;
     try {
-      this.user = await Api.signupUser(payload);
-      this.isAuthorized = true;
-      // Project stuff
+      await Api.signupUser(payload);
+      await this.loginUser(payload);
       this.hasError = false;
       this.statusMessage = 'User registered';
     } catch (e) {
@@ -101,7 +134,6 @@ export class UserState {
       this.user = undefined;
       localStorage.clear();
       this.projectState.clearProjects();
-      // Project stuff
       this.isAuthorized = false;
       this.hasError = false;
       this.statusMessage = 'User logged out';

@@ -81,7 +81,7 @@ export interface ConnectResourceResponse {
 
 export interface UserRequest {
   username: string;
-  pin: string;
+  password: string;
 }
 
 export interface CanProjectViewResponse {

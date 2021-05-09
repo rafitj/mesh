@@ -13,7 +13,7 @@ export class NetworkWS {
   constructor(wsHandler: (m: any) => void) {
     let subscription: StompSubscription;
     this.client = new Client({
-      brokerURL: 'ws://localhost:8090/test',
+      brokerURL: 'ws://localhost:8090/mesh',
       reconnectDelay: 10000,
       heartbeatIncoming: 5000,
       heartbeatOutgoing: 5000,

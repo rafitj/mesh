@@ -40,6 +40,8 @@ export const ProjectDashboard = observer(() => {
           status: ProjectStore.hasError ? 'error' : 'success',
         });
       });
+    } else if (UserStore.returningUsername) {
+      UserStore.fetchUserAndProjects(UserStore.returningUsername);
     }
     NetworkStore.initSimulation();
   }, []);

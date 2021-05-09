@@ -24,7 +24,7 @@ export const UserLogin = () => {
     setUsername(e.target.value);
   };
   const onComplete = (pin: string) => {
-    UserStore.loginUser({ username, pin }).then(() => {
+    UserStore.loginUser({ username, password: pin }).then(() => {
       if (UserStore.hasError) {
         setFormError('Incorrect pin');
       } else {
@@ -53,6 +53,7 @@ export const UserLogin = () => {
                 onChange={changeUsername}
                 onKeyDown={handleEnter}
                 size="md"
+                autoFocus
               />
               <IconButton
                 icon={<ArrowForwardIcon />}

@@ -1,14 +1,11 @@
 package com.rafitj.mesh.io.repos;
 
-import com.rafitj.mesh.controller.projections.ClientEntityProjection;
 import com.rafitj.mesh.controller.projections.ClientEntityProjectionDTO;
-import com.rafitj.mesh.controller.projections.ServerEntityProjectionDTO;
 import com.rafitj.mesh.io.entities.ClientEntity;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 
 @Repository

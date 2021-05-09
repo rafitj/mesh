@@ -1,6 +1,5 @@
 package com.rafitj.mesh.service.intf;
 
-
 import com.rafitj.mesh.proto.request.CreateProjectRequest;
 import com.rafitj.mesh.proto.request.PatchProjectRequest;
 import com.rafitj.mesh.proto.response.CanViewProjectResponse;

@@ -1,6 +1,5 @@
 package com.rafitj.mesh.controller;
 
-import com.rafitj.mesh.io.dto.shared.ServerDTO;
 import com.rafitj.mesh.proto.request.ConnectResourcesRequest;
 import com.rafitj.mesh.proto.request.CreateClientRequest;
 import com.rafitj.mesh.proto.request.PatchClientRequest;

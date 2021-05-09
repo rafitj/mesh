@@ -1,12 +1,8 @@
 package com.rafitj.mesh.threads;
 
-import com.rafitj.mesh.controller.projections.*;
 import com.rafitj.mesh.io.dto.shared.ClientDTO;
 import com.rafitj.mesh.io.dto.shared.DatabaseDTO;
 import com.rafitj.mesh.io.dto.shared.ServerDTO;
-import com.rafitj.mesh.io.repos.ClientRepo;
-import com.rafitj.mesh.io.repos.DatabaseRepo;
-import com.rafitj.mesh.io.repos.ServerRepo;
 import com.rafitj.mesh.service.impl.ClientServiceImpl;
 import com.rafitj.mesh.service.impl.DatabaseServiceImpl;
 import com.rafitj.mesh.service.impl.ServerServiceImpl;

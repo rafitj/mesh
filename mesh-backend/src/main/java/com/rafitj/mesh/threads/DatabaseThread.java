@@ -1,9 +1,7 @@
 package com.rafitj.mesh.threads;
 
-import com.rafitj.mesh.controller.projections.DatabaseEntityProjectionDTO;
 import com.rafitj.mesh.io.dto.shared.DatabaseDTO;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-
 
 public class DatabaseThread extends ResourceThread {
 

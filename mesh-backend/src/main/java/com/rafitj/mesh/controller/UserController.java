@@ -15,9 +15,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/login")
-    public UserDTO userLogin(@RequestBody UserRequest userRequest) throws Exception {
-        return userService.loginUser(userRequest);
+    @GetMapping("/{username}")
+    public UserDTO userLogin(@PathVariable String username) throws Exception {
+        return userService.getUser(username);
     }
 
     @PostMapping("/signup")

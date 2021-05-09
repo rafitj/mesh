@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry registry) {
-        registry.addEndpoint("/test").setAllowedOrigins("http://localhost:3000");
+        registry.addEndpoint("/mesh").setAllowedOrigins("http://localhost:3000");
     }
 
     @Override

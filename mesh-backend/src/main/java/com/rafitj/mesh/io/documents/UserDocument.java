@@ -2,7 +2,9 @@ package com.rafitj.mesh.io.documents;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.userdetails.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "Users")
@@ -10,21 +12,24 @@ public class UserDocument {
     @Id
     private String id;
     private String username;
-    private String pin;
+    private String password;
     private List<String> projects;
 
-    public UserDocument(String username, String pin, List<String> projects) {
-        this.pin = pin;
+    public UserDocument(String username, String password, List<String> projects) {
+        this.password = password;
         this.username = username;
         this.projects = projects;
     }
 
-    public String getPin() {
-        return pin;
+    public UserDocument() {
     }
 
-    public void setPin(String pin) {
-        this.pin = pin;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getId() {

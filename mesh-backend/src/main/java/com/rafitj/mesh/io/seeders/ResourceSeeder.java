@@ -13,14 +13,17 @@ import java.util.List;
 
 @Component
 public class ResourceSeeder implements CommandLineRunner {
-    @Autowired
-    private ServerRepo serverRepo;
-    @Autowired
-    private ClientRepo clientRepo ;
-    @Autowired
-    private DatabaseRepo dbRepo;
-    @Autowired
-    private ProjectRepo projectRepo;
+    private final ServerRepo serverRepo;
+    private final ClientRepo clientRepo ;
+    private final DatabaseRepo dbRepo;
+    private final ProjectRepo projectRepo;
+
+    public ResourceSeeder(ServerRepo serverRepo, ClientRepo clientRepo, DatabaseRepo dbRepo, ProjectRepo projectRepo) {
+        this.serverRepo = serverRepo;
+        this.clientRepo = clientRepo;
+        this.dbRepo = dbRepo;
+        this.projectRepo = projectRepo;
+    }
 
     @Override
     public void run(String... args) throws Exception {

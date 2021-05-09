@@ -1,15 +1,15 @@
 package com.rafitj.mesh.proto.request;
 
 public class UserRequest {
-    private String pin;
+    private String password;
     private String username;
 
-    public String getPin() {
-        return pin;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPin(String pin) {
-        this.pin = pin;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getUsername() {

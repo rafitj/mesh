@@ -53,7 +53,7 @@ export const UserLogin = () => {
                 onChange={changeUsername}
                 onKeyDown={handleEnter}
                 size="md"
-                autoFocus
+                autoFocus={true}
               />
               <IconButton
                 icon={<ArrowForwardIcon />}

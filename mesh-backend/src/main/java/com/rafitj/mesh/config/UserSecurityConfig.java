@@ -16,8 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static com.rafitj.mesh.config.SecurityConstants.CHECK_USERNAME_URL;
-import static com.rafitj.mesh.config.SecurityConstants.SIGN_UP_URL;
+import static com.rafitj.mesh.config.SecurityConstants.*;
 
 @Configuration
 @EnableWebSecurity
@@ -36,6 +35,7 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.GET, CHECK_USERNAME_URL).permitAll()
+                .antMatchers(HttpMethod.POST, VERIFY_TOKEN_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

@@ -27,6 +27,7 @@ import {
   UpdateServerRequest,
   UpdateServerResponse,
   UserRequest,
+  VerifyTokenRequest,
 } from './protos';
 
 export const baseUrl = 'http://localhost:8090/';
@@ -35,7 +36,8 @@ export class Api {
   static createRequest = <T, S>(
     endpoint: string,
     requestType: Method,
-    payload?: T
+    payload?: T,
+    noAuth?: boolean
   ): Promise<S> =>
     new Promise(async (resolve, reject) => {
       try {
@@ -44,7 +46,10 @@ export class Api {
           method: requestType,
           headers: {
             Authorization:
-              (UserStore.authToken && `Bearer ${UserStore.authToken}`) || '',
+              (!noAuth &&
+                UserStore.authToken &&
+                `Bearer ${UserStore.authToken}`) ||
+              '',
             'Content-Type': 'application/json',
           },
           data: payload || {},
@@ -210,7 +215,8 @@ export class Api {
     const data = await Api.createRequest<UserRequest, User>(
       `user/signup`,
       'POST',
-      payload
+      payload,
+      true
     );
     return data;
   };
@@ -219,6 +225,16 @@ export class Api {
     const data = await Api.createRequest<null, CanProjectViewResponse>(
       `project/check/${slug}`,
       'GET'
+    );
+    return data;
+  };
+
+  static verifyToken = async (token: string) => {
+    const data = await Api.createRequest<VerifyTokenRequest, boolean>(
+      `user/verify`,
+      'POST',
+      { token },
+      true
     );
     return data;
   };

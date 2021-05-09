@@ -25,7 +25,7 @@ export const App = observer(() => {
               <Home />
             </Route>
             <Route exact={true} path="/">
-              {UserStore.isAuthorized ? (
+              {UserStore.isAuthorized || UserStore.isLoading ? (
                 <ProjectDashboard />
               ) : (
                 <Redirect to="/home" />

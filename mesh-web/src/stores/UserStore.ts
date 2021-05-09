@@ -36,21 +36,37 @@ export class UserState {
       signupUser: action,
       logoutUser: action,
       fetchUser: action,
-      checkSession: action,
+      checkUserSession: action,
       fetchUserAndProjects: action,
     });
     this.projectState = projectState;
-    this.checkSession();
+    this.checkUserSession();
   }
 
-  checkSession() {
-    const token = localStorage.getItem('auth');
-    if (token != null) {
-      this.returningUsername = token.split(' ')[0];
-      this.authToken = token.split(' ')[1];
-      this.isAuthorized = true;
+  checkUserSession = async () => {
+    this.isLoading = true;
+    try {
+      const token = localStorage.getItem('auth');
+      if (token != null) {
+        if (await Api.verifyToken(token.split(' ')[1])) {
+          this.returningUsername = token.split(' ')[0];
+          this.authToken = token.split(' ')[1];
+          this.isAuthorized = true;
+          await this.fetchUserAndProjects(this.returningUsername);
+        } else {
+          localStorage.clear();
+        }
+      } else {
+        localStorage.clear();
+      }
+      this.hasError = false;
+      this.statusMessage = 'Verified token';
+    } catch (e) {
+      this.hasError = true;
+      this.statusMessage = 'Failed to verify token';
     }
-  }
+    this.isLoading = false;
+  };
 
   checkUsernameAvailability = async (username: string) => {
     this.isLoading = true;
@@ -64,8 +80,8 @@ export class UserState {
       this.statusMessage = 'Failed to check username availability';
     } finally {
       this.isLoading = false;
-      return isAvailable;
     }
+    return isAvailable;
   };
 
   fetchUserAndProjects = async (username: string) => {

@@ -88,3 +88,7 @@ export interface CanProjectViewResponse {
   canView: boolean;
   msg: string;
 }
+
+export interface VerifyTokenRequest {
+  token: string;
+}
